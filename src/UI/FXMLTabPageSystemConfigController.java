@@ -155,6 +155,7 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
     @FXML // すべての内容を現在メモリに登録している状態にもどす。
     private void handleButtonReloadPropertiesOnMemory(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to reload Properties from this system's memory?");
+        System.out.println("DB_URL: "+common.StaticSystemPropertiesAcc.DB_URL); // 取得に成功。
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> initializeSystemPropertiesWindow());
