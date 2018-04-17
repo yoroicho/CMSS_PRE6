@@ -69,23 +69,27 @@ public class FXMLTabPageProcessController implements Initializable {
                 } else {
                     // 入力されているidが存在するか。
                     if (textFieldId.getText() != null) {
-                        try {
-                            // 何か入力されている。
-                            List<ProcessDTO> processList = ProcessDAO.findById(
-                                    TimestampUtil.parseToTimestamp(textFieldId.getText()));
-                            if (processList.isEmpty()) { // 存在しない。
-                                System.out.println("ID ERROR");
-                                textFieldId.requestFocus();
-                            } else {                       // 存在する。
-                                // コンボボックスに入れ込み。                                     
-                                comboBoxDivTime.getItems().addAll(processList);
-
-                            }
-                        } catch (ParseException ex) {
-                            Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                        // 何か入力されている。
+                        List<ProcessDTO> processList = ProcessDAO.findById(
+                                Long.parseLong(textFieldId.getText()));
+                        if (processList.isEmpty()) { // 存在しない。
+                            System.out.println("ID ERROR");
+                            textFieldId.requestFocus();
+                            
+                        } else {                       // 存在する。
+                          textFieldId.setDisable(true);
+                            
+                        
+                            // コンボボックスに入れ込み。
+                            comboBoxDivTime.getItems().addAll(processList);
+                            
                         }
+                    }else{ // なにも入力されていなければ新規
+                      textFieldId.setText("新規登録");
+                        
+                        
                     }
-                    textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
+                    ////////textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
                     System.out.println("Textfield out focus");
                 }
             }
@@ -95,13 +99,21 @@ public class FXMLTabPageProcessController implements Initializable {
     @FXML
     private void testButtonAction(ActionEvent event) {
         List<ProcessDTO> findAll = ProcessDAO.findAll();
-        findAll.forEach(s -> System.out.println(s.getId() + ":" + TimestampUtil.formattedTimestamp(s.getDivtime())));
+        findAll.forEach(s -> System.out.println(s.getId() + ":" + (s.getDivtime()).toString()));
         String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
         System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
 
     }
+    @FXML
+    private void enterButtonAction(ActionEvent event) {
+        List<ProcessDTO> findAll = ProcessDAO.findAll();
+        findAll.forEach(s -> System.out.println(s.getId() + ":" + (s.getDivtime()).toString()));
+        String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
+        System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
+
+    }
     /**
      * Initializes the controller class.
      */

@@ -66,12 +66,9 @@ public class StaticSystemPropertiesAcc {
 
     static {
         Properties properties = new Properties();
-        //DB_URL = properties.getProperty("DB_URL");
         try {
-            //DB_URL="ABC";
             InputStream istream = new FileInputStream(systemPropertiesXmlFilePath);
             properties.loadFromXML(istream);
-            //DB_URL = properties.getProperty("DB_URL");
             SystemPropertiesItem.DB_USER = properties.getProperty("DB_USER");
             SystemPropertiesItem.DB_PASS = properties.getProperty("DB_PASS");
             SystemPropertiesItem.SHIP_BASE = properties.getProperty("SHIP_BASE");

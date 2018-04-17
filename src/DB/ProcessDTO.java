@@ -7,6 +7,9 @@ package DB;
 
 import common.TimestampUtil;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 
 /**
  *
@@ -17,8 +20,8 @@ public class ProcessDTO {
     /**
      * フィールド変数
      */
-    private Timestamp id;
-    private Timestamp divtime;
+    private long id;
+    private ZonedDateTime divtime;
     private String divname;
     private Timestamp cutdatetime;
     private String comment;
@@ -28,30 +31,18 @@ public class ProcessDTO {
     /**
      * @return the id
      */
-    public Timestamp getId() {
+    public long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Timestamp id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return the divtime
-     */
-    public Timestamp getDivtime() {
-        return divtime;
-    }
 
-    /**
-     * @param divtime the divtime to set
-     */
-    public void setDivtime(Timestamp divtime) {
-        this.divtime = divtime;
-    }
 
     /**
      * @return the divname
@@ -125,6 +116,22 @@ public class ProcessDTO {
 
         @Override
     public String toString() {
-        return TimestampUtil.formattedTimestamp(getCutdatetime())+getDivname()+ TimestampUtil.formattedTimestamp(getId()) + TimestampUtil.formattedTimestamp(getDivtime());
+        return (getCutdatetime())+getDivname()+ String.valueOf(getId()) + (getDivtime().toString());
     }
+
+    /**
+     * @return the divtime
+     */
+    public ZonedDateTime getDivtime() {
+        return divtime;
+    }
+
+    /**
+     * @param divtime the divtime to set
+     */
+    public void setDivtime(ZonedDateTime divtime) {
+        this.divtime = divtime;
+    }
+
+
 }

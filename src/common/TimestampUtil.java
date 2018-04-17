@@ -18,10 +18,13 @@ import java.util.TimeZone;
  */
 public class TimestampUtil {
 
-    private static final String CMSS_DATE_FORMAT_PATTERN = "yyyyMMddHHmmss";
+    private static final String CMSS_DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     public static Timestamp parseToTimestamp(String dateTime) throws ParseException {
+        System.out.println("Formatted "+new Timestamp(new SimpleDateFormat(CMSS_DATE_FORMAT_PATTERN).parse(dateTime).getTime()));
+        
         return new Timestamp(new SimpleDateFormat(CMSS_DATE_FORMAT_PATTERN).parse(dateTime).getTime());
+   
     }
 
     public static String formattedTimestamp(Timestamp timestamp, String timeFormat) {
@@ -29,7 +32,10 @@ public class TimestampUtil {
     }
 
     public static String formattedTimestamp(Timestamp timestamp) {
-        return new SimpleDateFormat(CMSS_DATE_FORMAT_PATTERN).format(timestamp);
+        System.out.println(timestamp.getClass().getName());
+        //System.out.println("timestamp"+timestamp.toString());
+        //return new SimpleDateFormat(CMSS_DATE_FORMAT_PATTERN).format(timestamp);
+        return "NULL";
     }
 
     public static Timestamp current() {
