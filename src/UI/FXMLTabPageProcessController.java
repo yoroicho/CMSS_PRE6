@@ -151,6 +151,7 @@ public class FXMLTabPageProcessController implements Initializable {
 
 // 要改良リフレッシュしてから選択するかたちにする。
         };
+        JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
     }
 
     /**
