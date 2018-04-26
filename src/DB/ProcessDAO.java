@@ -81,7 +81,8 @@ public class ProcessDAO implements IDAO {
                     //Instant instant = date.toInstant();
                     //ZoneId zone = ZoneId.systemDefault();
                     //ZonedDateTime converted = ZonedDateTime.ofInstant(instant, zone);
-                    dto.setDivtime(ZonedDateTime.ofInstant((result.getDate("divtime").toInstant()),ZoneId.systemDefault()));
+                    //dto.setDivtime(ZonedDateTime.ofInstant((result.getDate("divtime")toInstant()),ZoneId.systemDefault()));
+                    dto.setDivtime(result.getLong("divtime"));
                     dto.setDivname(result.getString("divname"));
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
@@ -117,7 +118,7 @@ public class ProcessDAO implements IDAO {
             System.out.println(statement.toString());
 
             ResultSet result = statement.executeQuery();
-            System.out.println("Total" + result.getFetchSize() + "items");
+            System.out.println("Total" + result.getFetchDirection() + "items");
 
             try {
                 connection.commit();
@@ -128,7 +129,8 @@ public class ProcessDAO implements IDAO {
                     ProcessDTO dto = new ProcessDTO();
                     // ???????????????
                     dto.setId(result.getLong("id"));
-                    dto.setDivtime(ZonedDateTime.ofInstant(result.getTimestamp("divtime").toInstant(),ZoneId.systemDefault()));
+                    //dto.setDivtime(ZonedDateTime.ofInstant(result.getTimestamp("divtime").toInstant(),ZoneId.systemDefault()));
+                    dto.setDivtime(result.getLong("divtime"));
                     dto.setDivname(result.getString("divname"));
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
@@ -148,8 +150,7 @@ public class ProcessDAO implements IDAO {
         }
         return processDTO;
     }
-    
-    
+
     public static List<ProcessDTO> findById(Timestamp id) {
         //Timestamp id = Timestamp.valueOf(idText);
         String sql = "SELECT * from process WHERE id = (?);";
@@ -174,7 +175,7 @@ public class ProcessDAO implements IDAO {
                     ProcessDTO dto = new ProcessDTO();
                     // カラムの値をフィールドにセット
                     dto.setId(result.getLong("id"));
-                    dto.setDivtime((ZonedDateTime.ofInstant(result.getTimestamp("divtime").toInstant(),ZoneId.systemDefault())));
+                    dto.setDivtime(result.getLong("divtime"));
                     dto.setDivname(result.getString("divname"));
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
@@ -195,29 +196,33 @@ public class ProcessDAO implements IDAO {
         return processDTO;
     }
 
-    public static void create(ProcessDTO processDTO) {
+    public static boolean create(ProcessDTO processDTO) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
-        String sql = "INSERT INTO process values (?,?,?,?,?,?,);";
+        //String sql = "INSERT INTO process values (?,?,?,?,?,?,?,?);";
+        //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
+        String sql = "REPLACE INTO process values (?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
             statement.setLong(1, processDTO.getId());
-            statement.setTimestamp(2, Timestamp.from(processDTO.getDivtime().toInstant()));
+            statement.setLong(2, processDTO.getDivtime());
             statement.setString(3, processDTO.getDivname());
-            statement.setString(4, processDTO.getComment());
-            statement.setTimestamp(5, processDTO.getPredivtime());
-            statement.setString(6, processDTO.getArtifactsId());
+            statement.setTimestamp(4, processDTO.getCutdatetime());
+            statement.setString(5, processDTO.getComment());
+            statement.setTimestamp(6, processDTO.getPredivtime());
+            statement.setString(7, processDTO.getArtifactsId());
+            statement.setTimestamp(8, processDTO.getClosedatetime());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
                 connection.commit();
                 System.out.println("追加成功");
-
+                return true;
             } catch (SQLException e) {
-                // connection.rollback(); 
+                connection.rollback();
                 e.printStackTrace();
                 System.out.println("追加失敗");
             }
@@ -225,5 +230,6 @@ public class ProcessDAO implements IDAO {
             e.printStackTrace();
             System.out.println("データべース障害");
         }
+        return false;
     }
 }

@@ -21,12 +21,13 @@ public class ProcessDTO {
      * フィールド変数
      */
     private long id;
-    private ZonedDateTime divtime;
+    private long divtime;
     private String divname;
     private Timestamp cutdatetime;
     private String comment;
     private Timestamp predivtime;
     private String artifactsId;
+    private Timestamp closedatetime;
 
     /**
      * @return the id
@@ -116,22 +117,38 @@ public class ProcessDTO {
 
         @Override
     public String toString() {
-        return (getCutdatetime())+getDivname()+ String.valueOf(getId()) + (getDivtime().toString());
+        return (String.valueOf(getDivtime()));
     }
 
     /**
      * @return the divtime
      */
-    public ZonedDateTime getDivtime() {
+    public long getDivtime() {
         return divtime;
     }
 
     /**
      * @param divtime the divtime to set
      */
-    public void setDivtime(ZonedDateTime divtime) {
+    public void setDivtime(long divtime) {
         this.divtime = divtime;
     }
+
+    /**
+     * @return the closedatetime
+     */
+    public Timestamp getClosedatetime() {
+        return closedatetime;
+    }
+
+    /**
+     * @param closedatetime the closedatetime to set
+     */
+    public void setClosedatetime(Timestamp closedatetime) {
+        this.closedatetime = closedatetime;
+    }
+
+
 
 
 }
