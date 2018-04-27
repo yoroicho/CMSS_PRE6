@@ -24,6 +24,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -48,7 +49,9 @@ public class FXMLTabPageProcessController implements Initializable {
     private TextArea textAreaDivName;
     @FXML
     private TextArea textAreaComment;
-
+    //@FXML
+    //private Button buttonClear;
+    
     @FXML
     AnchorPane anchorPaneTabPageProcess;
 
@@ -62,6 +65,14 @@ public class FXMLTabPageProcessController implements Initializable {
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
     }
 
+    private void clearAllProperty(){
+        textAreaDivName.clear();
+        textAreaComment.clear();
+        
+        comboBoxDivTime.setDisable(false);
+        textFieldId.setEditable(true);
+}
+    
     private void initFocuseConditionForTask() { // 存在確認をしてから編集不可。
         this.textFieldId.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -109,7 +120,12 @@ public class FXMLTabPageProcessController implements Initializable {
         System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
 
     }
-
+    
+    @FXML 
+            private void clearButtonAction(ActionEvent event) {
+                clearAllProperty();
+                
+            }
     @FXML
     private void enterButtonAction(ActionEvent event) {
         /*List<ProcessDTO> findAll = ProcessDAO.findAll();
