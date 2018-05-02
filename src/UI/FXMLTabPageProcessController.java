@@ -75,9 +75,10 @@ public class FXMLTabPageProcessController implements Initializable {
         textAreaComment.clear();
         
         comboBoxDivTime.setDisable(false);
+        
         textFieldId.requestFocus();
-        textFieldId.setEditable(true);
-        //textFieldId.setDisable(false);
+        //textFieldId.setEditable(true);
+        textFieldId.setDisable(false);
 }
     
     private void initFocuseConditionForTask() { // 存在確認をしてから編集不可。
@@ -100,8 +101,8 @@ public class FXMLTabPageProcessController implements Initializable {
                             textFieldId.requestFocus();
 
                         } else {                       // 存在する。
-                            //textFieldId.setDisable(true);
-                            textFieldId.setEditable(false);
+                            textFieldId.setDisable(true);
+                            //textFieldId.setEditable(false);
                             tempId = Long.parseLong(textFieldId.getText());
                             // コンボボックスに入れ込み。
                             comboBoxDivTime.getItems().addAll(processList);
@@ -167,8 +168,8 @@ public class FXMLTabPageProcessController implements Initializable {
             if (textFieldId.getText().length() == 0) {
                 textFieldId.setText(String.valueOf(tempId));
             }
-            //textFieldId.setDisable(true);
-            textFieldId.setEditable(false);
+            textFieldId.setDisable(true);
+            //textFieldId.setEditable(false);
             if (comboBoxDivTime.getEditor().getText().length() == 0) {
                 comboBoxDivTime.getEditor().setText(String.valueOf(tempDivTime));
             }
