@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  * @author AnyUser
  */
 public class FXMLTabPageProcessController implements Initializable {
-
+    
     @FXML
     private TextField textFieldId;
     @FXML
@@ -51,46 +51,55 @@ public class FXMLTabPageProcessController implements Initializable {
     private TextArea textAreaComment;
     //@FXML
     //private Button buttonClear;
-    
+
     @FXML
     AnchorPane anchorPaneTabPageProcess;
-
+    
     private State state;
-
+    
     private long tempId;
     private long tempDivTime;
-
+    
     private enum State {
         // 下記は確定でない。
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
     }
-
-    private void clearAllProperty(){
+    
+    private void clearAllProperty() {
         //comboBoxDivTime.setDisable(true);
         //textFieldId.setEditable(false);
-        
-        
-        
+
         textAreaDivName.clear();
         textAreaComment.clear();
         
         comboBoxDivTime.setDisable(false);
         
-        textFieldId.requestFocus();
+        //textFieldId.requestFocus();
         //textFieldId.setEditable(true);
         textFieldId.setDisable(false);
-}
-    private void syncroItem(){
-        this.comboBoxDivTime.getEditor().textProperty().addListener(new ChangeListener<String>(){
-            @Override public void changed(ObservableValue<? extends String> ov, String t, String t1){
+    }
+    
+    private void syncroItem() {
+        this.comboBoxDivTime.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                clearAllProperty();
                 System.out.println("Change");
-                System.out.println(ov);
-                System.out.println(t);
-                System.out.println(t1);
+                //System.out.println("ov"+ov);
+                System.out.println("t" + t);
+                System.out.println("t1" + t1);
+                ProcessDTO processDTO = (comboBoxDivTime
+                        .getItems()
+                        .stream()
+                        .filter(pri -> String.valueOf(pri.getDivtime()).equals(t1)))
+                        .findFirst()
+                        .get();
+                textAreaDivName.setText(processDTO.getDivname());
+                textAreaComment.setText(processDTO.getComment());
+                
             }
         });
     }
-    
     
     private void initFocuseConditionForTask() { // 存在確認をしてから編集不可。
         this.textFieldId.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -108,21 +117,22 @@ public class FXMLTabPageProcessController implements Initializable {
                                 Long.parseLong(textFieldId.getText()));
                         if (processList.isEmpty()) { // 存在しない。
                             System.out.println("ID ERROR");
-
+                            
                             textFieldId.requestFocus();
-
+                            
                         } else {                       // 存在する。
                             textFieldId.setDisable(true);
                             //textFieldId.setEditable(false);
                             tempId = Long.parseLong(textFieldId.getText());
-                            // コンボボックスに入れ込み。
+                            // コンボボックスをクリアしてから入れ込み。
+                            comboBoxDivTime.getItems().clear(); //
                             comboBoxDivTime.getItems().addAll(processList);
-
+                            
                         }
                     } else { // なにも入力されていなければ新規
                         //textFieldId.setText("");
                         System.out.println("New process and new divison. ");
-
+                        
                     }
                     ////////textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
                     System.out.println("Textfield out focus");
@@ -130,22 +140,23 @@ public class FXMLTabPageProcessController implements Initializable {
             }
         });
     }
-
+    
     @FXML
     private void testButtonAction(ActionEvent event) {
         List<ProcessDTO> findAll = ProcessDAO.findAll();
         findAll.forEach(s -> System.out.println(s.getId() + ":" + String.valueOf(s.getDivtime())));
         String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
-
+        
         System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
-
+        
     }
     
-    @FXML 
-            private void clearButtonAction(ActionEvent event) {
-                clearAllProperty();
-                
-            }
+    @FXML
+    private void clearButtonAction(ActionEvent event) {
+        clearAllProperty();
+        
+    }
+    
     @FXML
     private void enterButtonAction(ActionEvent event) {
         /*List<ProcessDTO> findAll = ProcessDAO.findAll();
@@ -185,12 +196,12 @@ public class FXMLTabPageProcessController implements Initializable {
                 comboBoxDivTime.getEditor().setText(String.valueOf(tempDivTime));
             }
             comboBoxDivTime.setDisable(true);
-        JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
+            JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
 // 要改良リフレッシュしてから選択するかたちにする。
-        }else{
-            JOptionPane.showMessageDialog(null,"データベース記録中に障害が発生しました。");
+        } else {
+            JOptionPane.showMessageDialog(null, "データベース記録中に障害が発生しました。");
         };
-
+        
     }
 
     /**
@@ -201,5 +212,5 @@ public class FXMLTabPageProcessController implements Initializable {
         initFocuseConditionForTask(); // 主キーを保護する為にロックするイベントを登録。       
         syncroItem();
     }
-
+    
 }
