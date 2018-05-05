@@ -29,7 +29,13 @@ public class FXMLBaseDocumentController implements Initializable {
     }
     */
     
+    @FXML
+    private Label LabelCentralMassage;
     
+    //@FXML
+    //private static void labelCentralMassageSetText(String value){
+    //LabelCentralMassage.setText(value);
+    //}
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

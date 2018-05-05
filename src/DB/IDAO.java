@@ -5,6 +5,7 @@
  */
 package DB;
 
+import common.StaticSystemPropertiesAcc;
 import common.SystemPropertiesItem;
 
 /**
@@ -13,13 +14,10 @@ import common.SystemPropertiesItem;
  */
 public interface IDAO {
 
-    /**
-     * SystemPropertiesItem.XXXは起動時の一回のみ初期化される。 final化できなかったため、不変の定数になっていない。
-     * 動作の途中で変更しない事。
-     */
-    static final String URL = SystemPropertiesItem.DB_URL;
-    static final String USERNAME = SystemPropertiesItem.DB_USER;
-    static final String PASSWORD = SystemPropertiesItem.DB_PASS;
+
+    static final String URL = StaticSystemPropertiesAcc.DB_URL;
+    static final String USERNAME = StaticSystemPropertiesAcc.DB_USER;
+    static final String PASSWORD = StaticSystemPropertiesAcc.DB_PASS;
 
     /*
 検索

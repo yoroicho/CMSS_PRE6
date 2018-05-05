@@ -1,6 +1,6 @@
 use cmss;
 CREATE TABLE `process` (
-  `id` datetime NOT NULL COMMENT '日時で構成される中間成果物processの通しID',
+  `id` BIGINT NOT NULL COMMENT '日時で構成される中間成果物processの通しID',
   `divtime` datetime NOT NULL COMMENT '日時で構成される中間成果物processの作版識別符号',
   `divname` text NOT NULL COMMENT '中間成果物に付けられる版ごとのタイトル。通常は初版に準じ、公開タイトルとは異なる。',
   `cutdatetime` datetime DEFAULT NULL COMMENT '締切日時',
