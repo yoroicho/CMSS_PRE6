@@ -3,10 +3,10 @@
 <properties>
 <comment>SystemProperties</comment>
 <entry key="VOYAGE_BASE"/>
-<entry key="DB_USER">CMSS-PRE5</entry>
+<entry key="DB_USER">CMSS-PRE6</entry>
 <entry key="CARGO_BASE"/>
-<entry key="DB_PASS">AzlIG8wUDcN2Ki63</entry>
+<entry key="DB_PASS">guacamole</entry>
 <entry key="BOOKING_BASE"/>
 <entry key="SHIP_BASE">/home/tokyo/デスクトップ/temp</entry>
-<entry key="DB_URL">jdbc:mariadb://160.16.98.96:3306/cmss</entry>
+<entry key="DB_URL">jdbc:mariadb://localhost:3306/cmss</entry>
 </properties>
