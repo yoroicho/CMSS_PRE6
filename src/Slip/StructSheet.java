@@ -181,7 +181,7 @@ public class StructSheet {
                 pdfPTable.addCell(cellUrlValueQr);
             }
 
-            PdfPCell cellUserNameKey = new PdfPCell(new Paragraph("ユーザ", ipaGothic));
+            PdfPCell cellUserNameKey = new PdfPCell(new Paragraph("作成者", ipaGothic));
             cellUserNameKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellUserNameKey.setHorizontalAlignment(Element.ALIGN_CENTER);
             cellUserNameKey.setRowspan(2);
