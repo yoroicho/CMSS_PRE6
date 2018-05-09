@@ -26,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
-import com.google.zxing.*;
-//import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  *
