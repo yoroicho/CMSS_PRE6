@@ -7,6 +7,6 @@
 <entry key="CARGO_BASE"/>
 <entry key="DB_PASS">guacamole</entry>
 <entry key="BOOKING_BASE"/>
-<entry key="SHIP_BASE">/home/tokyo/デスクトップ/temp</entry>
+<entry key="SHIP_BASE">/home/kyokuto/デスクトップ/pdfTest</entry>
 <entry key="DB_URL">jdbc:mariadb://localhost:3306/cmss</entry>
 </properties>

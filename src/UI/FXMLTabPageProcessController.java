@@ -8,7 +8,11 @@ package UI;
 import DB.DatabaseUty;
 import DB.ProcessDAO;
 import DB.ProcessDTO;
+import Slip.StructSheet;
+import com.itextpdf.text.DocumentException;
+import common.SystemPropertiesItem;
 import common.TimestampUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -187,17 +191,34 @@ public class FXMLTabPageProcessController implements Initializable {
         processDTO.setDivname(textAreaDivName.getText());
 //if(comboBoxDivTime.getSelectionModel().getSelectedItem().getDivtime())
         if (ProcessDAO.create(processDTO)) {
-            if (textFieldId.getText().length() == 0) {
-                textFieldId.setText(String.valueOf(tempId));
-            }
-            textFieldId.setDisable(true);
-            //textFieldId.setEditable(false);
-            if (comboBoxDivTime.getEditor().getText().length() == 0) {
-                comboBoxDivTime.getEditor().setText(String.valueOf(tempDivTime));
-            }
-            comboBoxDivTime.setDisable(true);
-            JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
+            try {
+                if (textFieldId.getText().length() == 0) {
+                    textFieldId.setText(String.valueOf(tempId));
+                }
+                textFieldId.setDisable(true);
+                //textFieldId.setEditable(false);
+                if (comboBoxDivTime.getEditor().getText().length() == 0) {
+                    comboBoxDivTime.getEditor().setText(String.valueOf(tempDivTime));
+                }
+                comboBoxDivTime.setDisable(true);
+                StructSheet.creatSlip(this.textAreaDivName.getText(),
+                        "cutDateTime",
+                        "compData",
+                        "makerName",
+                        this.textAreaComment.getText(),
+                        this.textFieldId.getText(),
+                        this.comboBoxDivTime.getEditor().getText(),
+                        SystemPropertiesItem.SHIP_BASE,
+                        Boolean.FALSE);
+                JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
 // 要改良リフレッシュしてから選択するかたちにする。
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DocumentException ex) {
+                Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RuntimeException ex) {
+                Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "データベース記録中に障害が発生しました。");
         };
