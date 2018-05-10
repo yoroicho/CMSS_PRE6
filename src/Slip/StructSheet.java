@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -77,8 +79,8 @@ public class StructSheet {
             Boolean noBarCodePrint
     ) throws IOException, DocumentException, RuntimeException {
         Document document = null;
-        String fileFullDir = 
-                fileDir
+        String fileFullDir
+                = fileDir
                 + FILE_SEPARATOR
                 + id
                 + "-"
@@ -332,6 +334,7 @@ public class StructSheet {
              */
             // step 5
             document.close();
+            System.out.println(fileFullDir + "を作成しました。");
         } catch (RuntimeException ex) {
             document.close();
             throw ex;
@@ -340,8 +343,18 @@ public class StructSheet {
         File file = new File(fileFullDir);
         Desktop desktop = Desktop.getDesktop();
 
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(StructSheet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //desktop.open(file);
+        //System.out.println(fileFullDir + "を開いています。");
+
         if (true) { // 開発中の仮分岐
-            desktop.open(file);
+            //desktop.open(file);
+            //System.out.println(fileFullDir + "を開いています。");
         } else {
             desktop.print(file);
         }
