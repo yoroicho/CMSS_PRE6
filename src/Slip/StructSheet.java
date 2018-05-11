@@ -82,12 +82,12 @@ public class StructSheet {
         Document document = null;
         String fileFullDir
                 = 
-                //fileDir +
+                fileDir +
                 //+ FILE_SEPARATOR +
                 //id +
                 //"-" +
                 //divDateTime +
-                "temp.pdf";
+                ".pdf";
         try {
             // step 1
             document = new Document(PageSize.A4, 60, 50, 50, 35);

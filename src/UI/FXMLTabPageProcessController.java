@@ -67,6 +67,8 @@ public class FXMLTabPageProcessController implements Initializable {
     private long tempId;
     private long tempDivTime;
 
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
     private enum State {
         // 下記は確定でない。
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
@@ -213,14 +215,22 @@ public class FXMLTabPageProcessController implements Initializable {
                         this.textAreaComment.getText(),
                         this.textFieldId.getText(),
                         this.comboBoxDivTime.getEditor().getText(),
-                        SystemPropertiesItem.SHIP_BASE,
-                        Boolean.FALSE);
+                        SystemPropertiesItem.SHIP_BASE
+                        + FILE_SEPARATOR
+                        + this.textFieldId.getText()
+                        + "-"
+                        + this.comboBoxDivTime.getEditor().getText(),
+                         Boolean.FALSE);
                 JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
                 if (Desktop.isDesktopSupported()) {
                     new Thread(() -> {
                         try {
                             System.out.println("tyr open file");
-                            File file = new File("temp.pdf");
+                            File file = new File(SystemPropertiesItem.SHIP_BASE
+                        + FILE_SEPARATOR
+                        + this.textFieldId.getText()
+                        + "-"
+                        + this.comboBoxDivTime.getEditor().getText()+".pdf");
                             Desktop.getDesktop().open(file);
                             System.out.println("opend file");
                         } catch (IOException e) {
