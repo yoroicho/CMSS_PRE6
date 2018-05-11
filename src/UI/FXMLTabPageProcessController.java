@@ -12,6 +12,8 @@ import Slip.StructSheet;
 import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesItem;
 import common.TimestampUtil;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -35,6 +37,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
+import test.TestPdfPrint;
 
 /**
  * FXML Controller class
@@ -42,7 +45,7 @@ import javax.swing.JOptionPane;
  * @author AnyUser
  */
 public class FXMLTabPageProcessController implements Initializable {
-    
+
     @FXML
     private TextField textFieldId;
     @FXML
@@ -58,31 +61,31 @@ public class FXMLTabPageProcessController implements Initializable {
 
     @FXML
     AnchorPane anchorPaneTabPageProcess;
-    
+
     private State state;
-    
+
     private long tempId;
     private long tempDivTime;
-    
+
     private enum State {
         // 下記は確定でない。
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
     }
-    
+
     private void clearAllProperty() {
         //comboBoxDivTime.setDisable(true);
         //textFieldId.setEditable(false);
 
         textAreaDivName.clear();
         textAreaComment.clear();
-        
+
         comboBoxDivTime.setDisable(false);
-        
+
         //textFieldId.requestFocus();
         //textFieldId.setEditable(true);
         textFieldId.setDisable(false);
     }
-    
+
     private void syncroItem() {
         this.comboBoxDivTime.getEditor().textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -100,11 +103,11 @@ public class FXMLTabPageProcessController implements Initializable {
                         .get();
                 textAreaDivName.setText(processDTO.getDivname());
                 textAreaComment.setText(processDTO.getComment());
-                
+
             }
         });
     }
-    
+
     private void initFocuseConditionForTask() { // 存在確認をしてから編集不可。
         this.textFieldId.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -121,9 +124,9 @@ public class FXMLTabPageProcessController implements Initializable {
                                 Long.parseLong(textFieldId.getText()));
                         if (processList.isEmpty()) { // 存在しない。
                             System.out.println("ID ERROR");
-                            
+
                             textFieldId.requestFocus();
-                            
+
                         } else {                       // 存在する。
                             textFieldId.setDisable(true);
                             //textFieldId.setEditable(false);
@@ -131,12 +134,12 @@ public class FXMLTabPageProcessController implements Initializable {
                             // コンボボックスをクリアしてから入れ込み。
                             comboBoxDivTime.getItems().clear(); //
                             comboBoxDivTime.getItems().addAll(processList);
-                            
+
                         }
                     } else { // なにも入力されていなければ新規
                         //textFieldId.setText("");
                         System.out.println("New process and new divison. ");
-                        
+
                     }
                     ////////textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
                     System.out.println("Textfield out focus");
@@ -144,23 +147,23 @@ public class FXMLTabPageProcessController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     private void testButtonAction(ActionEvent event) {
         List<ProcessDTO> findAll = ProcessDAO.findAll();
         findAll.forEach(s -> System.out.println(s.getId() + ":" + String.valueOf(s.getDivtime())));
         String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
-        
+
         System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
-        
+
     }
-    
+
     @FXML
     private void clearButtonAction(ActionEvent event) {
         clearAllProperty();
-        
+
     }
-    
+
     @FXML
     private void enterButtonAction(ActionEvent event) {
         /*List<ProcessDTO> findAll = ProcessDAO.findAll();
@@ -201,7 +204,9 @@ public class FXMLTabPageProcessController implements Initializable {
                     comboBoxDivTime.getEditor().setText(String.valueOf(tempDivTime));
                 }
                 comboBoxDivTime.setDisable(true);
-                StructSheet.creatSlip(this.textAreaDivName.getText(),
+
+                StructSheet structSheet = new StructSheet();
+                structSheet.creatSlip(this.textAreaDivName.getText(),
                         "cutDateTime",
                         "compData",
                         "makerName",
@@ -211,7 +216,19 @@ public class FXMLTabPageProcessController implements Initializable {
                         SystemPropertiesItem.SHIP_BASE,
                         Boolean.FALSE);
                 JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
-// 要改良リフレッシュしてから選択するかたちにする。
+                if (Desktop.isDesktopSupported()) {
+                    new Thread(() -> {
+                        try {
+                            System.out.println("tyr open file");
+                            File file = new File("temp.pdf");
+                            Desktop.getDesktop().open(file);
+                            System.out.println("opend file");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+
             } catch (IOException ex) {
                 Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (DocumentException ex) {
@@ -222,7 +239,7 @@ public class FXMLTabPageProcessController implements Initializable {
         } else {
             JOptionPane.showMessageDialog(null, "データベース記録中に障害が発生しました。");
         };
-        
+
     }
 
     /**
@@ -233,5 +250,5 @@ public class FXMLTabPageProcessController implements Initializable {
         initFocuseConditionForTask(); // 主キーを保護する為にロックするイベントを登録。       
         syncroItem();
     }
-    
+
 }

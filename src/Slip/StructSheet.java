@@ -67,7 +67,7 @@ public class StructSheet {
      * @throws com.itextpdf.text.DocumentException
      */
         
-        public static void creatSlip(
+        public void creatSlip(
             String title,
             String cutDateTime,
             String compData,
@@ -78,14 +78,16 @@ public class StructSheet {
             String fileDir,
             Boolean noBarCodePrint
     ) throws IOException, DocumentException, RuntimeException {
+            
         Document document = null;
         String fileFullDir
-                = fileDir
-                + FILE_SEPARATOR
-                + id
-                + "-"
-                + divDateTime
-                + ".pdf";
+                = 
+                //fileDir +
+                //+ FILE_SEPARATOR +
+                //id +
+                //"-" +
+                //divDateTime +
+                "temp.pdf";
         try {
             // step 1
             document = new Document(PageSize.A4, 60, 50, 50, 35);
@@ -340,24 +342,20 @@ public class StructSheet {
             throw ex;
         }
 
+return;
+
+        /*
         File file = new File(fileFullDir);
-        Desktop desktop = Desktop.getDesktop();
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(StructSheet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+                Desktop desktop = Desktop.getDesktop();
+        if(file.exists()){
+                    System.out.println(fileFullDir + "を開きます。");
         //desktop.open(file);
-        //System.out.println(fileFullDir + "を開いています。");
-
-        if (true) { // 開発中の仮分岐
-            //desktop.open(file);
-            //System.out.println(fileFullDir + "を開いています。");
-        } else {
-            desktop.print(file);
+        System.out.println(fileFullDir + "を開いています。");
         }
+
+*/
+
+
 
     }
 }
