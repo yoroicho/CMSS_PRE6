@@ -10,6 +10,7 @@ import DB.ProcessDAO;
 import DB.ProcessDTO;
 import Slip.StructSheet;
 import com.itextpdf.text.DocumentException;
+import common.SystemPropertiesAcc;
 import common.SystemPropertiesItem;
 import common.TimestampUtil;
 import java.awt.Desktop;
@@ -30,14 +31,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
-import test.TestPdfPrint;
 
 /**
  * FXML Controller class
@@ -81,11 +83,18 @@ public class FXMLTabPageProcessController implements Initializable {
         textAreaDivName.clear();
         textAreaComment.clear();
 
-        comboBoxDivTime.setDisable(false);
-
+        //comboBoxDivTime.setDisable(false);
         //textFieldId.requestFocus();
         //textFieldId.setEditable(true);
+        // textFieldId.setDisable(false);
+    }
+
+    private void clearIdAndDivDateTime() {
+        textFieldId.clear();
+        comboBoxDivTime.getItems().clear();
+        comboBoxDivTime.getEditor().clear();
         textFieldId.setDisable(false);
+        comboBoxDivTime.setDisable(false);
     }
 
     private void syncroItem() {
@@ -161,8 +170,32 @@ public class FXMLTabPageProcessController implements Initializable {
     }
 
     @FXML
+    private void duplicateButtonAction(ActionEvent event) {
+        // 公開後に複写して新規制作、もしくは雛形に基く新規作成。
+        // id,divDateTimeともに引き継がない。
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "id= divDateTime= を引き継ぎ複製制作しますか。");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> System.out.println("処理中"));
+        JOptionPane.showMessageDialog(null, "にて処理しました。");
+    }
+
+    @FXML
+    private void retakeButtonAction(ActionEvent event) {
+        // 未公開での複写してのやりなおし。全面改訂の場合は手動削除してから。
+        // idを引き継ぐ。divDateTimeは新規取得する。
+        // 自動的に他のdivDateTimeは閉鎖される。
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "id= divDateTime= を閉鎖して改造制作しますか。");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> System.out.println("処理中"));
+        JOptionPane.showMessageDialog(null, "にて処理しました。");
+
+    }
+
+    @FXML
     private void clearButtonAction(ActionEvent event) {
-        clearAllProperty();
+        clearIdAndDivDateTime();
 
     }
 
@@ -220,17 +253,17 @@ public class FXMLTabPageProcessController implements Initializable {
                         + this.textFieldId.getText()
                         + "-"
                         + this.comboBoxDivTime.getEditor().getText(),
-                         Boolean.FALSE);
+                        Boolean.FALSE);
                 JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
                 if (Desktop.isDesktopSupported()) {
                     new Thread(() -> {
                         try {
                             System.out.println("tyr open file");
                             File file = new File(SystemPropertiesItem.SHIP_BASE
-                        + FILE_SEPARATOR
-                        + this.textFieldId.getText()
-                        + "-"
-                        + this.comboBoxDivTime.getEditor().getText()+".pdf");
+                                    + FILE_SEPARATOR
+                                    + this.textFieldId.getText()
+                                    + "-"
+                                    + this.comboBoxDivTime.getEditor().getText() + ".pdf");
                             Desktop.getDesktop().open(file);
                             System.out.println("opend file");
                         } catch (IOException e) {

@@ -24,13 +24,15 @@
                         <TextField fx:id="textFieldArtifactsId" layoutX="86.0" layoutY="133.0" prefHeight="28.0" prefWidth="317.0" />
                         <TextArea fx:id="textAreaDivName" layoutX="86.0" layoutY="177.0" prefHeight="82.0" prefWidth="491.0" />
                         <TextArea fx:id="textAreaComment" layoutX="86.0" layoutY="273.0" prefHeight="146.0" prefWidth="492.0" />
-                        <Button fx:id="buttonFork" layoutX="514.0" layoutY="67.0" mnemonicParsing="false" text="FORK" />            
-                        <Label fx:id="shipTitle" layoutX="493.0" layoutY="97.0" prefHeight="18.0" prefWidth="87.0" text="PreDivision" />
-                        <Label fx:id="subTitle" layoutX="438.0" layoutY="138.0" prefHeight="18.0" prefWidth="68.0" text="Artifacts" />
-                        <Button fx:id="buttonNewArtifacts" layoutX="517.0" layoutY="133.0" mnemonicParsing="false" text="N/A" />
+                        <Button fx:id="buttonFork" layoutX="18.0" layoutY="177.0" mnemonicParsing="false" text="Fork" />            
+                        <Label fx:id="shipTitle" layoutX="10.0" layoutY="97.0" prefHeight="18.0" prefWidth="87.0" text="PreDivision" />
+                        <Label fx:id="subTitle" layoutX="10.0" layoutY="138.0" prefHeight="18.0" prefWidth="68.0" text="Artifacts" />
+                        <Button fx:id="buttonNewArtifacts" layoutX="417.0" layoutY="133.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="138.0" text="New Artifacts" />
                         <Button fx:id="buttonEnter" layoutX="517.0" layoutY="419.0" mnemonicParsing="false" onAction="#enterButtonAction" text="ENTER" />
-                        <Button fx:id="testButton" layoutX="510.0" layoutY="30.0" mnemonicParsing="false" onAction="#testButtonAction" text="test" />
+                        <Button fx:id="testButton" layoutX="429.0" layoutY="419.0" mnemonicParsing="false" onAction="#testButtonAction" text="test" />
                   <ChoiceBox layoutX="245.0" layoutY="433.0" prefWidth="150.0" />
+                  <Button fx:id="buttonDuplicate" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" onAction="#duplicateButtonAction" text="複製" />
+                  <Button fx:id="buttonRetake" layoutX="486.0" layoutY="53.0" mnemonicParsing="false" onAction="#retakeButtonAction" text="改造" />
                     </children>
                 </AnchorPane>
             </content>
