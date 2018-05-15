@@ -28,23 +28,31 @@ public class FileIO {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-    public static void createFullSet(String id, String divDateTime, List<String> text) {
-        // SHIP_BASEが正しいかどうかは分からない。！！！
+    public static void createFullSet(
+            String id,
+            String divDateTime,
+            Boolean isExsistId, // idが存在することが前提となっている場合true
+            Boolean isExsistDivDateTime, // DivDateTimeが存在することが前提となっている場合true
+            List<String> text) {
+        // 用途的にSHIP_BASEが正しいかどうかは分からない。
         // これから定数名を整理する必要がある。
         String idPath = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + id;
         File idPathFile = new File(idPath);
         File divDateTimeFile = new File(idPath + FILE_SEPARATOR + divDateTime);
         if (idPathFile.exists()) { // Exsist すでにある
+            if (isExsistId) {
+
+            }
             // Retake or update mode.
             if (divDateTimeFile.exists()) {
                 // Update mode.
-            }else{
+            } else {
                 // Retake mode.
             }
         } else {
             // New id mode.
-            makeUnderDirNamed(SystemPropertiesItem.SHIP_BASE,id);
-            
+            //makeUnderDirNamed(id,SystemPropertiesItem.SHIP_BASE);
+
         }
     }
 
@@ -76,30 +84,33 @@ public class FileIO {
         }
     }
 
-    public static String makeUnderDirNamed(String name, String parentPath) {
-        if (parentPath.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "検査エラー" + name + "を作成する親ディレクトリ<" + parentPath + ">が見つかりません。");
-            return null;
-        } else {
-            String createdDir = parentPath + System.getProperty("file.separator") + name;
-            System.out.println(createdDir);
-            Path targetPaths = Paths.get(createdDir);
-            try {
-                Files.createDirectory(targetPaths);
-            } catch (NoSuchFileException ex) {
-                JOptionPane.showMessageDialog(null, "例外発生" + name + "を作成する親ディレクトリ<" + parentPath + ">が見つかりません。" + ex.toString());
-                Logger
-                        .getLogger(FileIO.class
-                                .getName()).log(Level.SEVERE, null, ex);
+    public static String makeUnderDirNamed(String parent, String child, Boolean isExistParent, Boolean isExistChild) {
+        if (new File(parent).exists()) { // 親はなければならない
+            String createdDir = parent + System.getProperty("file.separator") + child;
+            if (new File(createdDir).exists()) { // 子は在ってはならない（今後はisExistChildで汎用性をもたせる）
+                JOptionPane.showMessageDialog(null, "検査エラー" + child + "を作成する前に親ディレクトリ<" + parent + ">に見つかりました。");
                 return null;
+            } else {
+                Path targetPaths = Paths.get(createdDir);
+                try {
+                    Files.createDirectory(targetPaths);
+                } catch (NoSuchFileException ex) {
+                    JOptionPane.showMessageDialog(null, "例外発生" + child + "か作成する親ディレクトリ<" + parent + ">に障害があります。" + ex.toString());
+                    Logger.getLogger(FileIO.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    return null;
 
-            } catch (IOException ex) {
-                Logger.getLogger(FileIO.class
-                        .getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "例外発生 " + ex.toString());
-                return null;
+                } catch (IOException ex) {
+                    Logger.getLogger(FileIO.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "例外発生 " + ex.toString());
+                    return null;
+                }
+                return createdDir;
             }
-            return createdDir;
+        } else {
+            JOptionPane.showMessageDialog(null, "検査エラー" + child + "を作成する親ディレクトリ<" + parent + ">が見つかりません。");
+            return null;
         }
     }
 
