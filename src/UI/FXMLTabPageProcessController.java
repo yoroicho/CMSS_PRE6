@@ -69,6 +69,8 @@ public class FXMLTabPageProcessController implements Initializable {
     private long tempId;
     private long tempDivTime;
 
+    private boolean isExsistDivDateTimeChanging;
+
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
     private enum State {
@@ -101,9 +103,11 @@ public class FXMLTabPageProcessController implements Initializable {
         this.comboBoxDivTime.getEditor().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                clearAllProperty();
+                // clearAllProperty();
                 System.out.println("Change");
+                isExsistDivDateTimeChanging = false;
                 //System.out.println("ov"+ov);
+                /*
                 System.out.println("t" + t);
                 System.out.println("t1" + t1);
                 ProcessDTO processDTO = (comboBoxDivTime
@@ -112,9 +116,21 @@ public class FXMLTabPageProcessController implements Initializable {
                         .filter(pri -> String.valueOf(pri.getDivtime()).equals(t1)))
                         .findFirst()
                         .get();
+                 */
+                comboBoxDivTime
+                        .getItems()
+                        .stream()
+                        .filter(pri -> String.valueOf(pri.getDivtime()).equals(t1))
+                        .findFirst()
+                        .ifPresent(s -> {
+                            textAreaDivName.setText(s.getDivname());
+                            textAreaComment.setText(s.getComment());
+                            isExsistDivDateTimeChanging = true;
+                        });
+                /*
                 textAreaDivName.setText(processDTO.getDivname());
                 textAreaComment.setText(processDTO.getComment());
-
+                 */
             }
         });
     }
@@ -140,6 +156,7 @@ public class FXMLTabPageProcessController implements Initializable {
 
                         } else {                       // 存在する。
                             textFieldId.setDisable(true);
+                            isExsistDivDateTimeChanging = false; // DivDateTimeで選択されるまでは存在せず。
                             //textFieldId.setEditable(false);
                             tempId = Long.parseLong(textFieldId.getText());
                             // コンボボックスをクリアしてから入れ込み。
@@ -155,6 +172,27 @@ public class FXMLTabPageProcessController implements Initializable {
                     ////////textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
                     System.out.println("Textfield out focus");
                 }
+            }
+        });
+
+        this.comboBoxDivTime.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                if (newPropertyValue) {
+                    System.out.println("DivDateTime on focus");
+                } else {
+                    System.out.println("DivDateTime out focus");
+                    // 値が入っていてDBに無い場合はエラーで抜ける。
+                    if (isExsistDivDateTimeChanging) {
+                        comboBoxDivTime.setDisable(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "対象が見つかりません。"
+                                + "内部階層での新規作成となります。");
+                        comboBoxDivTime.getEditor().clear();
+                        clearAllProperty(); // 改造ではなく新規なのでクリアとする。
+                    }
+                }
+
             }
         });
     }
@@ -241,7 +279,8 @@ public class FXMLTabPageProcessController implements Initializable {
                 comboBoxDivTime.setDisable(true);
 
                 StructSheet structSheet = new StructSheet();
-                structSheet.creatSlip(this.textAreaDivName.getText(),
+                structSheet.creatSlip(
+                        this.textAreaDivName.getText(),
                         "cutDateTime",
                         "compData",
                         "makerName",
