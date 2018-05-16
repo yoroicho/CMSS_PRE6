@@ -9,7 +9,7 @@ import common.TimestampUtil;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-
+import java.util.Date;
 
 /**
  *
@@ -28,6 +28,7 @@ public class ProcessDTO {
     private Timestamp predivtime;
     private String artifactsId;
     private Timestamp closedatetime;
+    private Timestamp ETD;
 
     /**
      * @return the id
@@ -42,8 +43,6 @@ public class ProcessDTO {
     public void setId(long id) {
         this.id = id;
     }
-
-
 
     /**
      * @return the divname
@@ -115,7 +114,7 @@ public class ProcessDTO {
         this.artifactsId = artifactsId;
     }
 
-        @Override
+    @Override
     public String toString() {
         return (String.valueOf(getDivtime()));
     }
@@ -148,6 +147,19 @@ public class ProcessDTO {
         this.closedatetime = closedatetime;
     }
 
+    /**
+     * @return the ETD
+     */
+    public Timestamp getETD() {
+        return ETD;
+    }
+
+    /**
+     * @param ETD the ETD to set
+     */
+    public void setETD(Timestamp ETD) {
+        this.ETD = ETD;
+    }
 
 
 

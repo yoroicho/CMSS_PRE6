@@ -17,7 +17,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="477.0" prefWidth="719.0">
                     <children>
                   <Button fx:id="buttonClera" layoutX="14.0" layoutY="53.0" mnemonicParsing="false" onAction="#clearButtonAction" text="CLEAR" />
-                  <DatePicker layoutX="86.0" layoutY="435.0" />
+                  <DatePicker fx:id="DatePickerETD" layoutX="86.0" layoutY="435.0" />
                         <TextField fx:id="textFieldId" layoutX="86.0" layoutY="14.0" prefHeight="28.0" prefWidth="385.0" />
                         <ComboBox fx:id="comboBoxDivTime" editable="true" layoutX="86.0" layoutY="53.0" prefHeight="28.0" prefWidth="386.0" />
                         <TextField fx:id="textFieldPreDivTime" layoutX="86.0" layoutY="92.0" prefHeight="28.0" prefWidth="387.0" />

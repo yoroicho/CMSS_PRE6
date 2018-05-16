@@ -201,7 +201,7 @@ public class ProcessDAO implements IDAO {
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO process values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "REPLACE INTO process values (?,?,?,?,?,?,?,?);";
+        String sql = "REPLACE INTO process values (?,?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -215,6 +215,7 @@ public class ProcessDAO implements IDAO {
             statement.setTimestamp(6, processDTO.getPredivtime());
             statement.setString(7, processDTO.getArtifactsId());
             statement.setTimestamp(8, processDTO.getClosedatetime());
+            statement.setTimestamp(9,processDTO.getETD());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {

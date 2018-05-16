@@ -21,7 +21,9 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -36,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -59,9 +62,11 @@ public class FXMLTabPageProcessController implements Initializable {
     private TextArea textAreaDivName;
     @FXML
     private TextArea textAreaComment;
+    @FXML
+    private DatePicker datePickerETD;
+
     //@FXML
     //private Button buttonClear;
-
     @FXML
     AnchorPane anchorPaneTabPageProcess;
 
@@ -128,6 +133,7 @@ public class FXMLTabPageProcessController implements Initializable {
                         .ifPresent(s -> {
                             textAreaDivName.setText(s.getDivname());
                             textAreaComment.setText(s.getComment());
+                            datePickerETD.getEditor().setText((s.getETD()).toString());
                             isExistDivDateTimeChanging = true;
                         });
                 /*
@@ -270,7 +276,17 @@ public class FXMLTabPageProcessController implements Initializable {
         }
         processDTO.setDivname(textAreaDivName.getText());
         processDTO.setComment(this.textAreaComment.getText());
-        // ... ここでDTOにすべての要素を登録をする
+        SimpleDateFormat dateFormatETD = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            System.out.println(dateFormatETD.parse(datePickerETD.getEditor().getText()+" 00:00:00"));
+            //processDTO.setETD(Timestamp.valueOf(datePickerETD.getEditor().getText()));
+//processDTO.setETD(Timestamp.valueOf("2018-05-16 00:00:00"));
+        } catch (ParseException ex) {
+            Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+
+// ... ここでDTOにすべての要素を登録をする
 
         String parentDirString // 親のフルパス
                 = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + String.valueOf(processDTO.getId());
@@ -324,7 +340,7 @@ public class FXMLTabPageProcessController implements Initializable {
                                     + FILE_SEPARATOR
                                     + String.valueOf(processDTO.getId())
                                     + "-"
-                                    + String.valueOf(processDTO.getDivtime())+ ".pdf");
+                                    + String.valueOf(processDTO.getDivtime()) + ".pdf");
                             Desktop.getDesktop().open(file);
                             System.out.println("opend file");
                         } catch (IOException e) {
