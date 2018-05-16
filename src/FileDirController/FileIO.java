@@ -84,12 +84,12 @@ public class FileIO {
         }
     }
 
-    public static String makeUnderDirNamed(String parent, String child, Boolean isExistParent, Boolean isExistChild) {
+    public static Boolean makeUnderDirNamed(String parent, String child) {
         if (new File(parent).exists()) { // 親はなければならない
             String createdDir = parent + System.getProperty("file.separator") + child;
-            if (new File(createdDir).exists()) { // 子は在ってはならない（今後はisExistChildで汎用性をもたせる）
+            if (new File(createdDir).exists()) { // 子は在ってはならない（上書きは行わない）
                 JOptionPane.showMessageDialog(null, "検査エラー" + child + "を作成する前に親ディレクトリ<" + parent + ">に見つかりました。");
-                return null;
+                return false;
             } else {
                 Path targetPaths = Paths.get(createdDir);
                 try {
@@ -98,19 +98,18 @@ public class FileIO {
                     JOptionPane.showMessageDialog(null, "例外発生" + child + "か作成する親ディレクトリ<" + parent + ">に障害があります。" + ex.toString());
                     Logger.getLogger(FileIO.class
                             .getName()).log(Level.SEVERE, null, ex);
-                    return null;
-
+                    return false;
                 } catch (IOException ex) {
                     Logger.getLogger(FileIO.class
                             .getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(null, "例外発生 " + ex.toString());
-                    return null;
+                    return false;
                 }
-                return createdDir;
+                return true;
             }
         } else {
             JOptionPane.showMessageDialog(null, "検査エラー" + child + "を作成する親ディレクトリ<" + parent + ">が見つかりません。");
-            return null;
+            return false;
         }
     }
 

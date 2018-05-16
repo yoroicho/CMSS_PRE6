@@ -83,10 +83,10 @@ public class StructSheet {
         String fileFullDir
                 = 
                 fileDir +
-                //+ FILE_SEPARATOR +
-                //id +
-                //"-" +
-                //divDateTime +
+                FILE_SEPARATOR +
+                id +
+                "-" +
+                divDateTime +
                 ".pdf";
         try {
             // step 1

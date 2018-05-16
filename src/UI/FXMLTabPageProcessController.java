@@ -8,6 +8,7 @@ package UI;
 import DB.DatabaseUty;
 import DB.ProcessDAO;
 import DB.ProcessDTO;
+import FileDirController.FileIO;
 import Slip.StructSheet;
 import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesAcc;
@@ -69,7 +70,9 @@ public class FXMLTabPageProcessController implements Initializable {
     private long tempId;
     private long tempDivTime;
 
-    private boolean isExsistDivDateTimeChanging;
+    private boolean isExistDivDateTimeChanging;
+
+    private boolean isNewIdMode = false; // 親フォルダを作る必要があるモードの宣言
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
@@ -105,7 +108,7 @@ public class FXMLTabPageProcessController implements Initializable {
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
                 // clearAllProperty();
                 System.out.println("Change");
-                isExsistDivDateTimeChanging = false;
+                isExistDivDateTimeChanging = false;
                 //System.out.println("ov"+ov);
                 /*
                 System.out.println("t" + t);
@@ -125,7 +128,7 @@ public class FXMLTabPageProcessController implements Initializable {
                         .ifPresent(s -> {
                             textAreaDivName.setText(s.getDivname());
                             textAreaComment.setText(s.getComment());
-                            isExsistDivDateTimeChanging = true;
+                            isExistDivDateTimeChanging = true;
                         });
                 /*
                 textAreaDivName.setText(processDTO.getDivname());
@@ -156,7 +159,7 @@ public class FXMLTabPageProcessController implements Initializable {
 
                         } else {                       // 存在する。
                             textFieldId.setDisable(true);
-                            isExsistDivDateTimeChanging = false; // DivDateTimeで選択されるまでは存在せず。
+                            isExistDivDateTimeChanging = false; // DivDateTimeで選択されるまでは存在せず。
                             //textFieldId.setEditable(false);
                             tempId = Long.parseLong(textFieldId.getText());
                             // コンボボックスをクリアしてから入れ込み。
@@ -183,7 +186,7 @@ public class FXMLTabPageProcessController implements Initializable {
                 } else {
                     System.out.println("DivDateTime out focus");
                     // 値が入っていてDBに無い場合はエラーで抜ける。
-                    if (isExsistDivDateTimeChanging) {
+                    if (isExistDivDateTimeChanging) {
                         comboBoxDivTime.setDisable(true);
                     } else {
                         JOptionPane.showMessageDialog(null, "対象が見つかりません。"
@@ -250,6 +253,7 @@ public class FXMLTabPageProcessController implements Initializable {
             processDTO.setId(Long.parseLong(textFieldId.getText()));
         } else {
             tempId = Instant.now().getEpochSecond();
+            isNewIdMode = true; // 親フォルダから新規作成する必要がある事にする。
             processDTO.setId(tempId);
         }
         System.out.println("getPromptText "
@@ -265,6 +269,23 @@ public class FXMLTabPageProcessController implements Initializable {
             processDTO.setDivtime(tempDivTime);
         }
         processDTO.setDivname(textAreaDivName.getText());
+        processDTO.setComment(this.textAreaComment.getText());
+        // ... ここでDTOにすべての要素を登録をする
+
+        String parentDirString // 親のフルパス
+                = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + String.valueOf(processDTO.getId());
+        // 親がないことになっていれば親を作る。
+        if (isNewIdMode) {
+            FileIO.makeUnderDirNamed(
+                    SystemPropertiesItem.SHIP_BASE,
+                    String.valueOf(processDTO.getId())
+            );
+            isNewIdMode = false; // この段階でリセットすべきか疑問は残る。
+        }
+        // 親があるはずなので子を作る。
+        FileIO.makeUnderDirNamed(parentDirString,
+                String.valueOf(processDTO.getDivtime()));
+
 //if(comboBoxDivTime.getSelectionModel().getSelectedItem().getDivtime())
         if (ProcessDAO.create(processDTO)) {
             try {
@@ -279,7 +300,7 @@ public class FXMLTabPageProcessController implements Initializable {
                 comboBoxDivTime.setDisable(true);
 
                 StructSheet structSheet = new StructSheet();
-                structSheet.creatSlip(
+                structSheet.creatSlip( // ここはDTOを渡すよう改善するべき
                         this.textAreaDivName.getText(),
                         "cutDateTime",
                         "compData",
@@ -287,22 +308,23 @@ public class FXMLTabPageProcessController implements Initializable {
                         this.textAreaComment.getText(),
                         this.textFieldId.getText(),
                         this.comboBoxDivTime.getEditor().getText(),
-                        SystemPropertiesItem.SHIP_BASE
+                        parentDirString
                         + FILE_SEPARATOR
-                        + this.textFieldId.getText()
-                        + "-"
-                        + this.comboBoxDivTime.getEditor().getText(),
+                        + String.valueOf(processDTO.getDivtime()),
                         Boolean.FALSE);
                 JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
                 if (Desktop.isDesktopSupported()) {
                     new Thread(() -> {
                         try {
                             System.out.println("tyr open file");
-                            File file = new File(SystemPropertiesItem.SHIP_BASE
+                            File file = new File(
+                                    parentDirString
                                     + FILE_SEPARATOR
-                                    + this.textFieldId.getText()
+                                    + String.valueOf(processDTO.getDivtime())
+                                    + FILE_SEPARATOR
+                                    + String.valueOf(processDTO.getId())
                                     + "-"
-                                    + this.comboBoxDivTime.getEditor().getText() + ".pdf");
+                                    + String.valueOf(processDTO.getDivtime())+ ".pdf");
                             Desktop.getDesktop().open(file);
                             System.out.println("opend file");
                         } catch (IOException e) {
