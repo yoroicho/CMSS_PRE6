@@ -87,6 +87,7 @@ public class ProcessDAO implements IDAO {
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
                     dto.setArtifactsId(result.getString("artifactsid"));
+                    dto.setEtd(result.getDate("etd"));
                     // インスタンスをListに格納
                     processDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -135,6 +136,7 @@ public class ProcessDAO implements IDAO {
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
                     dto.setArtifactsId(result.getString("artifactsid"));
+                    dto.setEtd(result.getDate("etd"));
                     // ???????List???
                     processDTO.add(dto);
                     // while????????????
@@ -180,6 +182,7 @@ public class ProcessDAO implements IDAO {
                     dto.setComment(result.getString("comment"));
                     dto.setPredivtime(result.getTimestamp("predivtime"));
                     dto.setArtifactsId(result.getString("artifactsid"));
+                    dto.setEtd(result.getDate("etd"));
                     // インスタンスをListに格納
                     processDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -215,7 +218,7 @@ public class ProcessDAO implements IDAO {
             statement.setTimestamp(6, processDTO.getPredivtime());
             statement.setString(7, processDTO.getArtifactsId());
             statement.setTimestamp(8, processDTO.getClosedatetime());
-            statement.setTimestamp(9,processDTO.getETD());
+            statement.setDate(9,processDTO.getEtd());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {

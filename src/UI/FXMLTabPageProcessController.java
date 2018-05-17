@@ -18,6 +18,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -25,6 +26,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -61,15 +63,24 @@ public class FXMLTabPageProcessController implements Initializable {
     @FXML
     private TextArea textAreaDivName;
     @FXML
+    private TextArea textAreaDivSubName;
+    @FXML
     private TextArea textAreaComment;
     @FXML
-    private DatePicker datePickerETD;
+    private DatePicker //<editor-fold defaultstate="collapsed" desc="comment">
+            datePickerETD
+//</editor-fold>
+;
 
     //@FXML
     //private Button buttonClear;
     @FXML
     AnchorPane anchorPaneTabPageProcess;
 
+    
+    //FXMLBaseDocumentController fXMLBaseDocumentController;
+    
+    
     private State state;
 
     private long tempId;
@@ -99,7 +110,7 @@ public class FXMLTabPageProcessController implements Initializable {
         // textFieldId.setDisable(false);
     }
 
-    private void clearIdAndDivDateTime() {
+    protected void clearIdAndDivDateTime() { // タブが切り替わる時に外側から呼ぶので。しかし目下外側で作動しない。
         textFieldId.clear();
         comboBoxDivTime.getItems().clear();
         comboBoxDivTime.getEditor().clear();
@@ -133,7 +144,7 @@ public class FXMLTabPageProcessController implements Initializable {
                         .ifPresent(s -> {
                             textAreaDivName.setText(s.getDivname());
                             textAreaComment.setText(s.getComment());
-                            datePickerETD.getEditor().setText((s.getETD()).toString());
+                            datePickerETD.setValue(s.getEtd().toLocalDate());
                             isExistDivDateTimeChanging = true;
                         });
                 /*
@@ -164,6 +175,9 @@ public class FXMLTabPageProcessController implements Initializable {
                             textFieldId.requestFocus();
 
                         } else {                       // 存在する。
+                            // 試験的に外側Masterにも表示
+                            // だめだったfXMLBaseDocumentController.LabelCentralMassage.setText(textFieldId.getText());
+                            
                             textFieldId.setDisable(true);
                             isExistDivDateTimeChanging = false; // DivDateTimeで選択されるまでは存在せず。
                             //textFieldId.setEditable(false);
@@ -172,6 +186,7 @@ public class FXMLTabPageProcessController implements Initializable {
                             comboBoxDivTime.getItems().clear(); //
                             comboBoxDivTime.getItems().addAll(processList);
 
+                            
                         }
                     } else { // なにも入力されていなければ新規
                         //textFieldId.setText("");
@@ -276,14 +291,15 @@ public class FXMLTabPageProcessController implements Initializable {
         }
         processDTO.setDivname(textAreaDivName.getText());
         processDTO.setComment(this.textAreaComment.getText());
-        SimpleDateFormat dateFormatETD = new SimpleDateFormat("yyyy/MM/dd");
-        try {
-            System.out.println(dateFormatETD.parse(datePickerETD.getEditor().getText()+" 00:00:00"));
-            //processDTO.setETD(Timestamp.valueOf(datePickerETD.getEditor().getText()));
+        //SimpleDateFormat dateFormatETD = new SimpleDateFormat("yyyy/MM/dd");
+        
+        System.out.println(this.datePickerETD.getValue());
+        // System.out.println(dateFormatETD.parse(datePickerETD.getEditor().getText()+" 00:00:00"));
+        processDTO.setEtd(Date.valueOf(this.datePickerETD.getValue()));
+//processDTO.setEtd(Timestamp.valueOf(this.datePickerETD.getValue().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))));
+
+
 //processDTO.setETD(Timestamp.valueOf("2018-05-16 00:00:00"));
-        } catch (ParseException ex) {
-            Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
-        }
                 
 
 // ... ここでDTOにすべての要素を登録をする

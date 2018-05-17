@@ -17,22 +17,27 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="477.0" prefWidth="719.0">
                     <children>
                   <Button fx:id="buttonClera" layoutX="14.0" layoutY="53.0" mnemonicParsing="false" onAction="#clearButtonAction" text="CLEAR" />
-                  <DatePicker fx:id="DatePickerETD" layoutX="86.0" layoutY="435.0" />
                         <TextField fx:id="textFieldId" layoutX="86.0" layoutY="14.0" prefHeight="28.0" prefWidth="385.0" />
                         <ComboBox fx:id="comboBoxDivTime" editable="true" layoutX="86.0" layoutY="53.0" prefHeight="28.0" prefWidth="386.0" />
-                        <TextField fx:id="textFieldPreDivTime" layoutX="86.0" layoutY="92.0" prefHeight="28.0" prefWidth="387.0" />
+                        <TextField fx:id="textFieldPreDivTime" layoutX="86.0" layoutY="101.0" prefHeight="28.0" prefWidth="387.0" />
                         <TextField fx:id="textFieldArtifactsId" layoutX="86.0" layoutY="133.0" prefHeight="28.0" prefWidth="317.0" />
-                        <TextArea fx:id="textAreaDivName" layoutX="86.0" layoutY="177.0" prefHeight="82.0" prefWidth="491.0" />
+                        <TextArea fx:id="textAreaDivName" layoutX="86.0" layoutY="177.0" prefHeight="37.0" prefWidth="491.0" />
                         <TextArea fx:id="textAreaComment" layoutX="86.0" layoutY="273.0" prefHeight="146.0" prefWidth="492.0" />
-                        <Button fx:id="buttonFork" layoutX="18.0" layoutY="177.0" mnemonicParsing="false" text="Fork" />            
-                        <Label fx:id="shipTitle" layoutX="10.0" layoutY="97.0" prefHeight="18.0" prefWidth="87.0" text="PreDivision" />
+                        <Button fx:id="buttonFork" layoutX="22.0" layoutY="346.0" mnemonicParsing="false" text="Fork" />            
+                        <Label fx:id="shipTitle" layoutX="4.0" layoutY="106.0" prefHeight="18.0" prefWidth="87.0" text="PreDivision" />
                         <Label fx:id="subTitle" layoutX="10.0" layoutY="138.0" prefHeight="18.0" prefWidth="68.0" text="Artifacts" />
                         <Button fx:id="buttonNewArtifacts" layoutX="417.0" layoutY="133.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="138.0" text="New Artifacts" />
                         <Button fx:id="buttonEnter" layoutX="517.0" layoutY="419.0" mnemonicParsing="false" onAction="#enterButtonAction" text="ENTER" />
                         <Button fx:id="testButton" layoutX="429.0" layoutY="419.0" mnemonicParsing="false" onAction="#testButtonAction" text="test" />
                   <ChoiceBox layoutX="245.0" layoutY="433.0" prefWidth="150.0" />
-                  <Button fx:id="buttonDuplicate" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" onAction="#duplicateButtonAction" text="複製" />
-                  <Button fx:id="buttonRetake" layoutX="486.0" layoutY="53.0" mnemonicParsing="false" onAction="#retakeButtonAction" text="改造" />
+                  <Button fx:id="buttonDuplicate" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" onAction="#duplicateButtonAction" text="複製／株分" />
+                  <Button fx:id="buttonRetake" layoutX="486.0" layoutY="53.0" mnemonicParsing="false" onAction="#retakeButtonAction" text="改造／改版" />
+                  <DatePicker fx:id="datePickerETD" layoutX="86.0" layoutY="433.0" />
+                  <TextArea fx:id="textAreaDivSubName" layoutX="86.0" layoutY="222.0" prefHeight="44.0" prefWidth="490.0" />
+                  <Label layoutX="14.0" layoutY="177.0" text="Title" />
+                  <Label layoutX="14.0" layoutY="222.0" text="Sub Title" />
+                  <Label layoutX="366.0" layoutY="82.0" text="Div=YYYに対して改造／改版された。" />
+                  <Label layoutX="91.0" layoutY="82.0" text="本プロセスはid=XXXを元に複製／株分された" />
                     </children>
                 </AnchorPane>
             </content>
