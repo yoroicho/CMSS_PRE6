@@ -46,6 +46,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
+import test.IOLib;
 
 /**
  * FXML Controller class
@@ -68,20 +69,16 @@ public class FXMLTabPageProcessController implements Initializable {
     private TextArea textAreaComment;
     @FXML
     private DatePicker //<editor-fold defaultstate="collapsed" desc="comment">
-            datePickerETD
-//</editor-fold>
-;
+            datePickerETD //</editor-fold>
+            ;
 
     //@FXML
     //private Button buttonClear;
     //@FXML
     //AnchorPane anchorPaneTabPageProcess;
-
-    
     @FXML
     private FXMLBaseDocumentController FXMLBaseDocumentController;
-    
-    
+
     private State state;
 
     private long tempId;
@@ -93,32 +90,34 @@ public class FXMLTabPageProcessController implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-    protected void testCase(String txt){
-        System.out.println("代入指示"+txt);
+    protected void testCase(String txt) {
+        System.out.println("代入指示" + txt);
     }
-    
-    
+
+    private void setTempIdAndDivTimeByUniqueTime() {
+        // idとDivDateTimeの番号が絶対に重ならないように設定する処理
+        long dt;
+        tempId = Instant.now().getEpochSecond();
+        dt = Instant.now().getEpochSecond();
+        if (tempId == dt) {
+            tempDivTime = ++dt; // 二回idをスキャンしてもデータに行当たってしまうのを防止。
+        } else {
+            tempDivTime = dt;
+        }
+    }
+
     private enum State {
         // 下記は確定でない。
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
     }
 
-    
     private void clearAllProperty() {
-        //comboBoxDivTime.setDisable(true);
-        //textFieldId.setEditable(false);
-
         textAreaDivName.clear();
         textAreaComment.clear();
-
-        //comboBoxDivTime.setDisable(false);
-        //textFieldId.requestFocus();
-        //textFieldId.setEditable(true);
-        // textFieldId.setDisable(false);
     }
 
     @FXML
-    protected void clearIdAndDivDateTime() { // タブが切り替わる時に外側から呼ぶので。しかし目下外側で作動しない。
+    protected void clearIdAndDivDateTime() { // タブが切り替わる時にも外側からも呼ばれる。
         textFieldId.clear();
         comboBoxDivTime.getItems().clear();
         comboBoxDivTime.getEditor().clear();
@@ -133,17 +132,6 @@ public class FXMLTabPageProcessController implements Initializable {
                 // clearAllProperty();
                 System.out.println("Change");
                 isExistDivDateTimeChanging = false;
-                //System.out.println("ov"+ov);
-                /*
-                System.out.println("t" + t);
-                System.out.println("t1" + t1);
-                ProcessDTO processDTO = (comboBoxDivTime
-                        .getItems()
-                        .stream()
-                        .filter(pri -> String.valueOf(pri.getDivtime()).equals(t1)))
-                        .findFirst()
-                        .get();
-                 */
                 comboBoxDivTime
                         .getItems()
                         .stream()
@@ -155,10 +143,6 @@ public class FXMLTabPageProcessController implements Initializable {
                             datePickerETD.setValue(s.getEtd().toLocalDate());
                             isExistDivDateTimeChanging = true;
                         });
-                /*
-                textAreaDivName.setText(processDTO.getDivname());
-                textAreaComment.setText(processDTO.getComment());
-                 */
             }
         });
     }
@@ -179,14 +163,10 @@ public class FXMLTabPageProcessController implements Initializable {
                                 Long.parseLong(textFieldId.getText()));
                         if (processList.isEmpty()) { // 存在しない。
                             System.out.println("ID ERROR");
-
                             textFieldId.requestFocus();
-
                         } else {                       // 存在する。
                             // 試験的に外側Masterにも表示
-                           FXMLBaseDocumentController.getTextFieldBaseMasterId().setText(textFieldId.getText());
-                            // だめだったfXMLBaseDocumentController.LabelCentralMassage.setText(textFieldId.getText());
-                            
+                            FXMLBaseDocumentController.getTextFieldBaseMasterId().setText(textFieldId.getText());
                             textFieldId.setDisable(true);
                             isExistDivDateTimeChanging = false; // DivDateTimeで選択されるまでは存在せず。
                             //textFieldId.setEditable(false);
@@ -194,13 +174,10 @@ public class FXMLTabPageProcessController implements Initializable {
                             // コンボボックスをクリアしてから入れ込み。
                             comboBoxDivTime.getItems().clear(); //
                             comboBoxDivTime.getItems().addAll(processList);
-
-                            
                         }
                     } else { // なにも入力されていなければ新規
                         //textFieldId.setText("");
                         System.out.println("New process and new divison. ");
-
                     }
                     ////////textFieldId.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
                     System.out.println("Textfield out focus");
@@ -225,7 +202,6 @@ public class FXMLTabPageProcessController implements Initializable {
                         clearAllProperty(); // 改造ではなく新規なのでクリアとする。
                     }
                 }
-
             }
         });
     }
@@ -235,9 +211,7 @@ public class FXMLTabPageProcessController implements Initializable {
         List<ProcessDTO> findAll = ProcessDAO.findAll();
         findAll.forEach(s -> System.out.println(s.getId() + ":" + String.valueOf(s.getDivtime())));
         String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
-
         System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
-
     }
 
     @FXML
@@ -247,7 +221,49 @@ public class FXMLTabPageProcessController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "id= divDateTime= を引き継ぎ複製制作しますか。");
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> System.out.println("処理中"));
+                .ifPresent(response -> {
+                    System.out.println("複製／株分処理中");
+                    // 新規に親と子の番号をセット
+                    setTempIdAndDivTimeByUniqueTime();
+                    /*
+                    // まず収納すべき親を作る。
+                    FileIO.makeUnderDirNamed(
+                            SystemPropertiesItem.SHIP_BASE,
+                            String.valueOf(tempId)
+                    );
+                    // 次に新しく作った親に子をコピー。
+                    String NewParentDirString // 新しい親のフルパス
+                            = SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + String.valueOf(tempId);
+                    String OldChildDirString // 元の子のフルパス
+                            = SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + this.textFieldId.getText()
+                            + FILE_SEPARATOR
+                            + this.comboBoxDivTime.getEditor().getText();
+                    System.out.println("oldChild"+ OldChildDirString);
+                    System.out.println("NewParent"+ NewParentDirString);
+                    IOLib.copy(
+                            OldChildDirString,
+                            NewParentDirString);
+                    コピーとリネームが同時にできるのでこの機能を利用する。
+                    */
+                    IOLib.copy(
+                            SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + String.valueOf(this.textFieldId.getText()),
+                            SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + String.valueOf(tempId));
+                    
+                    // コピー後に子の名前を変更
+                    // 新しい子のPDFファイルを削除
+                    // 新しい親子の中でコピーしないファイルを削除（ただし事故に注意）
+                    // 新しくなった旨を加えて新しいPDFを作成
+                    
+                    
+                });
         JOptionPane.showMessageDialog(null, "にて処理しました。");
     }
 
@@ -267,17 +283,10 @@ public class FXMLTabPageProcessController implements Initializable {
     @FXML
     private void clearButtonAction(ActionEvent event) {
         clearIdAndDivDateTime();
-
     }
 
     @FXML
     private void enterButtonAction(ActionEvent event) {
-        /*List<ProcessDTO> findAll = ProcessDAO.findAll();
-        findAll.forEach(s -> System.out.println(s.getId() + ":" + (s.getDivtime()).toString()));
-        String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
-
-        System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
-         */
         ProcessDTO processDTO = new ProcessDTO();
         if (textFieldId.getText().length() > 0) {
             processDTO.setId(Long.parseLong(textFieldId.getText()));
@@ -301,18 +310,14 @@ public class FXMLTabPageProcessController implements Initializable {
         processDTO.setDivname(textAreaDivName.getText());
         processDTO.setComment(this.textAreaComment.getText());
         //SimpleDateFormat dateFormatETD = new SimpleDateFormat("yyyy/MM/dd");
-        
+
         System.out.println(this.datePickerETD.getValue());
         // System.out.println(dateFormatETD.parse(datePickerETD.getEditor().getText()+" 00:00:00"));
         processDTO.setEtd(Date.valueOf(this.datePickerETD.getValue()));
 //processDTO.setEtd(Timestamp.valueOf(this.datePickerETD.getValue().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))));
 
-
 //processDTO.setETD(Timestamp.valueOf("2018-05-16 00:00:00"));
-                
-
 // ... ここでDTOにすべての要素を登録をする
-
         String parentDirString // 親のフルパス
                 = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + String.valueOf(processDTO.getId());
         // 親がないことになっていれば親を作る。
