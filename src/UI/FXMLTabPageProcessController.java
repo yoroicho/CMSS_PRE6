@@ -74,11 +74,12 @@ public class FXMLTabPageProcessController implements Initializable {
 
     //@FXML
     //private Button buttonClear;
-    @FXML
-    AnchorPane anchorPaneTabPageProcess;
+    //@FXML
+    //AnchorPane anchorPaneTabPageProcess;
 
     
-    //FXMLBaseDocumentController fXMLBaseDocumentController;
+    @FXML
+    private FXMLBaseDocumentController FXMLBaseDocumentController;
     
     
     private State state;
@@ -92,11 +93,17 @@ public class FXMLTabPageProcessController implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
+    protected void testCase(String txt){
+        System.out.println("代入指示"+txt);
+    }
+    
+    
     private enum State {
         // 下記は確定でない。
         NEW_CREATE, DIV_FORK, UPDATE_RECORD, PEEK, DELETE
     }
 
+    
     private void clearAllProperty() {
         //comboBoxDivTime.setDisable(true);
         //textFieldId.setEditable(false);
@@ -110,6 +117,7 @@ public class FXMLTabPageProcessController implements Initializable {
         // textFieldId.setDisable(false);
     }
 
+    @FXML
     protected void clearIdAndDivDateTime() { // タブが切り替わる時に外側から呼ぶので。しかし目下外側で作動しない。
         textFieldId.clear();
         comboBoxDivTime.getItems().clear();
@@ -176,6 +184,7 @@ public class FXMLTabPageProcessController implements Initializable {
 
                         } else {                       // 存在する。
                             // 試験的に外側Masterにも表示
+                           FXMLBaseDocumentController.getTextFieldBaseMasterId().setText(textFieldId.getText());
                             // だめだったfXMLBaseDocumentController.LabelCentralMassage.setText(textFieldId.getText());
                             
                             textFieldId.setDisable(true);
@@ -385,6 +394,20 @@ public class FXMLTabPageProcessController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initFocuseConditionForTask(); // 主キーを保護する為にロックするイベントを登録。       
         syncroItem();
+    }
+
+    /**
+     * @return the FXMLBaseDocumentController
+     */
+    public FXMLBaseDocumentController getFXMLBaseDocumentController() {
+        return FXMLBaseDocumentController;
+    }
+
+    /**
+     * @param FXMLBaseDocumentController the FXMLBaseDocumentController to set
+     */
+    public void setFXMLBaseDocumentController(FXMLBaseDocumentController FXMLBaseDocumentController) {
+        this.FXMLBaseDocumentController = FXMLBaseDocumentController;
     }
 
 }

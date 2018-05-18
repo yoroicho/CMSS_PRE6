@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -35,24 +36,49 @@ public class FXMLBaseDocumentController implements Initializable {
     //Label LabelCentralMassage;
     
     @FXML
-    FXMLTabPageProcessController fXMLTabPageProcessController;
+    FXMLTabPageProcessController FXMLTabPageProcessController;
     //@FXML
     //private static void labelCentralMassageSetText(String value){
     //LabelCentralMassage.setText(value);
     //}
 
+    @FXML
+    private TextField textFieldBaseMasterId;
+    
+    @FXML
+    private void processTabClear(String txt){
+        //System.out.println(fXMLTabPageProcessController.toString());
+                    FXMLTabPageProcessController.testCase(txt+"代入する文字");
+                    FXMLTabPageProcessController.clearIdAndDivDateTime(); //作動しない
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        FXMLTabPageProcessController.setFXMLBaseDocumentController(this);
         // リスナーは、ChangeListener#changed(ObservableValue<? extends T> observable, T oldValue, T newValue)
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Tab> obs, Tab ot, Tab nt) -> {
             System.out.println("tab selected " + obs + "が発生。" + ot.getId() + "から" + nt.getId());
             switch (ot.getId()) {
                 case "tabProcess":
                     System.out.println("clear");
-                    // fXMLTabPageProcessController.clearIdAndDivDateTime(); 作動しない
+                    processTabClear(ot.getId());
                     break;
             }
         });
+    }
+
+    /**
+     * @return the textFieldBaseMasterId
+     */
+    public TextField getTextFieldBaseMasterId() {
+        return textFieldBaseMasterId;
+    }
+
+    /**
+     * @param textFieldBaseMasterId the textFieldBaseMasterId to set
+     */
+    public void setTextFieldBaseMasterId(TextField textFieldBaseMasterId) {
+        this.textFieldBaseMasterId = textFieldBaseMasterId;
     }
 
 }
