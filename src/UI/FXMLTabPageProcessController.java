@@ -18,6 +18,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -248,7 +251,19 @@ public class FXMLTabPageProcessController implements Initializable {
                             OldChildDirString,
                             NewParentDirString);
                     コピーとリネームが同時にできるのでこの機能を利用する。
-                    */
+                     */
+                    String newParentDirString // 新しい親のフルパス
+                            = SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + String.valueOf(tempId);
+                    String oldChildDirString // 元の子のフルパス
+                            = SystemPropertiesItem.SHIP_BASE
+                            + FILE_SEPARATOR
+                            + this.textFieldId.getText()
+                            + FILE_SEPARATOR
+                            + this.comboBoxDivTime.getEditor().getText();
+                    System.out.println("oldChild" + oldChildDirString);
+                    System.out.println("NewParent" + newParentDirString);
                     IOLib.copy(
                             SystemPropertiesItem.SHIP_BASE
                             + FILE_SEPARATOR
@@ -256,13 +271,89 @@ public class FXMLTabPageProcessController implements Initializable {
                             SystemPropertiesItem.SHIP_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(tempId));
-                    
-                    // コピー後に子の名前を変更
-                    // 新しい子のPDFファイルを削除
-                    // 新しい親子の中でコピーしないファイルを削除（ただし事故に注意）
+
+                    // コピー後に子のディレクトリの名前を変更
+                    Path oldChild = Paths.get(oldChildDirString);
+                    try {
+                        Files.move(oldChild, oldChild.resolveSibling(String.valueOf(tempDivTime)));
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    /*
+                    新しい子の古いPDFファイルの名前の末尾に「-D(Duplicated)」を追加する
+                    削除しないのはその時点での複製元情報を記録する為と事故防止。
+                     */
+                    // コピー後の子のSLIPファイルPDFの名前を変更
+                    String newChildrenDirString // 新しい子のフルパス 
+                            = newParentDirString + FILE_SEPARATOR + tempDivTime;
+                    String oldSlipString
+                            = // 古いスリップPDFの名前
+                            this.textFieldId.getText()
+                            + "-"
+                            + this.comboBoxDivTime.getEditor().getText()
+                            + ".pdf";
+                    Path oldSlipDir
+                            = Paths.get(newChildrenDirString
+                                    + FILE_SEPARATOR
+                                    + oldSlipString);
+                    try {
+                        Files.move(oldSlipDir,
+                                oldSlipDir.resolveSibling(
+                                        String.valueOf(oldSlipString + "-D")));
+
+                        /*
+                        新しい親子の中でコピーしないファイルを削除することも
+                        検討したが、大容量の共通資料などは外だしされていることなどから
+                        需要が乏しいのと、万一の事故の可能性があるので見合せる。
+                         */
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     // 新しくなった旨を加えて新しいPDFを作成
-                    
-                    
+
+                    StructSheet structSheet = new StructSheet();
+                    try {
+                        structSheet.creatSlip( // ここはDTOを渡すよう改善するべき
+                                this.textAreaDivName.getText(),
+                                "cutDateTime",
+                                "compData",
+                                "makerName",
+                                this.textAreaComment.getText(),
+                                String.valueOf(this.tempId), // 実際にはDTOを変更してDTOを渡す
+                                String.valueOf(this.tempDivTime), // 実際にDTOを変更してDTOを渡す
+                                newParentDirString
+                                + FILE_SEPARATOR
+                                + newParentDirString
+                                + FILE_SEPARATOR
+                                + this.tempDivTime,
+                                Boolean.FALSE);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RuntimeException ex) {
+                        Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    JOptionPane.showMessageDialog(null, "登録／更新が完了しました");
+                    if (Desktop.isDesktopSupported()) {
+                        new Thread(() -> {
+                            try {
+                                System.out.println("tyr open file");
+                                File file = new File(
+                                        newParentDirString
+                                        + FILE_SEPARATOR
+                                        + this.tempDivTime
+                                              + FILE_SEPARATOR
+                                                +tempId
+                                        + "-"
+                                        + this.tempDivTime+".pdf");
+                                Desktop.getDesktop().open(file);
+                                System.out.println("opend file");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }
                 });
         JOptionPane.showMessageDialog(null, "にて処理しました。");
     }
