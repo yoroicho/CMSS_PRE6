@@ -256,13 +256,22 @@ public class FXMLTabPageProcessController implements Initializable {
                             = SystemPropertiesItem.SHIP_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(tempId);
-                    String oldChildDirString // 元の子のフルパス
+                    String newChildDirString // 新しい子の名称変更前のフルパス
+                            = newParentDirString 
+                            +FILE_SEPARATOR
+                            +String.valueOf(this.comboBoxDivTime.getEditor().getText());
+                    String newChildDirNewNameDir // 新しい子の名称変更後のフルパス
+                            =newParentDirString 
+                            +FILE_SEPARATOR
+                            +String.valueOf(tempDivTime);
+                            
+                    String oldChildDirString // 元の子のフルパス 使わないかも？
                             = SystemPropertiesItem.SHIP_BASE
                             + FILE_SEPARATOR
                             + this.textFieldId.getText()
                             + FILE_SEPARATOR
                             + this.comboBoxDivTime.getEditor().getText();
-                    System.out.println("oldChild" + oldChildDirString);
+                    //System.out.println("newChild" + oldChildDirString);
                     System.out.println("NewParent" + newParentDirString);
                     IOLib.copy(
                             SystemPropertiesItem.SHIP_BASE
@@ -273,9 +282,11 @@ public class FXMLTabPageProcessController implements Initializable {
                             + String.valueOf(tempId));
 
                     // コピー後に子のディレクトリの名前を変更
-                    Path oldChild = Paths.get(oldChildDirString);
+                    Path newChild = Paths.get(newChildDirString);
+                    System.out.println("変更する予定の子フォルダ"+newChildDirString);
+                    System.out.println("変更する予定の名前"+tempDivTime);
                     try {
-                        Files.move(oldChild, oldChild.resolveSibling(String.valueOf(tempDivTime)));
+                        Files.move(newChild, newChild.resolveSibling(String.valueOf(tempDivTime)));
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -284,18 +295,16 @@ public class FXMLTabPageProcessController implements Initializable {
                     削除しないのはその時点での複製元情報を記録する為と事故防止。
                      */
                     // コピー後の子のSLIPファイルPDFの名前を変更
-                    String newChildrenDirString // 新しい子のフルパス 
-                            = newParentDirString + FILE_SEPARATOR + tempDivTime;
+                    //String newChildrenDirString // 新しい子の名称変更後のフルパス 
+                      //      = newParentDirString + FILE_SEPARATOR + tempDivTime;
                     String oldSlipString
-                            = // 古いスリップPDFの名前
+                            = // 新しいフォルダの古いスリップPDFの名前
                             this.textFieldId.getText()
                             + "-"
                             + this.comboBoxDivTime.getEditor().getText()
                             + ".pdf";
                     Path oldSlipDir
-                            = Paths.get(newChildrenDirString
-                                    + FILE_SEPARATOR
-                                    + oldSlipString);
+                            = Paths.get(newChildDirNewNameDir+FILE_SEPARATOR+oldSlipString);
                     try {
                         Files.move(oldSlipDir,
                                 oldSlipDir.resolveSibling(
