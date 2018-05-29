@@ -298,17 +298,16 @@ public class FXMLTabPageProcessController implements Initializable {
                     //String newChildrenDirString // 新しい子の名称変更後のフルパス 
                       //      = newParentDirString + FILE_SEPARATOR + tempDivTime;
                     String oldSlipString
-                            = // 新しいフォルダの古いスリップPDFの名前
+                            = // 新しいフォルダの古いスリップPDFの名前(拡張子以外)
                             this.textFieldId.getText()
                             + "-"
-                            + this.comboBoxDivTime.getEditor().getText()
-                            + ".pdf";
+                            + this.comboBoxDivTime.getEditor().getText();                            
                     Path oldSlipDir
-                            = Paths.get(newChildDirNewNameDir+FILE_SEPARATOR+oldSlipString);
+                            = Paths.get(newChildDirNewNameDir+FILE_SEPARATOR+oldSlipString+ ".pdf");
                     try {
                         Files.move(oldSlipDir,
                                 oldSlipDir.resolveSibling(
-                                        String.valueOf(oldSlipString + "-D")));
+                                        String.valueOf(oldSlipString + "-D"+ ".pdf")));
 
                         /*
                         新しい親子の中でコピーしないファイルを削除することも
@@ -364,6 +363,8 @@ public class FXMLTabPageProcessController implements Initializable {
                         }).start();
                     }
                 });
+        this.textFieldId.setText(String.valueOf(this.tempId));
+        this.comboBoxDivTime.getEditor().setText(String.valueOf(this.tempDivTime));
         JOptionPane.showMessageDialog(null, "にて処理しました。");
     }
 
@@ -499,6 +500,7 @@ public class FXMLTabPageProcessController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initFocuseConditionForTask(); // 主キーを保護する為にロックするイベントを登録。       
         syncroItem();
+        //this.textAreaDivName.textProperty().bind(this.comboBoxDivTime.getEditor().textProperty());
     }
 
     /**
