@@ -257,14 +257,14 @@ public class FXMLTabPageProcessController implements Initializable {
                             + FILE_SEPARATOR
                             + String.valueOf(tempId);
                     String newChildDirString // 新しい子の名称変更前のフルパス
-                            = newParentDirString 
-                            +FILE_SEPARATOR
-                            +String.valueOf(this.comboBoxDivTime.getEditor().getText());
+                            = newParentDirString
+                            + FILE_SEPARATOR
+                            + String.valueOf(this.comboBoxDivTime.getEditor().getText());
                     String newChildDirNewNameDir // 新しい子の名称変更後のフルパス
-                            =newParentDirString 
-                            +FILE_SEPARATOR
-                            +String.valueOf(tempDivTime);
-                            
+                            = newParentDirString
+                            + FILE_SEPARATOR
+                            + String.valueOf(tempDivTime);
+
                     String oldChildDirString // 元の子のフルパス 使わないかも？
                             = SystemPropertiesItem.SHIP_BASE
                             + FILE_SEPARATOR
@@ -283,8 +283,8 @@ public class FXMLTabPageProcessController implements Initializable {
 
                     // コピー後に子のディレクトリの名前を変更
                     Path newChild = Paths.get(newChildDirString);
-                    System.out.println("変更する予定の子フォルダ"+newChildDirString);
-                    System.out.println("変更する予定の名前"+tempDivTime);
+                    System.out.println("変更する予定の子フォルダ" + newChildDirString);
+                    System.out.println("変更する予定の名前" + tempDivTime);
                     try {
                         Files.move(newChild, newChild.resolveSibling(String.valueOf(tempDivTime)));
                     } catch (IOException ex) {
@@ -296,18 +296,18 @@ public class FXMLTabPageProcessController implements Initializable {
                      */
                     // コピー後の子のSLIPファイルPDFの名前を変更
                     //String newChildrenDirString // 新しい子の名称変更後のフルパス 
-                      //      = newParentDirString + FILE_SEPARATOR + tempDivTime;
+                    //      = newParentDirString + FILE_SEPARATOR + tempDivTime;
                     String oldSlipString
                             = // 新しいフォルダの古いスリップPDFの名前(拡張子以外)
                             this.textFieldId.getText()
                             + "-"
-                            + this.comboBoxDivTime.getEditor().getText();                            
+                            + this.comboBoxDivTime.getEditor().getText();
                     Path oldSlipDir
-                            = Paths.get(newChildDirNewNameDir+FILE_SEPARATOR+oldSlipString+ ".pdf");
+                            = Paths.get(newChildDirNewNameDir + FILE_SEPARATOR + oldSlipString + ".pdf");
                     try {
                         Files.move(oldSlipDir,
                                 oldSlipDir.resolveSibling(
-                                        String.valueOf(oldSlipString + "-D"+ ".pdf")));
+                                        String.valueOf(oldSlipString + "-D" + ".pdf")));
 
                         /*
                         新しい親子の中でコピーしないファイルを削除することも
@@ -331,10 +331,13 @@ public class FXMLTabPageProcessController implements Initializable {
                                 String.valueOf(this.tempDivTime), // 実際にDTOを変更してDTOを渡す
                                 newParentDirString
                                 + FILE_SEPARATOR
-                                + newParentDirString
-                                + FILE_SEPARATOR
                                 + this.tempDivTime,
                                 Boolean.FALSE);
+                        System.out.println("複写して新しいPDF："
+                                + FILE_SEPARATOR
+                                + newParentDirString
+                                + FILE_SEPARATOR
+                                + this.tempDivTime);
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (DocumentException ex) {
@@ -347,25 +350,43 @@ public class FXMLTabPageProcessController implements Initializable {
                         new Thread(() -> {
                             try {
                                 System.out.println("tyr open file");
+
                                 File file = new File(
                                         newParentDirString
                                         + FILE_SEPARATOR
                                         + this.tempDivTime
-                                              + FILE_SEPARATOR
-                                                +tempId
+                                        + FILE_SEPARATOR
+                                        + this.tempId
                                         + "-"
-                                        + this.tempDivTime+".pdf");
+                                        + this.tempDivTime
+                                        + ".pdf");
+                                //System.out.println("opend -D file: " + file.getPath());
+
+                                //File file = new File("/home/kyokuto/デスクトップ/pdfTest/1528156654/1528156655/1528156654-1528156655.pdf");
+                                System.out.println("設定した" + file.getPath());
                                 Desktop.getDesktop().open(file);
-                                System.out.println("opend file");
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                //JOptionPane.showMessageDialog(null, "表示処理しました。");
+                                //this.textFieldId.setText(String.valueOf(this.tempId));
+                                // this.comboBoxDivTime.getEditor().setText(String.valueOf(this.tempDivTime));
+                            } catch (IOException ex) {
+                                Logger.getLogger(FXMLTabPageProcessController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }).start();
                     }
                 });
+
+        //JOptionPane.showMessageDialog(null, "リテラルにて処理しました。");
         this.textFieldId.setText(String.valueOf(this.tempId));
         this.comboBoxDivTime.getEditor().setText(String.valueOf(this.tempDivTime));
-        JOptionPane.showMessageDialog(null, "にて処理しました。");
+        // 以下は双方向バインドさせるかメソッドに切り出すかにすべき
+        ProcessDTO processDTO = new ProcessDTO();
+        processDTO.setId(Long.parseLong(this.textFieldId.getText()));
+        processDTO.setDivtime(Long.parseLong(this.comboBoxDivTime.getEditor().getText()));
+        
+        processDTO.setDivname(this.textAreaDivName.getText());
+        processDTO.setComment(this.textAreaComment.getText());
+        processDTO.setEtd(Date.valueOf(this.datePickerETD.getValue()));     
+        System.out.println("株分けデータベース"+ProcessDAO.create(processDTO));
     }
 
     @FXML
@@ -434,7 +455,8 @@ public class FXMLTabPageProcessController implements Initializable {
                 String.valueOf(processDTO.getDivtime()));
 
 //if(comboBoxDivTime.getSelectionModel().getSelectedItem().getDivtime())
-        if (ProcessDAO.create(processDTO)) {
+        if (ProcessDAO.create(processDTO)) { 
+// データベースは最も不確実性が低いので最終処理に変更する
             try {
                 if (textFieldId.getText().length() == 0) {
                     textFieldId.setText(String.valueOf(tempId));
