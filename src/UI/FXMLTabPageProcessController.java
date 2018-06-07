@@ -129,6 +129,18 @@ public class FXMLTabPageProcessController implements Initializable {
     }
 
     private void syncroItem() {
+        comboBoxDivTime.getSelectionModel().selectedItemProperty().addListener((r, o, newValue) -> {
+//Do samting.
+// clearAllProperty();
+            System.out.println("Change");
+            isExistDivDateTimeChanging = false;
+            textAreaDivName.setText(newValue.getDivname());
+            textAreaComment.setText(newValue.getComment());
+            datePickerETD.setValue(newValue.getEtd().toLocalDate());
+            isExistDivDateTimeChanging = true;
+
+        });
+        /*
         this.comboBoxDivTime.getEditor().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
@@ -148,6 +160,8 @@ public class FXMLTabPageProcessController implements Initializable {
                         });
             }
         });
+         */
+
     }
 
     private void initFocuseConditionForTask() { // 存在確認をしてから編集不可。
@@ -382,11 +396,11 @@ public class FXMLTabPageProcessController implements Initializable {
         ProcessDTO processDTO = new ProcessDTO();
         processDTO.setId(Long.parseLong(this.textFieldId.getText()));
         processDTO.setDivtime(Long.parseLong(this.comboBoxDivTime.getEditor().getText()));
-        
+
         processDTO.setDivname(this.textAreaDivName.getText());
         processDTO.setComment(this.textAreaComment.getText());
-        processDTO.setEtd(Date.valueOf(this.datePickerETD.getValue()));     
-        System.out.println("株分けデータベース"+ProcessDAO.create(processDTO));
+        processDTO.setEtd(Date.valueOf(this.datePickerETD.getValue()));
+        System.out.println("株分けデータベース" + ProcessDAO.create(processDTO));
     }
 
     @FXML
@@ -455,7 +469,7 @@ public class FXMLTabPageProcessController implements Initializable {
                 String.valueOf(processDTO.getDivtime()));
 
 //if(comboBoxDivTime.getSelectionModel().getSelectedItem().getDivtime())
-        if (ProcessDAO.create(processDTO)) { 
+        if (ProcessDAO.create(processDTO)) {
 // データベースは最も不確実性が低いので最終処理に変更する
             try {
                 if (textFieldId.getText().length() == 0) {
@@ -522,6 +536,7 @@ public class FXMLTabPageProcessController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initFocuseConditionForTask(); // 主キーを保護する為にロックするイベントを登録。       
         syncroItem();
+        comboBoxDivTime.setEditable(false);
         //this.textAreaDivName.textProperty().bind(this.comboBoxDivTime.getEditor().textProperty());
     }
 
