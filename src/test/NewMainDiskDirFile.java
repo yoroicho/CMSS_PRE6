@@ -38,6 +38,9 @@ public class NewMainDiskDirFile {
         NewMainDiskDirFile newMainDiskDirFile = new NewMainDiskDirFile();
         System.out.println(newMainDiskDirFile.calcMD5HashForDir(new File("/home/kyokuto/デスクトップ/pdfTest"), true));
         System.out.println(newMainDiskDirFile.calcMD5HashForDir(new File("/home/kyokuto/デスクトップ/pdfTest_2"), true));
+        System.out.println("MD5 chedk = "+newMainDiskDirFile.calcMD5HashForDir(new File("/home/kyokuto/デスクトップ/pdfTest"), true)
+                .equals(newMainDiskDirFile.calcMD5HashForDir(new File("/home/kyokuto/デスクトップ/pdfTest_2"), true)));
+        /*
         try {
             List<File> pathList = findAllFile("/home/kyokuto/デスクトップ/pdfTest");
             List<File> pathList2 = findAllFile("/home/kyokuto/デスクトップ/pdfTest_2");
@@ -67,9 +70,14 @@ public class NewMainDiskDirFile {
         } catch (IOException ex) {
             Logger.getLogger(NewMainDiskDirFile.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
     }
 
-    /*
+    /*フォルダー配下のハッシュを算出する。
+    A（B（））がある場合にA（）と指定するとB（）を計算する。
+    ゆえにA（B（））とC（B（））の比較でB（）の同一性をチェックできる。
+    実験ではさらに内側の階層に置いたテキストファイルの一文字の比較もできた。
+    https://stackoverflow.com/questions/3010071/how-to-calculate-md5-checksum-on-directory-with-java-or-groovy#
 I had the same requirement and chose my 'directory hash' to be an MD5 hash of the concatenated streams of all (non-directory) files within the directory. As crozin mentioned in comments on [a similar question][1], you can use `SequenceInputStream` to act as a stream concatenating a load of other streams. I'm using [Apache Commons Codec][2] for the MD5 algorithm.
 Basically, you recurse through the directory tree, adding `FileInputStream` instances to a `Vector` for non-directory files. `Vector` then conveniently has the `elements()` method to provide the `Enumeration` that `SequenceInputStream` needs to loop through. To the MD5 algorithm, this just appears as one `InputStream`.
 A gotcha is that you need the files presented in the same order every time for the hash to be the same with the same inputs. The `listFiles()` method in `File` doesn't guarantee an ordering, so I sort by filename.
