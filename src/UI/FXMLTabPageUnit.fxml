@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.FXMLTabPageUnitController">
+<AnchorPane id="AnchorPane" prefHeight="438.0" prefWidth="628.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.FXMLTabPageUnitController">
    <children>
       <ScrollPane layoutX="186.0" layoutY="73.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <content>
@@ -31,6 +31,7 @@
                   <Button layoutX="19.0" layoutY="344.0" mnemonicParsing="false" text="同型で新規作成（つづき）" />
                   <Button layoutX="213.0" layoutY="344.0" mnemonicParsing="false" text="改変目的の複写（別バージョン）" />
                   <Button layoutX="438.0" layoutY="344.0" mnemonicParsing="false" text="本内容を上書き" />
+                  <Button layoutX="19.0" layoutY="387.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="529.0" text="起動" />
                </children></AnchorPane>
         </content>
       </ScrollPane>
