@@ -5,20 +5,14 @@
  */
 package DB;
 
-import static DB.DatabaseUty.URL;
-import common.SystemPropertiesItem;
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,31 +23,19 @@ public class UnitDAO implements IDAO {
 
     public static ResultSet getResultSetByKey(String tableName, String keyName, String id) {
         String sql = "SELECT * from " + tableName + " WHERE " + keyName + " = (?);";
-
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
             statement.setString(1, id);
             statement.addBatch();
-            System.out.println(statement.toString());
-
+            System.out.println("getResultSetByKey statement is " + statement.toString());
             ResultSet result = statement.executeQuery();
-            System.out.println("検索：" + result.getFetchSize() + "件");
-
-            try {
-                connection.commit();
-                System.out.println("検索成功");
-                return result;
-            } catch (SQLException e) {
-
-                System.out.println("検索失敗");
-                e.printStackTrace();
-            }
-        } catch (BatchUpdateException e) {
-            System.out.println("登録失敗:すでに登録されています。");
-            e.printStackTrace();
+            System.out.println("getResultSetByKey 検索：" + result.getFetchSize() + "件"); // 下の行と逆っぽい
+            connection.commit();
+            System.out.println("getResultSetByKey 検索成功");
+            return result;
         } catch (SQLException e) {
-            System.out.println("outer");
+            System.out.println("getResultSetByKey 検索失敗");
             e.printStackTrace();
         }
         return null;
@@ -78,16 +60,13 @@ public class UnitDAO implements IDAO {
                     UnitDTO dto = new UnitDTO();
                     // カラムの値をフィールドにセット
                     dto.setId(result.getLong("id"));
-                    //Instant instant = date.toInstant();
-                    //ZoneId zone = ZoneId.systemDefault();
-                    //ZonedDateTime converted = ZonedDateTime.ofInstant(instant, zone);
-                    //dto.setDivtime(ZonedDateTime.ofInstant((result.getDate("divtime")toInstant()),ZoneId.systemDefault()));
-                    dto.setDivtime(result.getLong("divtime"));
-                    dto.setDivname(result.getString("divname"));
-                    dto.setComment(result.getString("comment"));
-                    dto.setPredivtime(result.getTimestamp("predivtime"));
-                    dto.setArtifactsId(result.getString("artifactsid"));
-                    dto.setEtd(result.getDate("etd"));
+                    dto.setClose(result.getTimestamp("close"));
+                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setTitle(result.getString("title"));
+                    dto.setMtg(result.getTimestamp("mtg"));
+                    dto.setCut(result.getTimestamp("cut"));
+                    dto.setEtd(result.getTimestamp("etd"));
+                    dto.setRemark(result.getString("remark"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -130,16 +109,15 @@ public class UnitDAO implements IDAO {
                     UnitDTO dto = new UnitDTO();
                     // ???????????????
                     dto.setId(result.getLong("id"));
-                    //dto.setDivtime(ZonedDateTime.ofInstant(result.getTimestamp("divtime").toInstant(),ZoneId.systemDefault()));
-                    dto.setDivtime(result.getLong("divtime"));
-                    dto.setDivname(result.getString("divname"));
-                    dto.setComment(result.getString("comment"));
-                    dto.setPredivtime(result.getTimestamp("predivtime"));
-                    dto.setArtifactsId(result.getString("artifactsid"));
-                    dto.setEtd(result.getDate("etd"));
-                    // ???????List???
+                    dto.setClose(result.getTimestamp("close"));
+                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setTitle(result.getString("title"));
+                    dto.setMtg(result.getTimestamp("mtg"));
+                    dto.setCut(result.getTimestamp("cut"));
+                    dto.setEtd(result.getTimestamp("etd"));
+                    dto.setRemark(result.getString("remark"));
                     unitDTO.add(dto);
-                    // while????????????
+
                 }
             } catch (SQLException e) {
                 // connection.rollback(); 
@@ -177,12 +155,13 @@ public class UnitDAO implements IDAO {
                     UnitDTO dto = new UnitDTO();
                     // カラムの値をフィールドにセット
                     dto.setId(result.getLong("id"));
-                    dto.setDivtime(result.getLong("divtime"));
-                    dto.setDivname(result.getString("divname"));
-                    dto.setComment(result.getString("comment"));
-                    dto.setPredivtime(result.getTimestamp("predivtime"));
-                    dto.setArtifactsId(result.getString("artifactsid"));
-                    dto.setEtd(result.getDate("etd"));
+                    dto.setClose(result.getTimestamp("close"));
+                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setTitle(result.getString("title"));
+                    dto.setMtg(result.getTimestamp("mtg"));
+                    dto.setCut(result.getTimestamp("cut"));
+                    dto.setEtd(result.getTimestamp("etd"));
+                    dto.setRemark(result.getString("remark"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -199,40 +178,39 @@ public class UnitDAO implements IDAO {
         return unitDTO;
     }
 
-    public static boolean create(UnitDTO unitDTO) {
+    public static boolean register(UnitDTO unitDTO) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?);";
+        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
             statement.setLong(1, unitDTO.getId());
-            statement.setLong(2, unitDTO.getDivtime());
-            statement.setString(3, unitDTO.getDivname());
-            statement.setTimestamp(4, unitDTO.getCutdatetime());
-            statement.setString(5, unitDTO.getComment());
-            statement.setTimestamp(6, unitDTO.getPredivtime());
-            statement.setString(7, unitDTO.getArtifactsId());
-            statement.setTimestamp(8, unitDTO.getClosedatetime());
-            statement.setDate(9, unitDTO.getEtd());
+            statement.setTimestamp(2, unitDTO.getClose());
+            statement.setString(3, unitDTO.getMaintitleid());
+            statement.setString(4, unitDTO.getTitle());
+            statement.setTimestamp(5, unitDTO.getMtg());
+            statement.setTimestamp(6, unitDTO.getCut());
+            statement.setTimestamp(7, unitDTO.getEtd());
+            statement.setString(8, unitDTO.getRemark());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
                 connection.commit();
-                System.out.println("追加成功");
+                System.out.println("register 追加成功");
                 return true;
             } catch (SQLException e) {
                 connection.rollback();
                 e.printStackTrace();
-                System.out.println("追加失敗");
+                System.out.println("register 追加失敗");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("データべース障害");
+            System.out.println("register データべース障害");
         }
         return false;
     }
