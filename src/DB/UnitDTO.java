@@ -130,6 +130,35 @@ public class UnitDTO {
     }
 
     /**
+     * @return the templateid
+     */
+    public long getTemplateid() {
+        return templateid;
+    }
+
+    /**
+     * @param templateid the templateid to set
+     */
+    public void setTemplateid(long templateid) {
+        this.templateid = templateid;
+    }
+
+    /**
+     * @return the versionid
+     */
+    public long getVersionid() {
+        return versionid;
+    }
+
+    /**
+     * @param versionid the versionid to set
+     */
+    public void setVersionid(long versionid) {
+        this.versionid = versionid;
+    }
+
+    
+    /**
      * CREATE TABLE `unit` ( `id` bigint(20) NOT NULL, `close` datetime DEFAULT
      * NULL, `maintitleid` varchar(4) DEFAULT NULL, `title` text NOT NULL, `mtg`
      * datetime DEFAULT NULL, `cut` datetime DEFAULT NULL, `etd` datetime
@@ -145,6 +174,8 @@ public class UnitDTO {
     private Timestamp cut;
     private Timestamp etd;
     private String remark;
+    private long templateid;
+    private long versionid;
 
     
 }

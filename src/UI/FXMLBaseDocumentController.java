@@ -46,6 +46,9 @@ public class FXMLBaseDocumentController implements Initializable {
     private TextField textFieldBaseMasterId;
     
     @FXML
+    private Label labelCentralMessage;
+    
+    @FXML
     private void processTabClear(String txt){
         //System.out.println(fXMLTabPageProcessController.toString());
                     FXMLTabPageProcessController.testCase(txt+"代入する文字");
@@ -72,6 +75,10 @@ public class FXMLBaseDocumentController implements Initializable {
      */
     public TextField getTextFieldBaseMasterId() {
         return textFieldBaseMasterId;
+    }
+    
+    public Label getLabelCentralMessage(){
+        return labelCentralMessage;
     }
 
     /**

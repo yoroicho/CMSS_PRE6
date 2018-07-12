@@ -67,6 +67,8 @@ public class UnitDAO implements IDAO {
                     dto.setCut(result.getTimestamp("cut"));
                     dto.setEtd(result.getTimestamp("etd"));
                     dto.setRemark(result.getString("remark"));
+                    dto.setTemplateid(result.getLong("templateid"));
+                    dto.setVersionid(result.getLong("versionid"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -85,7 +87,7 @@ public class UnitDAO implements IDAO {
     }
 
     public static List<UnitDTO> findById(long id) {
-        //Timestamp id = Timestamp.valueOf(idText);
+System.out.println("findById Called."+id);
         String sql = "SELECT * from unit WHERE id = (?) ; ";
         //String sql = "SELECT * from unit ;";
 // DTO?????????????
@@ -95,7 +97,7 @@ public class UnitDAO implements IDAO {
             connection.setAutoCommit(false);
             statement.setLong(1, id);
             statement.addBatch();
-            System.out.println(statement.toString());
+            System.out.println("findById "+statement.toString());
 
             ResultSet result = statement.executeQuery();
             System.out.println("Total" + result.getFetchDirection() + "items");
@@ -116,6 +118,8 @@ public class UnitDAO implements IDAO {
                     dto.setCut(result.getTimestamp("cut"));
                     dto.setEtd(result.getTimestamp("etd"));
                     dto.setRemark(result.getString("remark"));
+                    dto.setTemplateid(result.getLong("templateid"));
+                    dto.setVersionid(result.getLong("versionid"));
                     unitDTO.add(dto);
 
                 }
@@ -162,6 +166,8 @@ public class UnitDAO implements IDAO {
                     dto.setCut(result.getTimestamp("cut"));
                     dto.setEtd(result.getTimestamp("etd"));
                     dto.setRemark(result.getString("remark"));
+                    dto.setTemplateid(result.getLong("templateid"));
+                    dto.setVersionid(result.getLong("versionid"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -197,6 +203,8 @@ public class UnitDAO implements IDAO {
             statement.setTimestamp(6, unitDTO.getCut());
             statement.setTimestamp(7, unitDTO.getEtd());
             statement.setString(8, unitDTO.getRemark());
+            statement.setLong(9, unitDTO.getTemplateid());
+            statement.setLong(10, unitDTO.getVersionid());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
