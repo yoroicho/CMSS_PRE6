@@ -79,7 +79,7 @@ public class FXMLTabPageUnitController implements Initializable {
         if (unitDTO.size() != 1) {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("Key 重複");
         }else{
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("呼び出しを行います。");
+            FXMLBaseDocumentController.getTextFieldBaseMasterId().setText("呼び出しを行います。");
         }
         unitDTO.forEach(s -> {
             System.out.println("ID " + String.valueOf(s.getId()));
@@ -93,6 +93,20 @@ public class FXMLTabPageUnitController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+    }
+    
+        /**
+     * @return the FXMLBaseDocumentController
+     */
+    public FXMLBaseDocumentController getFXMLBaseDocumentController() {
+        return FXMLBaseDocumentController;
+    }
+
+    /**
+     * @param FXMLBaseDocumentController the FXMLBaseDocumentController to set
+     */
+    public void setFXMLBaseDocumentController(FXMLBaseDocumentController FXMLBaseDocumentController) {
+        this.FXMLBaseDocumentController = FXMLBaseDocumentController;
     }
 
 }

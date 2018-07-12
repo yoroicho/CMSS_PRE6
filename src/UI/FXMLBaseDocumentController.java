@@ -37,6 +37,10 @@ public class FXMLBaseDocumentController implements Initializable {
     
     @FXML
     FXMLTabPageProcessController FXMLTabPageProcessController;
+    
+    @FXML
+    FXMLTabPageUnitController FXMLTabPageUnitController;
+    
     //@FXML
     //private static void labelCentralMassageSetText(String value){
     //LabelCentralMassage.setText(value);
@@ -86,6 +90,13 @@ public class FXMLBaseDocumentController implements Initializable {
      */
     public void setTextFieldBaseMasterId(TextField textFieldBaseMasterId) {
         this.textFieldBaseMasterId = textFieldBaseMasterId;
+    }
+
+    /**
+     * @param labelCentralMessage the labelCentralMessage to set
+     */
+    public void setLabelCentralMessage(Label labelCentralMessage) {
+        this.labelCentralMessage = labelCentralMessage;
     }
 
 }
