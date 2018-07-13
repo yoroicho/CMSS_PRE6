@@ -17,6 +17,36 @@ import java.sql.Date;
  */
 public class UnitDTO {
 
+
+
+    
+    /**
+CREATE TABLE `unit` (
+  `id` bigint(20) NOT NULL,
+  `close` datetime DEFAULT NULL,
+  `maintitleid` varchar(4) DEFAULT NULL,
+  `title` text NOT NULL,
+  `mtg` datetime DEFAULT NULL,
+  `cut` datetime DEFAULT NULL,
+  `etd` datetime DEFAULT NULL,
+  `remark` text,
+  `templateid` bigint(20) DEFAULT NULL,
+  `versionid` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+     *
+     */
+    private long id;
+    private Date close;
+    private String maintitleid;
+    private String title;
+    private Date mtg;
+    private Date cut;
+    private Date etd;
+    private String remark;
+    private long templateid;
+    private long versionid;
+
     /**
      * @return the id
      */
@@ -34,14 +64,14 @@ public class UnitDTO {
     /**
      * @return the close
      */
-    public Timestamp getClose() {
+    public Date getClose() {
         return close;
     }
 
     /**
      * @param close the close to set
      */
-    public void setClose(Timestamp close) {
+    public void setClose(Date close) {
         this.close = close;
     }
 
@@ -76,42 +106,42 @@ public class UnitDTO {
     /**
      * @return the mtg
      */
-    public Timestamp getMtg() {
+    public Date getMtg() {
         return mtg;
     }
 
     /**
      * @param mtg the mtg to set
      */
-    public void setMtg(Timestamp mtg) {
+    public void setMtg(Date mtg) {
         this.mtg = mtg;
     }
 
     /**
      * @return the cut
      */
-    public Timestamp getCut() {
+    public Date getCut() {
         return cut;
     }
 
     /**
      * @param cut the cut to set
      */
-    public void setCut(Timestamp cut) {
+    public void setCut(Date cut) {
         this.cut = cut;
     }
 
     /**
      * @return the etd
      */
-    public Timestamp getEtd() {
+    public Date getEtd() {
         return etd;
     }
 
     /**
      * @param etd the etd to set
      */
-    public void setEtd(Timestamp etd) {
+    public void setEtd(Date etd) {
         this.etd = etd;
     }
 
@@ -156,26 +186,6 @@ public class UnitDTO {
     public void setVersionid(long versionid) {
         this.versionid = versionid;
     }
-
-    
-    /**
-     * CREATE TABLE `unit` ( `id` bigint(20) NOT NULL, `close` datetime DEFAULT
-     * NULL, `maintitleid` varchar(4) DEFAULT NULL, `title` text NOT NULL, `mtg`
-     * datetime DEFAULT NULL, `cut` datetime DEFAULT NULL, `etd` datetime
-     * DEFAULT NULL, `remark` text, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT
-     * CHARSET=utf8 フィールド変数
-     *
-     */
-    private long id;
-    private Timestamp close;
-    private String maintitleid;
-    private String title;
-    private Timestamp mtg;
-    private Timestamp cut;
-    private Timestamp etd;
-    private String remark;
-    private long templateid;
-    private long versionid;
 
     
 }

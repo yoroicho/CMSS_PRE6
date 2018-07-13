@@ -62,6 +62,7 @@ public class FXMLBaseDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLTabPageProcessController.setFXMLBaseDocumentController(this);
+        FXMLTabPageUnitController.setFXMLBaseDocumentController(this);
         // リスナーは、ChangeListener#changed(ObservableValue<? extends T> observable, T oldValue, T newValue)
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Tab> obs, Tab ot, Tab nt) -> {
             System.out.println("tab selected " + obs + "が発生。" + ot.getId() + "から" + nt.getId());

@@ -10,9 +10,12 @@ import DB.ProcessDTO;
 import DB.UnitDAO;
 import DB.UnitDTO;
 import common.TimestampUtil;
+import static java.lang.Thread.sleep;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -56,7 +59,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private Button buttonMakeFromVersion;
 
     @FXML
-    private Button buttonReRegister;
+    private Button buttonRegister;
 
     @FXML
     private TextField textFieldMaintitleid;
@@ -76,15 +79,20 @@ public class FXMLTabPageUnitController implements Initializable {
         List<UnitDTO> unitDTO;
         unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
         System.out.println("textFieldIdOnAction size " + unitDTO.size());
-        if (unitDTO.size() != 1) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("Key 重複");
-        }else{
-            FXMLBaseDocumentController.getTextFieldBaseMasterId().setText("呼び出しを行います。");
+        if (unitDTO.size() > 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("重大な障害 DB cmss.unit.id 重複Key発生");
+        } else if (unitDTO.size() == 0) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("レコードがありません。");
+        } else if (unitDTO.size() == 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("呼び出しを行います。");
+            this.textFieldId.setEditable(false);
+            unitDTO.forEach(s -> { // 一件しかないのでループは無意味だがコピペ元用
+                System.out.println("ID " + String.valueOf(s.getId()));
+                //this.textFieldId.setText(String.valueOf(s.getId()));
+                this.datePickerClose.setValue(s.getCut().toLocalDate());
+            });
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("入力受付中。");
         }
-        unitDTO.forEach(s -> {
-            System.out.println("ID " + String.valueOf(s.getId()));
-        });
-        
     }
 
     /**
@@ -94,8 +102,8 @@ public class FXMLTabPageUnitController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    
-        /**
+
+    /**
      * @return the FXMLBaseDocumentController
      */
     public FXMLBaseDocumentController getFXMLBaseDocumentController() {
