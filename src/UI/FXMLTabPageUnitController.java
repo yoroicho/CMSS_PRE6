@@ -76,22 +76,28 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
-        List<UnitDTO> unitDTO;
-        unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
-        System.out.println("textFieldIdOnAction size " + unitDTO.size());
-        if (unitDTO.size() > 1) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("重大な障害 DB cmss.unit.id 重複Key発生");
-        } else if (unitDTO.size() == 0) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("レコードがありません。");
-        } else if (unitDTO.size() == 1) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("呼び出しを行います。");
-            this.textFieldId.setEditable(false);
-            unitDTO.forEach(s -> { // 一件しかないのでループは無意味だがコピペ元用
-                System.out.println("ID " + String.valueOf(s.getId()));
-                //this.textFieldId.setText(String.valueOf(s.getId()));
-                this.datePickerClose.setValue(s.getCut().toLocalDate());
-            });
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("入力受付中。");
+        if (textFieldId.getText().trim().length() == 0) { //空欄は新規入力扱い
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規入力");
+            this.textFieldId.setEditable(false); // スキップ後は主キー欄をブロック
+        } else { //入力があればDB索引
+            List<UnitDTO> unitDTO;
+            unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
+            System.out.println("textFieldIdOnAction size " + unitDTO.size());
+            if (unitDTO.size() > 1) {
+                FXMLBaseDocumentController.getLabelCentralMessage().setText("重大な障害 DB cmss.unit.id 重複Key発生");
+            } else if (unitDTO.isEmpty()) {
+                FXMLBaseDocumentController.getLabelCentralMessage().setText("レコードがありません。");
+            } else if (unitDTO.size() == 1) {
+                FXMLBaseDocumentController.getLabelCentralMessage().setText("呼び出しを行います。");
+                this.textFieldId.setEditable(false); // 索引後は主キーをブロック
+                unitDTO.forEach(s -> { // 一件しかないのでループは無意味だがコピペ元用
+                    System.out.println("ID " + String.valueOf(s.getId()));
+                    //this.textFieldId.setText(String.valueOf(s.getId()));
+                    this.datePickerClose.setValue(s.getCut().toLocalDate());
+                });
+                FXMLBaseDocumentController.getLabelCentralMessage().setText("入力受付中。");
+            }
+
         }
     }
 
