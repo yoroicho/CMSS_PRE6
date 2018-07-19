@@ -100,6 +100,14 @@ public class FXMLTabPageUnitController implements Initializable {
 
         }
     }
+    
+    @FXML
+    private void initializeAllItems(){
+        this.datePickerClose.getEditor().clear();
+        this.textAreaTitle.setEditable(false); //エンターせずに入力してまたIDに戻って来れるのを防止
+        this.textFieldId.clear();
+        this.textFieldId.setEditable(true);
+    }
 
     /**
      * Initializes the controller class.
