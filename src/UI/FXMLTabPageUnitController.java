@@ -81,6 +81,8 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規入力");
             this.textFieldId.setEditable(false); // スキップ後は主キー欄をブロック
             this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
+            this.buttonRegisterChange.setDisable(false);
+            this.buttonRegisterNew.setDisable(false);
         } else { //入力があればDB索引
             List<UnitDTO> unitDTO;
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
@@ -109,6 +111,8 @@ public class FXMLTabPageUnitController implements Initializable {
                 FXMLBaseDocumentController.getLabelCentralMessage().setText("入力受付中。");
                 this.textFieldId.setEditable(false); // スキップ後は主キー欄をブロック
                 this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
+                this.buttonRegisterChange.setDisable(false);
+                this.buttonRegisterNew.setDisable(false);
             }
         }
     }
@@ -119,38 +123,52 @@ public class FXMLTabPageUnitController implements Initializable {
         条件
             IDが空欄で、CUT日を含みそれ以前で、かつCLOSEに日が入っていないこと
          */
-        if (textFieldId.getText().isEmpty()==false) { //IDが空欄ではない
+        if (textFieldId.getText().isEmpty() == false) { //IDが空欄ではない
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                     "IDが入力されています。\n"
+                    "IDが入力されています。\n"
                     + "既存のレコードを変更しての新規作成はできません。");
             Optional<ButtonType> showAndWait = alert.showAndWait();
-        } else if (LocalDate.now().isAfter(datePickerCut.getValue())){
+        } else if (datePickerCut.getValue() != null
+                // CUTが空欄でない
+                && LocalDate.now().isAfter(datePickerCut.getValue())) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                     "設定されているCUT日以降に登録はできません。\n"
-                    );
+                    "設定されているCUT日以降に登録はできません。\n"
+            );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-        }else if(this.datePickerClose.getValue().toString().isEmpty()==false){
+        } else if (this.datePickerClose.getValue() != null) {
             //CLOSE(閉鎖日が入力されている)
-                        Alert alert = new Alert(Alert.AlertType.WARNING,
-                     "CLOSE（閉鎖）が宣言された登録はできません。\n"
-                    );
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "CLOSE（閉鎖）が宣言された登録はできません。\n"
+                    + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else {
+            blockRegisterButton();
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録中。");
         }
     }
 
     private void registerChange() { //既存のレコードを変更
         /*
         条件
-            IDが入力されており、CUT日を含みそれ以前で、かつCLOSEに日が入っていないこと
+            IDが入力されており、CUT日を含みそれ以前で、
+            かつCLOSEが本日を含みそれ以前であること
          */
-
+blockRegisterButton();
     }
 
     @FXML
     private void initializeAllItems() {
-        this.datePickerClose.getEditor().clear();
+        this.datePickerClose.setValue(null);
         this.textAreaTitle.setEditable(false); //エンターせずに入力してまたIDに戻って来れるのを防止
         this.textFieldId.clear();
         this.textFieldId.setEditable(true);
+        blockRegisterButton();
+    }
+
+    private void blockRegisterButton() {
+        this.buttonRegisterChange.setDisable(true);
+        this.buttonRegisterNew.setDisable(true);
     }
 
     /**
@@ -159,12 +177,14 @@ public class FXMLTabPageUnitController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         /*
+         *ID欄でエンターが押されないと、登録キー4つとも入力不可とする。
          *ID欄はエンターを押さずにフォーカス遷移させると、後で戻って入力できてしまう。
          *タイトルは必須項目なのでとりあえずここをブロックしておき、ID欄でエンターが
          *押されたタイミングに解放する事でID検査を回避して入力が先行するのを回避する。
          *（本来はすべての入力項目に対してブロックを行った方がよい）
          */
         this.textAreaTitle.setEditable(false); // タイトル入力欄をブロック
+        blockRegisterButton();
 
     }
 
