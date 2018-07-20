@@ -34,31 +34,29 @@ public class FXMLBaseDocumentController implements Initializable {
      */
     //@FXML
     //Label LabelCentralMassage;
-    
     @FXML
     FXMLTabPageProcessController FXMLTabPageProcessController;
-    
+
     @FXML
     FXMLTabPageUnitController FXMLTabPageUnitController;
-    
+
     //@FXML
     //private static void labelCentralMassageSetText(String value){
     //LabelCentralMassage.setText(value);
     //}
-
     @FXML
     private TextField textFieldBaseMasterId;
-    
+
     @FXML
     private Label labelCentralMessage;
-    
+
     @FXML
-    private void processTabClear(String txt){
+    private void processTabClear(String txt) {
         //System.out.println(fXMLTabPageProcessController.toString());
-                    FXMLTabPageProcessController.testCase(txt+"代入する文字");
-                    FXMLTabPageProcessController.clearIdAndDivDateTime(); //作動しない
+        FXMLTabPageProcessController.testCase(txt + "代入する文字");
+        FXMLTabPageProcessController.clearIdAndDivDateTime(); //作動しない
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLTabPageProcessController.setFXMLBaseDocumentController(this);
@@ -66,11 +64,18 @@ public class FXMLBaseDocumentController implements Initializable {
         // リスナーは、ChangeListener#changed(ObservableValue<? extends T> observable, T oldValue, T newValue)
         mainTabPane.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Tab> obs, Tab ot, Tab nt) -> {
             System.out.println("tab selected " + obs + "が発生。" + ot.getId() + "から" + nt.getId());
-            switch (ot.getId()) {
-                case "tabProcess":
-                    System.out.println("clear");
-                    processTabClear(ot.getId());
-                    break;
+            if (ot.getId() != null) {
+                switch (ot.getId()) {
+                    case "tabProcess":
+                        System.out.println("clear");
+                        processTabClear(ot.getId());
+                        break;
+                    case "tabUnit":
+                        System.out.println("Unit");
+                        break;
+                    default:
+                        System.out.println("その他のタブ");
+                }
             }
         });
     }
@@ -81,8 +86,8 @@ public class FXMLBaseDocumentController implements Initializable {
     public TextField getTextFieldBaseMasterId() {
         return textFieldBaseMasterId;
     }
-    
-    public Label getLabelCentralMessage(){
+
+    public Label getLabelCentralMessage() {
         return labelCentralMessage;
     }
 
