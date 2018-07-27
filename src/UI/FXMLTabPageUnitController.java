@@ -154,7 +154,7 @@ public class FXMLTabPageUnitController implements Initializable {
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
-blockRegisterButton();
+        blockRegisterButton();
     }
 
     @FXML
@@ -171,6 +171,9 @@ blockRegisterButton();
         this.buttonRegisterNew.setDisable(true);
     }
 
+    private void lockAllControls(){ //このスペルで正しい。
+    }
+    
     /**
      * Initializes the controller class.
      */
