@@ -63,7 +63,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private Button buttonRegisterNew;
 
     @FXML
-    private TextField textFieldMaintitleid;
+    private TextField textFieldMainTitleId;
 
     @FXML
     private TextArea textAreaTitle;
@@ -75,11 +75,41 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaRemark;
 
     @FXML
+    private Button buttonStartUp;
+
+    @FXML
+    private TextArea textAreaSeriesName;
+
+    @FXML
+    private TextArea textAreaOverallSeriesName;
+
+    @FXML
+    private TextField textFieldOverallSeriesId;
+
+    @FXML
+    private TextField textFieldSeriesId;
+
+    @FXML
+    private TextArea textAreaMainTitleName;
+
+    @FXML
+    void initializeAllItems(ActionEvent event) {
+
+    }
+
+    @FXML
+    void registerNew(ActionEvent event) {
+
+    }
+
+    @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
         if (textFieldId.getText().trim().length() == 0) { //空欄は新規入力扱い
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規入力");
-            this.textFieldId.setEditable(false); // スキップ後は主キー欄をブロック
+             // スキップ後は主キー欄をブロック
+             //this.textFieldId.setEditable(false); ではエンターイベントが発生してしまう
+            this.textFieldId.setDisable(true); // 
             this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
             this.buttonRegisterChange.setDisable(false);
             this.buttonRegisterNew.setDisable(false);
@@ -103,7 +133,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     datePickerClose.setValue(s.getClose().toLocalDate());
                     datePickerCut.setValue(s.getCut().toLocalDate());
                     datePickerEtd.setValue(s.getEtd().toLocalDate());
-                    textFieldMaintitleid.setText(s.getMaintitleid());
+                    textFieldMainTitleId.setText(s.getMaintitleid());
                     textAreaTitle.setText(s.getTitle());
                     datePickerMtg.setValue(s.getMtg().toLocalDate());
                     textAreaRemark.setText(s.getRemark());
@@ -160,9 +190,9 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private void initializeAllItems() {
         this.datePickerClose.setValue(null);
-        this.textAreaTitle.setEditable(false); //エンターせずに入力してまたIDに戻って来れるのを防止
+        this.textAreaTitle.setDisable(true); //エンターせずに入力してまたIDに戻って来れるのを防止
         this.textFieldId.clear();
-        this.textFieldId.setEditable(true);
+        this.textFieldId.setDisable(false);
         blockRegisterButton();
     }
 
@@ -171,14 +201,37 @@ public class FXMLTabPageUnitController implements Initializable {
         this.buttonRegisterNew.setDisable(true);
     }
 
-    private void lockAllControls(){ //このスペルで正しい。
+    /**
+     * LockAllControls ID以外すべての制御をロックする。 ボタンは無効化するが、テキストなどの表示はさせる。
+     */
+    private void lockAllControls(boolean value) { //このスペルで正しい。
+        this.buttonClear.setDisable(value);
+        this.buttonCloseToday.setDisable(value);
+        this.buttonMakeFromTemplate.setDisable(value);
+        this.buttonMakeFromVersion.setDisable(value);
+        this.buttonRegisterChange.setDisable(value);
+        this.buttonRegisterNew.setDisable(value);
+        this.buttonStartUp.setDisable(value);
+        this.datePickerClose.setDisable(value);
+        this.datePickerCut.setDisable(value);
+        this.datePickerEtd.setDisable(value);
+        this.datePickerMtg.setDisable(value);
+        this.textAreaMainTitleName.setDisable(value);
+        this.textAreaOverallSeriesName.setDisable(value);
+        this.textAreaRemark.setDisable(value);
+        this.textAreaSeriesName.setDisable(value);
+        this.textAreaTitle.setDisable(value);
+        this.textFieldMainTitleId.setDisable(value);
+        this.textFieldOverallSeriesId.setDisable(value);
+        this.textFieldSeriesId.setDisable(value);
     }
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        lockAllControls(true);
         /*
          *ID欄でエンターが押されないと、登録キー4つとも入力不可とする。
          *ID欄はエンターを押さずにフォーカス遷移させると、後で戻って入力できてしまう。
