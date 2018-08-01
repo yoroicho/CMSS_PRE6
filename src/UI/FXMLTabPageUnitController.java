@@ -8,6 +8,7 @@ package UI;
 import DB.UnitDAO;
 import DB.UnitDTO;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -93,16 +94,6 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaMainTitleName;
 
     @FXML
-    void initializeAllItems(ActionEvent event) {
-
-    }
-
-    @FXML
-    void registerNew(ActionEvent event) {
-
-    }
-
-    @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
         if (textFieldId.getText().trim().length() == 0) { //空欄は新規入力扱い
@@ -110,9 +101,12 @@ public class FXMLTabPageUnitController implements Initializable {
              // スキップ後は主キー欄をブロック
              //this.textFieldId.setEditable(false); ではエンターイベントが発生してしまう
             this.textFieldId.setDisable(true); // 
-            this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
-            this.buttonRegisterChange.setDisable(false);
-            this.buttonRegisterNew.setDisable(false);
+            //this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
+            //this.buttonRegisterChange.setDisable(false);
+            //this.buttonRegisterNew.setDisable(false);
+            this.lockAllControls(false);
+            this.buttonMakeFromTemplate.setDisable(true);
+            this.buttonMakeFromVersion.setDisable(true);
         } else { //入力があればDB索引
             List<UnitDTO> unitDTO;
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
@@ -173,8 +167,13 @@ public class FXMLTabPageUnitController implements Initializable {
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "新規登録を開始します。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
             blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録中。");
+            this.textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
         }
     }
 
@@ -189,11 +188,9 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private void initializeAllItems() {
-        this.datePickerClose.setValue(null);
-        this.textAreaTitle.setDisable(true); //エンターせずに入力してまたIDに戻って来れるのを防止
         this.textFieldId.clear();
         this.textFieldId.setDisable(false);
-        blockRegisterButton();
+        this.lockAllControls(true);
     }
 
     private void blockRegisterButton() {
@@ -239,8 +236,7 @@ public class FXMLTabPageUnitController implements Initializable {
          *押されたタイミングに解放する事でID検査を回避して入力が先行するのを回避する。
          *（本来はすべての入力項目に対してブロックを行った方がよい）
          */
-        this.textAreaTitle.setEditable(false); // タイトル入力欄をブロック
-        blockRegisterButton();
+        this.lockAllControls(true);
 
     }
 
