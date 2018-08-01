@@ -174,6 +174,7 @@ public class FXMLTabPageUnitController implements Initializable {
             blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録中。");
             this.textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
+            
         }
     }
 
@@ -188,9 +189,10 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private void initializeAllItems() {
-        this.textFieldId.clear();
-        this.textFieldId.setDisable(false);
-        this.lockAllControls(true);
+        textFieldId.clear();
+        textFieldId.setDisable(false);
+        lockAllControls(true);
+        clearAllView();
     }
 
     private void blockRegisterButton() {
@@ -201,7 +203,7 @@ public class FXMLTabPageUnitController implements Initializable {
     /**
      * LockAllControls ID以外すべての制御をロックする。 ボタンは無効化するが、テキストなどの表示はさせる。
      */
-    private void lockAllControls(boolean value) { //このスペルで正しい。
+    private void lockAllControls(boolean value) { 
         this.buttonClear.setDisable(value);
         this.buttonCloseToday.setDisable(value);
         this.buttonMakeFromTemplate.setDisable(value);
@@ -223,20 +225,28 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textFieldSeriesId.setDisable(value);
     }
 
+    private void clearAllView() { 
+        this.datePickerClose.setValue(null);
+        this.datePickerCut.setValue(null);
+        this.datePickerEtd.setValue(null);
+        this.datePickerMtg.setValue(null);
+        this.textAreaMainTitleName.setText(null);
+        this.textAreaOverallSeriesName.setText(null);
+        this.textAreaRemark.setText(null);
+        this.textAreaSeriesName.setText(null);
+        this.textAreaTitle.setText(null);
+        this.textFieldMainTitleId.setText(null);
+        this.textFieldOverallSeriesId.setText(null);
+        this.textFieldSeriesId.setText(null);
+    }
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        clearAllView();
         lockAllControls(true);
-        /*
-         *ID欄でエンターが押されないと、登録キー4つとも入力不可とする。
-         *ID欄はエンターを押さずにフォーカス遷移させると、後で戻って入力できてしまう。
-         *タイトルは必須項目なのでとりあえずここをブロックしておき、ID欄でエンターが
-         *押されたタイミングに解放する事でID検査を回避して入力が先行するのを回避する。
-         *（本来はすべての入力項目に対してブロックを行った方がよい）
-         */
-        this.lockAllControls(true);
 
     }
 
