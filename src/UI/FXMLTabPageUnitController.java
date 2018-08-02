@@ -97,14 +97,11 @@ public class FXMLTabPageUnitController implements Initializable {
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
         if (textFieldId.getText().trim().length() == 0) { //空欄は新規入力扱い
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規入力");
-             // スキップ後は主キー欄をブロック
-             //this.textFieldId.setEditable(false); ではエンターイベントが発生してしまう
-            this.textFieldId.setDisable(true); // 
-            //this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
-            //this.buttonRegisterChange.setDisable(false);
-            //this.buttonRegisterNew.setDisable(false);
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規入力モード");
+            // スキップ後は主キー欄をブロック
+            this.textFieldId.setDisable(true); // setEdiatable(false)は不可
             this.lockAllControls(false);
+            this.buttonRegisterChange.setDisable(true);
             this.buttonMakeFromTemplate.setDisable(true);
             this.buttonMakeFromVersion.setDisable(true);
         } else { //入力があればDB索引
@@ -132,13 +129,18 @@ public class FXMLTabPageUnitController implements Initializable {
                     datePickerMtg.setValue(s.getMtg().toLocalDate());
                     textAreaRemark.setText(s.getRemark());
                 });
-                FXMLBaseDocumentController.getLabelCentralMessage().setText("入力受付中。");
-                this.textFieldId.setEditable(false); // スキップ後は主キー欄をブロック
-                this.textAreaTitle.setEditable(true); // タイトル入力欄を解放
-                this.buttonRegisterChange.setDisable(false);
-                this.buttonRegisterNew.setDisable(false);
+
+                FXMLBaseDocumentController.getLabelCentralMessage().setText("既存分の操作を受付中。");
+                this.textFieldId.setDisable(true); // スキップ後は主キー欄をブロック
+                this.lockAllControls(false); // 画面解放
+                this.buttonRegisterNew.setDisable(true); // 新規はありえないのでブロック
             }
         }
+    }
+
+    @FXML
+    private void buttonClearOnAction(ActionEvent event) {
+        initializeAllItems();
     }
 
     @FXML
@@ -174,7 +176,7 @@ public class FXMLTabPageUnitController implements Initializable {
             blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録中。");
             this.textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
-            
+
         }
     }
 
@@ -185,6 +187,8 @@ public class FXMLTabPageUnitController implements Initializable {
             かつCLOSEが本日を含みそれ以前であること
          */
         blockRegisterButton();
+        // 登録内容を提示し可否を確認して登録したら画面は抹消する。
+        initializeAllItems();
     }
 
     @FXML
@@ -203,7 +207,7 @@ public class FXMLTabPageUnitController implements Initializable {
     /**
      * LockAllControls ID以外すべての制御をロックする。 ボタンは無効化するが、テキストなどの表示はさせる。
      */
-    private void lockAllControls(boolean value) { 
+    private void lockAllControls(boolean value) {
         this.buttonClear.setDisable(value);
         this.buttonCloseToday.setDisable(value);
         this.buttonMakeFromTemplate.setDisable(value);
@@ -225,7 +229,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textFieldSeriesId.setDisable(value);
     }
 
-    private void clearAllView() { 
+    private void clearAllView() {
         this.datePickerClose.setValue(null);
         this.datePickerCut.setValue(null);
         this.datePickerEtd.setValue(null);
@@ -239,7 +243,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textFieldOverallSeriesId.setText(null);
         this.textFieldSeriesId.setText(null);
     }
-    
+
     /**
      * Initializes the controller class.
      */
