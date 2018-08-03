@@ -129,7 +129,6 @@ public class FXMLTabPageUnitController implements Initializable {
                     datePickerMtg.setValue(s.getMtg().toLocalDate());
                     textAreaRemark.setText(s.getRemark());
                 });
-
                 FXMLBaseDocumentController.getLabelCentralMessage().setText("既存分の操作を受付中。");
                 this.textFieldId.setDisable(true); // スキップ後は主キー欄をブロック
                 this.lockAllControls(false); // 画面解放
@@ -174,9 +173,17 @@ public class FXMLTabPageUnitController implements Initializable {
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
             blockRegisterButton();
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録中。");
-            this.textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
-
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録の受付中。");
+            // ここでプレビューと可否の入力を受け付け
+            textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
+            this.lockAllControls(true);
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "ID "
+                    + textFieldId.getText()
+                    + " を登録しました。");
+            clearAllView();
+            this.textFieldId.setText(null);
+            this.textFieldId.setDisable(false);
         }
     }
 
