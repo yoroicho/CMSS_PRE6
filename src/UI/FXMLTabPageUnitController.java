@@ -8,6 +8,7 @@ package UI;
 import DB.UnitDAO;
 import DB.UnitDTO;
 import java.net.URL;
+import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -281,17 +282,21 @@ public class FXMLTabPageUnitController implements Initializable {
          * 画面表示からDTOに詰め込み用(上書きする) 
          * 内容の検査は各モードで共通のもの以外原則しない
          */
-        /*
-unitDTO.setId(id);
-unitDTO.setClose(close);
-unitDTO.setMaintitleid(title);
-    private String title;
-    private Date mtg;
-    private Date cut;
-    private Date etd;
-    private String remark;
-    private long templateid;
-    private long versionid;
+        
+unitDTO.setId(Long.parseLong(this.textFieldId.getText()));
+unitDTO.setClose(Date.valueOf(this.datePickerClose.getValue()));
+unitDTO.setMaintitleId(this.textFieldMainTitleId.getText());
+unitDTO.setTitle(this.textAreaTitle.getText());
+unitDTO.setMtg(Date.valueOf(this.datePickerMtg.getValue()));
+unitDTO.setCut(Date.valueOf(this.datePickerCut.getValue()));
+unitDTO.setEtd(Date.valueOf(this.datePickerEtd.getValue()));
+unitDTO.setRemark(this.textAreaRemark.getText());
+/* 単純な詰め込みで済まなくなってしまった。
+状態により上書きする値と場所が変わってくる
+引数にモードを加えるべきか
 */
+unitDTO.setTemplateId();
+unitDTO.setVersionId();
+
     }
 }
