@@ -30,22 +30,22 @@ CREATE TABLE `unit` (
   `cut` datetime DEFAULT NULL,
   `etd` datetime DEFAULT NULL,
   `remark` text,
-  `templateid` bigint(20) DEFAULT NULL,
-  `versionid` bigint(20) DEFAULT NULL,
+  `templateId` bigint(20) DEFAULT NULL,
+  `versionId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
      *
      */
     private long id;
     private Date close;
-    private String maintitleid;
+    private String maintitleId;
     private String title;
     private Date mtg;
     private Date cut;
     private Date etd;
     private String remark;
-    private long templateid;
-    private long versionid;
+    private long templateId;
+    private long versionId;
 
     /**
      * @return the id
@@ -78,15 +78,15 @@ CREATE TABLE `unit` (
     /**
      * @return the maintitleid
      */
-    public String getMaintitleid() {
-        return maintitleid;
+    public String getMaintitleId() {
+        return maintitleId;
     }
 
     /**
      * @param maintitleid the maintitleid to set
      */
-    public void setMaintitleid(String maintitleid) {
-        this.maintitleid = maintitleid;
+    public void setMaintitleId(String maintitleId) {
+        this.maintitleId = maintitleId;
     }
 
     /**
@@ -160,31 +160,31 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @return the templateid
+     * @return the templateId
      */
-    public long getTemplateid() {
-        return templateid;
+    public long getTemplateId() {
+        return templateId;
     }
 
     /**
-     * @param templateid the templateid to set
+     * @param templateId the templateId to set
      */
-    public void setTemplateid(long templateid) {
-        this.templateid = templateid;
+    public void setTemplateId(long templateId) {
+        this.templateId = templateId;
     }
 
     /**
-     * @return the versionid
+     * @return the versionId
      */
-    public long getVersionid() {
-        return versionid;
+    public long getVersionId() {
+        return versionId;
     }
 
     /**
-     * @param versionid the versionid to set
+     * @param versionId the versionId to set
      */
-    public void setVersionid(long versionid) {
-        this.versionid = versionid;
+    public void setVersionId(long versionId) {
+        this.versionId = versionId;
     }
 
     

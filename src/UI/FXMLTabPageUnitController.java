@@ -105,7 +105,7 @@ public class FXMLTabPageUnitController implements Initializable {
             this.buttonMakeFromTemplate.setDisable(true);
             this.buttonMakeFromVersion.setDisable(true);
         } else { //入力があればDB索引
-            List<UnitDTO> unitDTO;
+            List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
             System.out.println("textFieldIdOnAction size " + unitDTO.size());
             if (unitDTO.size() > 1) {
@@ -124,7 +124,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     datePickerClose.setValue(s.getClose().toLocalDate());
                     datePickerCut.setValue(s.getCut().toLocalDate());
                     datePickerEtd.setValue(s.getEtd().toLocalDate());
-                    textFieldMainTitleId.setText(s.getMaintitleid());
+                    textFieldMainTitleId.setText(s.getMaintitleId());
                     textAreaTitle.setText(s.getTitle());
                     datePickerMtg.setValue(s.getMtg().toLocalDate());
                     textAreaRemark.setText(s.getRemark());
@@ -275,4 +275,23 @@ public class FXMLTabPageUnitController implements Initializable {
         this.FXMLBaseDocumentController = FXMLBaseDocumentController;
     }
 
+    // ここからデータベースまわり
+    private void pushDTO(UnitDTO unitDTO) {
+        /**
+         * 画面表示からDTOに詰め込み用(上書きする) 
+         * 内容の検査は各モードで共通のもの以外原則しない
+         */
+        /*
+unitDTO.setId(id);
+unitDTO.setClose(close);
+unitDTO.setMaintitleid(title);
+    private String title;
+    private Date mtg;
+    private Date cut;
+    private Date etd;
+    private String remark;
+    private long templateid;
+    private long versionid;
+*/
+    }
 }

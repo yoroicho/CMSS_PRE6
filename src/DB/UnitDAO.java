@@ -61,14 +61,14 @@ public class UnitDAO implements IDAO {
                     // カラムの値をフィールドにセット
                     dto.setId(result.getLong("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
                     dto.setRemark(result.getString("remark"));
-                    dto.setTemplateid(result.getLong("templateid"));
-                    dto.setVersionid(result.getLong("versionid"));
+                    dto.setTemplateId(result.getLong("templateid"));
+                    dto.setVersionId(result.getLong("versionid"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -112,14 +112,14 @@ System.out.println("findById Called."+id);
                     // ???????????????
                     dto.setId(result.getLong("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
                     dto.setRemark(result.getString("remark"));
-                    dto.setTemplateid(result.getLong("templateid"));
-                    dto.setVersionid(result.getLong("versionid"));
+                    dto.setTemplateId(result.getLong("templateid"));
+                    dto.setVersionId(result.getLong("versionid"));
                     unitDTO.add(dto);
 
                 }
@@ -160,14 +160,14 @@ System.out.println("findById Called."+id);
                     // カラムの値をフィールドにセット
                     dto.setId(result.getLong("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setMaintitleid(result.getString("maintitleid"));
+                    dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
                     dto.setRemark(result.getString("remark"));
-                    dto.setTemplateid(result.getLong("templateid"));
-                    dto.setVersionid(result.getLong("versionid"));
+                    dto.setTemplateId(result.getLong("templateid"));
+                    dto.setVersionId(result.getLong("versionid"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -197,14 +197,14 @@ System.out.println("findById Called."+id);
             connection.setAutoCommit(false);
             statement.setLong(1, unitDTO.getId());
             statement.setDate(2, unitDTO.getClose());
-            statement.setString(3, unitDTO.getMaintitleid());
+            statement.setString(3, unitDTO.getMaintitleId());
             statement.setString(4, unitDTO.getTitle());
             statement.setDate(5, unitDTO.getMtg());
             statement.setDate(6, unitDTO.getCut());
             statement.setDate(7, unitDTO.getEtd());
             statement.setString(8, unitDTO.getRemark());
-            statement.setLong(9, unitDTO.getTemplateid());
-            statement.setLong(10, unitDTO.getVersionid());
+            statement.setLong(9, unitDTO.getTemplateId());
+            statement.setLong(10, unitDTO.getVersionId());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
