@@ -182,7 +182,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     + textFieldId.getText()
                     + " を登録しました。");
             clearAllView();
-            this.textFieldId.setText(null);
+            this.textFieldId.clear();
             this.textFieldId.setDisable(false);
         }
     }
