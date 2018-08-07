@@ -189,7 +189,7 @@ System.out.println("findById Called."+id);
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?);";
+        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);

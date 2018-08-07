@@ -7,6 +7,7 @@ package UI;
 
 import DB.UnitDAO;
 import DB.UnitDTO;
+import common.SystemPropertiesAcc;
 import java.net.URL;
 import java.sql.Date;
 import java.time.Instant;
@@ -56,7 +57,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private Button buttonMakeFromTemplate;
 
     @FXML
-    private Button buttonMakeFromVersion;
+    private Button buttonMakeAnotherVersion;
 
     @FXML
     private Button buttonRegisterChange;
@@ -94,6 +95,11 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private TextArea textAreaMainTitleName;
 
+    private enum UnitAim {
+        // 下記は確定でない。
+        MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
+    }
+
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
@@ -104,7 +110,7 @@ public class FXMLTabPageUnitController implements Initializable {
             this.lockAllControls(false);
             this.buttonRegisterChange.setDisable(true);
             this.buttonMakeFromTemplate.setDisable(true);
-            this.buttonMakeFromVersion.setDisable(true);
+            this.buttonMakeAnotherVersion.setDisable(true);
         } else { //入力があればDB索引
             List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
@@ -176,12 +182,19 @@ public class FXMLTabPageUnitController implements Initializable {
             blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
-            textFieldId.setText(String.valueOf(Instant.now().getEpochSecond()));
+            Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
+                    "新規登録：新しいユニットを作成します。"
+                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    + "TITLE:" + this.textAreaTitle.getText());
+            alertRegisterNew.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        this.pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
+
+                    });
+
             this.lockAllControls(true);
-            FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                    "ID "
-                    + textFieldId.getText()
-                    + " を登録しました。");
+
             clearAllView();
             this.textFieldId.clear();
             this.textFieldId.setDisable(false);
@@ -219,7 +232,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.buttonClear.setDisable(value);
         this.buttonCloseToday.setDisable(value);
         this.buttonMakeFromTemplate.setDisable(value);
-        this.buttonMakeFromVersion.setDisable(value);
+        this.buttonMakeAnotherVersion.setDisable(value);
         this.buttonRegisterChange.setDisable(value);
         this.buttonRegisterNew.setDisable(value);
         this.buttonStartUp.setDisable(value);
@@ -277,26 +290,46 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     // ここからデータベースまわり
-    private void pushDTO(UnitDTO unitDTO) {
+    private void pushDTO(UnitDTO unitDTO, UnitAim unitAim) {
         /**
-         * 画面表示からDTOに詰め込み用(上書きする) 
-         * 内容の検査は各モードで共通のもの以外原則しない
+         * 画面表示からDTOに詰め込み用(上書きする) 内容の検査は各モードで共通のもの以外原則しない
          */
-        
-unitDTO.setId(Long.parseLong(this.textFieldId.getText()));
-unitDTO.setClose(Date.valueOf(this.datePickerClose.getValue()));
-unitDTO.setMaintitleId(this.textFieldMainTitleId.getText());
-unitDTO.setTitle(this.textAreaTitle.getText());
-unitDTO.setMtg(Date.valueOf(this.datePickerMtg.getValue()));
-unitDTO.setCut(Date.valueOf(this.datePickerCut.getValue()));
-unitDTO.setEtd(Date.valueOf(this.datePickerEtd.getValue()));
-unitDTO.setRemark(this.textAreaRemark.getText());
-/* 単純な詰め込みで済まなくなってしまった。
-状態により上書きする値と場所が変わってくる
-引数にモードを加えるべきか
-*/
-unitDTO.setTemplateId();
-unitDTO.setVersionId();
+        unitDTO.setId(Instant.now().getEpochSecond());
+        if (datePickerClose.getValue() != null) {
+            unitDTO.setClose(Date.valueOf(datePickerClose.getValue()));
+        }
+        unitDTO.setMaintitleId(this.textFieldMainTitleId.getText());
+        unitDTO.setTitle(this.textAreaTitle.getText());
+        if (datePickerMtg.getValue() != null) {
+            unitDTO.setMtg(Date.valueOf(this.datePickerMtg.getValue()));
+        }
+        if (datePickerCut.getValue() != null) {
+            unitDTO.setCut(Date.valueOf(this.datePickerCut.getValue()));
+        }
+        if (datePickerEtd.getValue() != null) {
+            unitDTO.setEtd(Date.valueOf(this.datePickerEtd.getValue()));
+        }
+        unitDTO.setRemark(this.textAreaRemark.getText());
+        switch (unitAim) {
+            case REGISTER_NEW:
+                /*
+                新規の場合はどこからも参照していないので以下の二項は何も操作しない
+                unitDTO.setTemplateId();
+                unitDTO.setVersionId();
+                 */
+                if(UnitDAO.register(unitDTO)){
+                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                        "ID "
+                        + unitDTO.getId()
+                        + " を登録しました。");
+                }else{
+                    FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                        "データーベース登録に失敗しました。");
+                }
+                break;
+            case REGISTER_CHANGE:
+                break;
+        }
 
     }
 }

@@ -30,7 +30,7 @@
                   <DatePicker fx:id="datePickerEtd" layoutX="432.0" layoutY="250.0" />
                   <Label layoutX="18.0" layoutY="284.0" text="REMARK" />
                   <Button fx:id="buttonMakeFromTemplate" layoutX="19.0" layoutY="344.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="176.0" text="同型で新規作成（つづき）" />
-                  <Button fx:id="buttonMakeFromVersion" layoutX="213.0" layoutY="344.0" mnemonicParsing="false" text="改変目的の複写（別バージョン）" />
+                  <Button fx:id="buttonMakeAnotherVersion" layoutX="213.0" layoutY="344.0" mnemonicParsing="false" text="改変目的の複写（別バージョン）" />
                   <Button fx:id="buttonRegisterChange" layoutX="438.0" layoutY="344.0" mnemonicParsing="false" text="上書き更新" />
                   <Button fx:id="buttonStartUp" layoutX="19.0" layoutY="387.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="529.0" text="起動" />
                   <TextField fx:id="textFieldMainTitleId" layoutX="59.0" layoutY="136.0" />
