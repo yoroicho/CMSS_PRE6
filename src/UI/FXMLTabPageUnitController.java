@@ -179,7 +179,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "新規登録を開始します。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-            blockRegisterButton();
+            // blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
@@ -189,15 +189,35 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        this.pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
+
+                        // , UnitAim.REGISTER_NEW
+                        // switch (unitAim) {
+                        //    case REGISTER_NEW:
+                        /*
+                新規の場合はどこからも参照していないので以下の二項は何も操作しない
+                unitDTO.setTemplateId();
+                unitDTO.setVersionId();
+                         */
+                        if (UnitDAO.register(pushDTO(new UnitDTO()))) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "新規登録しました。");
+                            this.lockAllControls(true);
+                            clearAllView();
+                            textFieldId.clear();
+                            textFieldId.setDisable(false);
+                            textFieldId.requestFocus();
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "データーベース登録に失敗しました。");
+                            
+                        }
+                        // break;
+                        // case REGISTER_CHANGE:
+                        //   break;
+                        //   }
 
                     });
 
-            this.lockAllControls(true);
-
-            clearAllView();
-            this.textFieldId.clear();
-            this.textFieldId.setDisable(false);
         }
     }
 
@@ -290,7 +310,7 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     // ここからデータベースまわり
-    private void pushDTO(UnitDTO unitDTO, UnitAim unitAim) {
+    private UnitDTO pushDTO(UnitDTO unitDTO) {
         /**
          * 画面表示からDTOに詰め込み用(上書きする) 内容の検査は各モードで共通のもの以外原則しない
          */
@@ -310,26 +330,7 @@ public class FXMLTabPageUnitController implements Initializable {
             unitDTO.setEtd(Date.valueOf(this.datePickerEtd.getValue()));
         }
         unitDTO.setRemark(this.textAreaRemark.getText());
-        switch (unitAim) {
-            case REGISTER_NEW:
-                /*
-                新規の場合はどこからも参照していないので以下の二項は何も操作しない
-                unitDTO.setTemplateId();
-                unitDTO.setVersionId();
-                 */
-                if(UnitDAO.register(unitDTO)){
-                FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                        "ID "
-                        + unitDTO.getId()
-                        + " を登録しました。");
-                }else{
-                    FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                        "データーベース登録に失敗しました。");
-                }
-                break;
-            case REGISTER_CHANGE:
-                break;
-        }
 
+        return unitDTO;
     }
 }
