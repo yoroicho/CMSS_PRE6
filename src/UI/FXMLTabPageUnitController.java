@@ -128,12 +128,20 @@ public class FXMLTabPageUnitController implements Initializable {
                 unitDTO.forEach(s -> { // 一件しかないのでループは無意味だがコピペ元用
                     System.out.println("ID " + String.valueOf(s.getId()));
                     //this.textFieldId.setText(String.valueOf(s.getId()));
-                    datePickerClose.setValue(s.getClose().toLocalDate());
-                    datePickerCut.setValue(s.getCut().toLocalDate());
-                    datePickerEtd.setValue(s.getEtd().toLocalDate());
+                    if (s.getClose() != null) {
+                        datePickerClose.setValue(s.getClose().toLocalDate());
+                    }
+                    if (s.getCut() != null) {
+                        datePickerCut.setValue(s.getCut().toLocalDate());
+                    }
+                    if (s.getEtd() != null) {
+                        datePickerEtd.setValue(s.getEtd().toLocalDate());
+                    }
                     textFieldMainTitleId.setText(s.getMaintitleId());
                     textAreaTitle.setText(s.getTitle());
-                    datePickerMtg.setValue(s.getMtg().toLocalDate());
+                    if (s.getMtg() != null) {
+                        datePickerMtg.setValue(s.getMtg().toLocalDate());
+                    }
                     textAreaRemark.setText(s.getRemark());
                 });
                 FXMLBaseDocumentController.getLabelCentralMessage().setText("既存分の操作を受付中。");
@@ -189,7 +197,6 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-
                         // , UnitAim.REGISTER_NEW
                         // switch (unitAim) {
                         //    case REGISTER_NEW:
@@ -198,7 +205,7 @@ public class FXMLTabPageUnitController implements Initializable {
                 unitDTO.setTemplateId();
                 unitDTO.setVersionId();
                          */
-                        if (UnitDAO.register(pushDTO(new UnitDTO()))) {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW))) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "新規登録しました。");
                             this.lockAllControls(true);
@@ -209,7 +216,6 @@ public class FXMLTabPageUnitController implements Initializable {
                         } else {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
-                            
                         }
                         // break;
                         // case REGISTER_CHANGE:
@@ -221,15 +227,61 @@ public class FXMLTabPageUnitController implements Initializable {
         }
     }
 
+    @FXML
     private void registerChange() { //既存のレコードを変更
         /*
-        条件
+        条件buttonRegisterChangeの押下
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
-        blockRegisterButton();
-        // 登録内容を提示し可否を確認して登録したら画面は抹消する。
-        initializeAllItems();
+        if (textFieldId.getText().isEmpty() == true) { //IDが空欄
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "IDが入力されていません。\n"
+                    + "既存のレコードでなければ変更上書きはできません。");
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (datePickerCut.getValue() != null
+                // CUTが空欄でない
+                && LocalDate.now().isAfter(datePickerCut.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "設定されているCUT日以降に登録はできません。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (this.datePickerClose.getValue() != null) {
+            //CLOSE(閉鎖日が入力されている)
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "CLOSE（閉鎖）が宣言された登録はできません。\n"
+                    + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "変更登録を開始します。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+            // blockRegisterButton();
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
+            // ここでプレビューと可否の入力を受け付け
+            Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
+                    "変更登録：既存のユニットを変更します。"
+                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    + "TITLE:" + this.textAreaTitle.getText());
+            alertRegisterNew.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "変更登録しました。");
+                            this.lockAllControls(true);
+                            clearAllView();
+                            textFieldId.clear();
+                            textFieldId.setDisable(false);
+                            textFieldId.requestFocus();
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "データーベース登録に失敗しました。");
+                        }
+                    });
+        }
     }
 
     @FXML
@@ -310,11 +362,27 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     // ここからデータベースまわり
-    private UnitDTO pushDTO(UnitDTO unitDTO) {
+    private UnitDTO pushDTO(UnitDTO unitDTO, UnitAim unitAim) {
         /**
          * 画面表示からDTOに詰め込み用(上書きする) 内容の検査は各モードで共通のもの以外原則しない
          */
-        unitDTO.setId(Instant.now().getEpochSecond());
+        switch (unitAim) {
+            case REGISTER_NEW:
+                unitDTO.setId(Instant.now().getEpochSecond());
+                break;
+            case REGISTER_CHANGE:
+                unitDTO.setId(Long.parseLong(this.textFieldId.getText()));
+                break;
+            case MAKE_ANOTHER_VERSION:
+                unitDTO.setId(Instant.now().getEpochSecond());
+                unitDTO.setVersionId(Long.parseLong(this.textFieldId.getText()));
+                break;
+            case MAKE_FROM_TEMPLATE:
+                unitDTO.setId(Instant.now().getEpochSecond());
+                unitDTO.setTemplateId(Long.parseLong(this.textFieldId.getText()));
+                break;
+        }
+
         if (datePickerClose.getValue() != null) {
             unitDTO.setClose(Date.valueOf(datePickerClose.getValue()));
         }
