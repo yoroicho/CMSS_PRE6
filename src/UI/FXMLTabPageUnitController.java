@@ -100,6 +100,8 @@ public class FXMLTabPageUnitController implements Initializable {
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
     }
 
+    private List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
+    
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
@@ -112,7 +114,7 @@ public class FXMLTabPageUnitController implements Initializable {
             this.buttonMakeFromTemplate.setDisable(true);
             this.buttonMakeAnotherVersion.setDisable(true);
         } else { //入力があればDB索引
-            List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
+            // List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
             System.out.println("textFieldIdOnAction size " + unitDTO.size());
             if (unitDTO.size() > 1) {
@@ -231,6 +233,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private void registerChange() { //既存のレコードを変更
         /*
         条件buttonRegisterChangeの押下
+        ★おそらく元のUnitDTOとの比較も必要であろう。
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
@@ -292,7 +295,7 @@ public class FXMLTabPageUnitController implements Initializable {
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
-        if (textFieldId.getText().isEmpty() == true) { //IDが空欄
+        if (textFieldId.getText().isEmpty() != true) { //IDが空欄
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "IDが入力されていません。\n"
                     + "既存のレコードでなければ変更上書きはできません。");
