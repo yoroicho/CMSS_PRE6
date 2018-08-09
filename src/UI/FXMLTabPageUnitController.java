@@ -96,7 +96,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaMainTitleName;
 
     private enum UnitAim {
-        // 下記は確定でない。
+        // PEEK,DELETEは確定でない。
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
     }
 
@@ -284,6 +284,121 @@ public class FXMLTabPageUnitController implements Initializable {
         }
     }
 
+    @FXML
+    private void makeAnotherVersion(){ // コピペしただけで細部の調整はまだ
+            /*
+        条件buttonMakeAnotherVersionの押下
+        もともと索引されているUnitDTOの内容と登録しようとしている画面の内容を比較
+            IDが入力されており、CUT日を含みそれ以前で、
+            かつCLOSEが本日を含みそれ以前であること
+         */
+        if (textFieldId.getText().isEmpty() == true) { //IDが空欄
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "IDが入力されていません。\n"
+                    + "既存のレコードでなければ変更上書きはできません。");
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (datePickerCut.getValue() != null
+                // CUTが空欄でない
+                && LocalDate.now().isAfter(datePickerCut.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "設定されているCUT日以降に登録はできません。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (this.datePickerClose.getValue() != null) {
+            //CLOSE(閉鎖日が入力されている)
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "CLOSE（閉鎖）が宣言された登録はできません。\n"
+                    + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "変更登録を開始します。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+            // blockRegisterButton();
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
+            // ここでプレビューと可否の入力を受け付け
+            Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
+                    "変更登録：既存のユニットを変更します。"
+                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    + "TITLE:" + this.textAreaTitle.getText());
+            alertRegisterNew.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "変更登録しました。");
+                            this.lockAllControls(true);
+                            clearAllView();
+                            textFieldId.clear();
+                            textFieldId.setDisable(false);
+                            textFieldId.requestFocus();
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "データーベース登録に失敗しました。");
+                        }
+                    });
+        }
+    }
+    
+    @FXML
+    private void makeFromTemplate(){  // コピペしただけで細部の調整はまだ
+            /*
+        条件buttonRegisterChangeの押下
+            IDが入力されており、CUT日を含みそれ以前で、
+            かつCLOSEが本日を含みそれ以前であること
+         */
+        if (textFieldId.getText().isEmpty() == true) { //IDが空欄
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "IDが入力されていません。\n"
+                    + "既存のレコードでなければ変更上書きはできません。");
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (datePickerCut.getValue() != null
+                // CUTが空欄でない
+                && LocalDate.now().isAfter(datePickerCut.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "設定されているCUT日以降に登録はできません。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (this.datePickerClose.getValue() != null) {
+            //CLOSE(閉鎖日が入力されている)
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "CLOSE（閉鎖）が宣言された登録はできません。\n"
+                    + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "変更登録を開始します。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+            // blockRegisterButton();
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
+            // ここでプレビューと可否の入力を受け付け
+            Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
+                    "変更登録：既存のユニットを変更します。"
+                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    + "TITLE:" + this.textAreaTitle.getText());
+            alertRegisterNew.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "変更登録しました。");
+                            this.lockAllControls(true);
+                            clearAllView();
+                            textFieldId.clear();
+                            textFieldId.setDisable(false);
+                            textFieldId.requestFocus();
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "データーベース登録に失敗しました。");
+                        }
+                    });
+        }
+    }
+    
     @FXML
     private void initializeAllItems() {
         textFieldId.clear();
