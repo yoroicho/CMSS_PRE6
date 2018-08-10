@@ -16,10 +16,6 @@ import java.sql.Date;
  * @author tokyo
  */
 public class UnitDTO {
-
-
-
-    
     /**
 CREATE TABLE `unit` (
   `id` bigint(20) NOT NULL,

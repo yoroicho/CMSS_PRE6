@@ -24,6 +24,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 
 /**
  * FXML Controller class
@@ -100,8 +101,10 @@ public class FXMLTabPageUnitController implements Initializable {
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
     }
 
+    // 馬鹿馬鹿しいのでちゃんとやる
     private List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
-    
+    // UnitDTO unitDTO;
+
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
@@ -126,7 +129,6 @@ public class FXMLTabPageUnitController implements Initializable {
             } else if (unitDTO.size() == 1) {
                 FXMLBaseDocumentController.getLabelCentralMessage().setText(
                         "呼び出しを行います。");
-                this.textFieldId.setEditable(false); // 索引後は主キーをブロック
                 unitDTO.forEach(s -> { // 一件しかないのでループは無意味だがコピペ元用
                     System.out.println("ID " + String.valueOf(s.getId()));
                     //this.textFieldId.setText(String.valueOf(s.getId()));
@@ -194,19 +196,11 @@ public class FXMLTabPageUnitController implements Initializable {
             // ここでプレビューと可否の入力を受け付け
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "新規登録：新しいユニットを作成します。"
-                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    // + "ID:" + this.textFieldId.getText() // IDは表示されないはず
                     + "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        // , UnitAim.REGISTER_NEW
-                        // switch (unitAim) {
-                        //    case REGISTER_NEW:
-                        /*
-                新規の場合はどこからも参照していないので以下の二項は何も操作しない
-                unitDTO.setTemplateId();
-                unitDTO.setVersionId();
-                         */
                         if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW))) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "新規登録しました。");
@@ -219,11 +213,6 @@ public class FXMLTabPageUnitController implements Initializable {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
                         }
-                        // break;
-                        // case REGISTER_CHANGE:
-                        //   break;
-                        //   }
-
                     });
 
         }
@@ -265,9 +254,22 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
-                    "変更登録：既存のユニットを変更します。"
-                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
-                    + "TITLE:" + this.textAreaTitle.getText());
+                    "変更\n"
+                    + "ID: "
+                    + String.valueOf(unitDTO.get(0).getId()
+                            + " から "
+                            + this.textFieldId.getText())
+                    + "\n"
+                    + "TITLE: "
+                            + "\n"
+                    + String.valueOf(unitDTO.get(0).getTitle()
+                            + "\n"
+                            + " から "
+                            + "\n"
+                            + this.textAreaTitle.getText()));
+            // 大きさの制限をとりはらう(setMinSizeでも横幅は広がらなかった)
+            alertRegisterNew.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                    // .setMinSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE); 
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
@@ -288,17 +290,18 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     @FXML
-    private void makeAnotherVersion(){ // コピペしただけで細部の調整はまだ
-            /*
+    private void makeAnotherVersion() { // コピペしただけで細部の調整はまだ
+        /*
         条件buttonMakeAnotherVersionの押下
         もともと索引されているUnitDTOの内容と登録しようとしている画面の内容を比較
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
-        if (textFieldId.getText().isEmpty() != true) { //IDが空欄
+        if (textFieldId.getText()==String.valueOf(unitDTO.get(0).getId())) { //IDが一致しない。通常は有り得ない。
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                    "IDが入力されていません。\n"
-                    + "既存のレコードでなければ変更上書きはできません。");
+                    "IDが呼び出し時と一致していません。\n"
+                    + "プログラムを見直す必要があります。"
+            );
             Optional<ButtonType> showAndWait = alert.showAndWait();
         } else if (datePickerCut.getValue() != null
                 // CUTが空欄でない
@@ -317,6 +320,10 @@ public class FXMLTabPageUnitController implements Initializable {
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
+                    + "ID: "
+                    + String.valueOf(unitDTO.get(0).getId()
+                            + " から "
+                            + this.textFieldId.getText())
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
             // blockRegisterButton();
@@ -329,7 +336,7 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION))) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
                             this.lockAllControls(true);
@@ -344,10 +351,10 @@ public class FXMLTabPageUnitController implements Initializable {
                     });
         }
     }
-    
+
     @FXML
-    private void makeFromTemplate(){  // コピペしただけで細部の調整はまだ
-            /*
+    private void makeFromTemplate() {  // コピペしただけで細部の調整はまだ
+        /*
         条件buttonRegisterChangeの押下
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
@@ -386,7 +393,7 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.MAKE_FROM_TEMPLATE))) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
                             this.lockAllControls(true);
@@ -401,7 +408,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     });
         }
     }
-    
+
     @FXML
     private void initializeAllItems() {
         textFieldId.clear();
