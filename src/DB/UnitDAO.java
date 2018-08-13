@@ -184,6 +184,36 @@ System.out.println("findById Called."+id);
         return unitDTO;
     }
 
+    public static boolean deleteById(Long id) {
+
+        // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
+        //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
+        //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
+        String sql = "DELETE FROM unit WHERE id = ?;";
+
+        // データベースへの接続
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                PreparedStatement statement = connection.prepareStatement(sql);) {
+            connection.setAutoCommit(false);
+            statement.setLong(1, id);
+            statement.addBatch();
+            ResultSet result = statement.executeQuery();
+            try {
+                connection.commit();
+                System.out.println("deleteById 成功");
+                return true;
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+                System.out.println("deleteById 失敗");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("deleteByID データべース障害");
+        }
+        return false;
+    }
+    
     public static boolean register(UnitDTO unitDTO) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
