@@ -275,6 +275,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -366,6 +373,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -450,6 +464,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -491,7 +512,9 @@ public class FXMLTabPageUnitController implements Initializable {
                                 FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                         "UNIT_BASEの登録に失敗しましたが、データベースレコードの削除はできませんでした。");
                             }
-                            return; // 失敗したらそこで終了。
+                            return; // 失敗したらDB削除して終了。
+                            // pdfの作成を行う
+
                         }
                         this.lockAllControls(true);
                         clearAllView();
