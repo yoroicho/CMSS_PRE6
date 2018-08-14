@@ -34,21 +34,23 @@ import java.util.logging.Logger;
  * @author
  */
 public class StructUnit {
-
-    /*
-    private String mainTitle; //
-    private String subTitle; //
-    private String url; // アクセス先、もしくはプログラム名
-    private String userName; // パスワードと対になるユーザー名
-    private String scanType; //ランダム分割、順読み分割、循環更新、使い捨て更新など
-    private String comment; //
-    private String thisPassCode; //シートそのものを暗号化する時のパスコード
-    private String randomType; // 文字種の分類
-    private String randomText; // 具体的な文字指定
-    private int passLength; // ひとつあたりの文字数
-    private String passCodeA; // 
-    private String passCodeB; // 
-     */
+/*
+    private TextField textFieldId;
+    private DatePicker datePickerClose;
+    private DatePicker datePickerCut;
+    private DatePicker datePickerEtd;
+    private TextField textFieldMainTitleId;
+    private TextArea textAreaTitle;
+    private DatePicker datePickerMtg;
+    private TextArea textAreaMainTitleName;
+    private TextArea textAreaSeriesName;
+    private TextArea textAreaOverallSeriesName;
+    private TextField textFieldOverallSeriesId;
+    private TextField textFieldSeriesId;
+    private TextArea textAreaRemark;
+    private TextArea textAreaCreator;
+    */
+  
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     /**
      *
@@ -95,18 +97,7 @@ public class StructUnit {
             document.open();
             // step 4
             PdfContentByte cb = writer.getDirectContent();
-            /*
-             Properties props = new Properties();
-             String jarPath = System.getProperty("java.class.path");
-             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator)+1);
-             FontFactory.registerDirectory("/res");
-             FontFactory.register("ipag.ttf");
-             Font ipaGothic = FontFactory.getFont("ipag", BaseFont.IDENTITY_H, 
-             BaseFont.EMBEDDED, 10); //10 is the size
-
-             InputStream is = getClass().getResourceAsStream("/res/ipag.ttf");
-             */
-
+ 
             Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator) + 1);
@@ -293,45 +284,7 @@ public class StructUnit {
 
             //表を文章に追加する
             document.add(pdfPTable);
-            /*
 
-             // CODE 128
-             document.add(new Paragraph("件名 : " + mainTitle, ipaGothic));
-             document.add(new Paragraph("分類 : " + subTitle, ipaGothic));
-             document.add(new Paragraph("-------------------------------------------------------"));
-             document.add(new Paragraph("発行 " + strDate));
-             document.add(new Paragraph("-------------------------------------------------------"));
-
-
-             BaseFont bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED);
-             Font font = new Font(bf, 12);
-             document.add(new Paragraph("指定", ipaGothic));
-             document.add(new Paragraph(url, ipaGothic));
-             code128.setCode(url);
-             code128.setFont(bf);
-             code128.setX(1);
-             //document.add(code128.createImageWithBarcode(cb, null, null));
-
-             document.add(new Paragraph("USER", ipaGothic));
-             if (userName.length() != 0) {
-             document.add(new Paragraph(userName, ipaGothic));
-             code128.setCode(userName);
-             code128.setFont(bf);
-             code128.setBarHeight(40f);
-             document.add(code128.createImageWithBarcode(cb, null, null));
-             }
-
-             document.add(new Paragraph("CODE", ipaGothic));
-             if (passCode.length() != 0) {
-             document.add(new Paragraph(passCode, ipaGothic));
-             code128.setCode(passCode);
-             code128.setFont(bf);
-             document.add(code128.createImageWithBarcode(cb, null, null));
-             }
-
-             document.add(new Paragraph("摘要", ipaGothic));
-             document.add(new Paragraph(comment, ipaGothic));
-             */
             // step 5
             document.close();
             System.out.println(fileFullDir + "を作成しました。");
@@ -339,21 +292,6 @@ public class StructUnit {
             document.close();
             throw ex;
         }
-
 return;
-
-        /*
-        File file = new File(fileFullDir);
-                Desktop desktop = Desktop.getDesktop();
-        if(file.exists()){
-                    System.out.println(fileFullDir + "を開きます。");
-        //desktop.open(file);
-        System.out.println(fileFullDir + "を開いています。");
-        }
-
-*/
-
-
-
     }
 }
