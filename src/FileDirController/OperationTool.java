@@ -44,6 +44,7 @@ public class OperationTool {
         }
         text.add("MAIN TITLE ID: " + unitDTO.getMaintitleId());
         text.add("TITLE: " + unitDTO.getTitle());
+        text.add("CREATOR: " + unitDTO.getCreator());
         if (unitDTO.getMtg() != null) {
             text.add("MTG: " + unitDTO.getMtg().toString());
         } else {
@@ -83,10 +84,10 @@ public class OperationTool {
                     Files.createDirectory(Paths.get(unitDir)); // Unitのフォルダを新規作成。
                 } else if (unitDTO.getTemplateId() != 0) {
                     System.out.println("TemplateCopy");
-                    copy(templateDir,unitDir); // テンプレート元からコピー。
+                    copy(templateDir, unitDir); // テンプレート元からコピー。
                 } else if (unitDTO.getVersionId() != 0) {
                     System.out.println("VersionCopy");
-                    copy(versionDir,unitDir); //  バージョン元からコピー。
+                    copy(versionDir, unitDir); //  バージョン元からコピー。
                 }
             }
             if (Paths.get(logFile).toFile().isFile()) {
@@ -142,8 +143,8 @@ public class OperationTool {
             System.out.println(e.getMessage());
             // Logging.logger.severe(e.getMessage());  //エラーメッセージ
             e.printStackTrace();
-         
+
         }
-     
+
     }
 }

@@ -74,6 +74,9 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaTitle;
 
     @FXML
+    private TextArea textAreaCreator;
+
+    @FXML
     private DatePicker datePickerMtg;
 
     @FXML
@@ -146,6 +149,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     }
                     textFieldMainTitleId.setText(s.getMaintitleId());
                     textAreaTitle.setText(s.getTitle());
+                    textAreaCreator.setText(s.getCreator());
                     if (s.getMtg() != null) {
                         datePickerMtg.setValue(s.getMtg().toLocalDate());
                     }
@@ -194,6 +198,13 @@ public class FXMLTabPageUnitController implements Initializable {
             //タイトルが空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+            } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
@@ -280,6 +291,13 @@ public class FXMLTabPageUnitController implements Initializable {
             //タイトルが空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+            } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
@@ -380,6 +398,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+            } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -471,6 +496,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+            } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -559,6 +591,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textAreaRemark.setDisable(value);
         this.textAreaSeriesName.setDisable(value);
         this.textAreaTitle.setDisable(value);
+        this.textAreaCreator.setDisable(value);
         this.textFieldMainTitleId.setDisable(value);
         this.textFieldOverallSeriesId.setDisable(value);
         this.textFieldSeriesId.setDisable(value);
@@ -574,6 +607,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textAreaRemark.setText(null);
         this.textAreaSeriesName.setText(null);
         this.textAreaTitle.setText(null);
+        this.textAreaCreator.setText(null);
         this.textFieldMainTitleId.setText(null);
         this.textFieldOverallSeriesId.setText(null);
         this.textFieldSeriesId.setText(null);
@@ -632,6 +666,7 @@ public class FXMLTabPageUnitController implements Initializable {
         }
         unitDTO.setMaintitleId(this.textFieldMainTitleId.getText());
         unitDTO.setTitle(this.textAreaTitle.getText());
+        unitDTO.setCreator(this.textAreaCreator.getText());
         if (datePickerMtg.getValue() != null) {
             unitDTO.setMtg(Date.valueOf(this.datePickerMtg.getValue()));
         }
