@@ -65,16 +65,32 @@ public class OperationTool {
         text.add("--- " + ZonedDateTime.now(ZoneId.systemDefault()).toString() + " ---");
 
         String unitBase = SystemPropertiesItem.SHIP_BASE;
-        String unitDir = unitBase + System.getProperty("file.separator") + String.valueOf(unitDTO.getId());
-        String logFile = unitDir + System.getProperty("file.separator") + String.valueOf(unitDTO.getId());
+        String unitDir = unitBase + System.getProperty("file.separator")
+                + String.valueOf(unitDTO.getId());
+        String logFile = unitDir + System.getProperty("file.separator")
+                + String.valueOf(unitDTO.getId());
+        String templateDir = unitBase + System.getProperty("file.separator")
+                + String.valueOf(unitDTO.getTemplateId());
+        String versionDir = unitBase + System.getProperty("file.separator")
+                + String.valueOf(unitDTO.getVersionId());
         try {
             if (Paths.get(unitDir).toFile().isDirectory()) {
-                // すでにディレクトリがある場合は何もしない。本当はモードと照合すべき。
+                // すでにディレクトリがある場合は何もしない。
+                // 変更の場合はここで分岐しているが、本当はモードと照合すべき。
             } else {
-                Files.createDirectory(Paths.get(unitDir)); // Unitのフォルダを作る。
+                if (unitDTO.getTemplateId() == 0 && unitDTO.getVersionId() == 0) {
+                    System.out.println("NewUnit");
+                    Files.createDirectory(Paths.get(unitDir)); // Unitのフォルダを新規作成。
+                } else if (unitDTO.getTemplateId() != 0) {
+                    System.out.println("TemplateCopy");
+                    copy(templateDir,unitDir); // テンプレート元からコピー。
+                } else if (unitDTO.getVersionId() != 0) {
+                    System.out.println("VersionCopy");
+                    copy(versionDir,unitDir); //  バージョン元からコピー。
+                }
             }
             if (Paths.get(logFile).toFile().isFile()) {
-                // すでにファイルがある場合は何もしない。本当はモードと照合すべき。
+                // すでにファイルがある場合は新たに作らない（変更の場合は追記する）
             } else {
                 Files.createFile(Paths.get(logFile)); // UnitのフォルダにlogFileを作る。 
             }
@@ -94,6 +110,7 @@ public class OperationTool {
      *
      * @param from コピー元ディレクトリ名
      * @param to コピー先ディレクトリ名
+     * @return 成功でtrue 失敗でfalse
      */
     public static void copy(String from, String to) {
         //コピー元
@@ -125,6 +142,8 @@ public class OperationTool {
             System.out.println(e.getMessage());
             // Logging.logger.severe(e.getMessage());  //エラーメッセージ
             e.printStackTrace();
+         
         }
+     
     }
 }

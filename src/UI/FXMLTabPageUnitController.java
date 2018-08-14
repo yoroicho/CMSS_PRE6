@@ -189,6 +189,13 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "新規登録を開始します。\n"
@@ -372,8 +379,8 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
-                    "変更登録：既存のユニットを変更します。"
-                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    "別版新規：既存のユニットの改変を作成します。"
+                    + "ID:" + this.textFieldId.getText()
                     + "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
@@ -389,7 +396,7 @@ public class FXMLTabPageUnitController implements Initializable {
                             registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
-                            return; // 失敗したらそこで終了。
+                            return; // DBは失敗したらそこで終了。
                         }
                         if (OperationTool.createUnitDir(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
