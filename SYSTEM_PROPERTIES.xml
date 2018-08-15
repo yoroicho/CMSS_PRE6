@@ -8,5 +8,5 @@
 <entry key="DB_PASS">guacamole</entry>
 <entry key="BOOKING_BASE"/>
 <entry key="SHIP_BASE">/home/kyokuto/デスクトップ/pdfTest</entry>
-<entry key="DB_URL">jdbc:mariadb://localhost:3306/cmss</entry>
+<entry key="DB_URL">jdbc:mariadb://157.7.208.160:3306/cmss</entry>
 </properties>
