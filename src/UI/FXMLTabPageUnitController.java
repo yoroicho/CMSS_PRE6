@@ -8,7 +8,11 @@ package UI;
 import DB.UnitDAO;
 import DB.UnitDTO;
 import FileDirController.OperationTool;
+import Slip.StructSheet;
+import Slip.StructUnit;
+import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesAcc;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.Instant;
@@ -16,6 +20,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -200,7 +206,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-            } else if (textAreaCreator.getText() == null
+        } else if (textAreaCreator.getText() == null
                 || textAreaCreator.getText().trim().length() == 0) {
             //製作者が空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,
@@ -236,6 +242,22 @@ public class FXMLTabPageUnitController implements Initializable {
                         if (OperationTool.createUnitDir(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "UNIT_BASEに新規登録しました。");
+                            try {
+                                StructUnit.creatSlip( // pdfの作成テスト。
+                                        registerUnitDTO,
+                                        "",//this.textFieldOverallSeriesId.getText(),
+                                        "",//this.textAreaOverallSeriesName.getText(),
+                                        "",//this.textFieldSeriesId.getText(),
+                                        "",//this.textAreaSeriesName.getText(),
+                                        ""//this.textAreaMainTitleName.getText()
+                                );
+                            } catch (IOException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (DocumentException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RuntimeException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         } else {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "UNIT_BASEの登録に失敗しました。");
@@ -293,7 +315,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-            } else if (textAreaCreator.getText() == null
+        } else if (textAreaCreator.getText() == null
                 || textAreaCreator.getText().trim().length() == 0) {
             //製作者が空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,
@@ -398,7 +420,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-            } else if (textAreaCreator.getText() == null
+        } else if (textAreaCreator.getText() == null
                 || textAreaCreator.getText().trim().length() == 0) {
             //製作者が空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,
@@ -496,7 +518,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "タイトル名が不正です。\n"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
-            } else if (textAreaCreator.getText() == null
+        } else if (textAreaCreator.getText() == null
                 || textAreaCreator.getText().trim().length() == 0) {
             //製作者が空白文字だけかゼロ文字
             Alert alert = new Alert(Alert.AlertType.WARNING,

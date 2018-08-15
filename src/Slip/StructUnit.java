@@ -5,6 +5,7 @@
  */
 package Slip;
 
+import DB.UnitDTO;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -18,12 +19,17 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
+import common.SystemPropertiesItem;
 import java.awt.Desktop;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -34,12 +40,11 @@ import java.util.logging.Logger;
  * @author
  */
 public class StructUnit {
-    
+
     /**
-     * Unitを出力するため専用。
-     * 他の情報と共に制作プランとして出力する事も視野に入れるべきか。
+     * Unitを出力するため専用。 他の情報と共に制作プランとして出力する事も視野に入れる。
      */
-/*
+    /*
     private TextField textFieldId;
     private DatePicker datePickerClose;
     private DatePicker datePickerCut;
@@ -54,56 +59,57 @@ public class StructUnit {
     private TextField textFieldSeriesId;
     private TextArea textAreaRemark;
     private TextArea textAreaCreator;
-    */
-  
+     */
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
+
     /**
-     *
-     * @param title
-     * @param cutDateTime
-     * @param compData
-     * @param makerName
-     * @param comment
-     * @param id
-     * @param divDateTime
-     * @param fileDir
-     * @param noBarCodePrint
+     * @param unitDTO
+     * @param overallSeriesId
+     * @param overallSeriesName
+     * @param seriesId
+     * @param seriesName
+     * @param mainTitleName
      * @throws java.io.IOException
      * @throws com.itextpdf.text.DocumentException
      */
-        
-        public void creatSlip(
-            String title,
-            String cutDateTime,
-            String compData,
-            String makerName,
-            String comment,
-            String id,
-            String divDateTime,
-            String fileDir,
-            Boolean noBarCodePrint
+    public static void creatSlip(
+            UnitDTO unitDTO,
+            String overallSeriesId,
+            String overallSeriesName,
+            String seriesId,
+            String seriesName,
+            String mainTitleName
     ) throws IOException, DocumentException, RuntimeException {
-            
         Document document = null;
         String fileFullDir
-                = 
-                fileDir +
-                FILE_SEPARATOR +
-                id +
-                "-" +
-                divDateTime +
-                ".pdf";
+                = UNIT_BASE
+                + FILE_SEPARATOR
+                + String.valueOf(unitDTO.getId())
+                + FILE_SEPARATOR
+                + String.valueOf(unitDTO.getId())
+                // ファイル名に日付けを入れれば世代管理できるが、
+                // Unitの番号からファイルを特定しきれない。
+                // 2018-08-15T15:16:10.708+09:00 (このフォーマットパターン)
+                //+ "_"
+                + DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                        .format(ZonedDateTime.now(ZoneId.systemDefault()))
+                + ".pdf";
+        System.out.println("PDF dir " + fileFullDir);
         try {
-            // step 1
+            // step 1 紙の端ギリギリに印刷することもあるので、余白は0とする。
             document = new Document(PageSize.A4, 60, 50, 50, 35);
-            // step 2
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileFullDir));
+            // step 2 
+            PdfWriter writer = PdfWriter.getInstance(
+                    document,
+                    new FileOutputStream(fileFullDir)
+            );
             // step 3
             document.open();
             // step 4
             PdfContentByte cb = writer.getDirectContent();
- 
-            Properties props = new Properties();
+
+            // Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator) + 1);
             System.out.println(jarPath);
@@ -116,26 +122,31 @@ public class StructUnit {
             Font ipaGothic14 = new Font(BaseFont.createFont(System.getProperty("user.dir") + FILE_SEPARATOR + "res" + FILE_SEPARATOR + "ipag.ttf",
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
-            //表を作成(2列)
-            PdfPTable pdfPTable = new PdfPTable(2);
+            //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
+            PdfPTable pdfPTable = new PdfPTable(8);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             pdfPTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             pdfPTable.getDefaultCell().setFixedHeight(150);
 
             pdfPTable.setWidthPercentage(100f);
-
-            int pdfPTableWidth[] = {10, 90};
+/*
+            int pdfPTableWidth[] // 20列の割合
+                    = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                        5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+            
             pdfPTable.setWidths(pdfPTableWidth);
+  */          
 
-            PdfPCell cell_1_1 = new PdfPCell(new Paragraph("タイトル", ipaGothic));
+            PdfPCell cell_1_1 = new PdfPCell(new Paragraph("title", ipaGothic));
             cell_1_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_1.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_1_1.setFixedHeight(50);
-            PdfPCell cell_1_2 = new PdfPCell(new Paragraph(title, ipaGothic));
+            PdfPCell cell_1_2 = new PdfPCell(new Paragraph(unitDTO.getTitle(), ipaGothic));
             cell_1_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_2.setHorizontalAlignment(Element.ALIGN_CENTER);
-
+            
+            /*
             PdfPCell cell_2_1 = new PdfPCell(new Paragraph("締切日時", ipaGothic));
             cell_2_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_2_1.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -143,8 +154,16 @@ public class StructUnit {
             cell_2_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
+             */
             pdfPTable.addCell(cell_1_1);
             pdfPTable.addCell(cell_1_2);
+                        pdfPTable.addCell(cell_1_1);
+            pdfPTable.addCell(cell_1_2);
+                        pdfPTable.addCell(cell_1_1);
+            pdfPTable.addCell(cell_1_2);
+                        pdfPTable.addCell(cell_1_1);
+            pdfPTable.addCell(cell_1_2);
+            /*
             pdfPTable.addCell(cell_2_1);
             pdfPTable.addCell(cell_2_2);
 
@@ -286,17 +305,17 @@ public class StructUnit {
             cellIssueValue.setHorizontalAlignment(Element.ALIGN_CENTER);
             cellIssueValue.setFixedHeight(20);
             pdfPTable.addCell(cellIssueValue);
-
+             */
             //表を文章に追加する
             document.add(pdfPTable);
 
             // step 5
             document.close();
+
             System.out.println(fileFullDir + "を作成しました。");
         } catch (RuntimeException ex) {
-            document.close();
+            // document.close();
             throw ex;
         }
-return;
     }
 }
