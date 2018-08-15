@@ -7,7 +7,12 @@ package UI;
 
 import DB.UnitDAO;
 import DB.UnitDTO;
+import FileDirController.OperationTool;
+import Slip.StructSheet;
+import Slip.StructUnit;
+import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesAcc;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.Instant;
@@ -15,6 +20,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -73,6 +80,9 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaTitle;
 
     @FXML
+    private TextArea textAreaCreator;
+
+    @FXML
     private DatePicker datePickerMtg;
 
     @FXML
@@ -104,6 +114,8 @@ public class FXMLTabPageUnitController implements Initializable {
     // 馬鹿馬鹿しいのでちゃんとやる
     private List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
     // UnitDTO unitDTO;
+
+    private UnitDTO registerUnitDTO; // 登録予定のUnitDTO
 
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
@@ -143,6 +155,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     }
                     textFieldMainTitleId.setText(s.getMaintitleId());
                     textAreaTitle.setText(s.getTitle());
+                    textAreaCreator.setText(s.getCreator());
                     if (s.getMtg() != null) {
                         datePickerMtg.setValue(s.getMtg().toLocalDate());
                     }
@@ -186,6 +199,20 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "新規登録を開始します。\n"
@@ -201,20 +228,56 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW))) {
+                        registerUnitDTO // 登録予定のUnitDTO
+                                = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
+                        if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                                    "新規登録しました。");
-                            this.lockAllControls(true);
-                            clearAllView();
-                            textFieldId.clear();
-                            textFieldId.setDisable(false);
-                            textFieldId.requestFocus();
+                                    "データベースに新規登録しました。");
                         } else {
+                            registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
+                            return; // 失敗したらそこで終了。
                         }
+                        if (OperationTool.createUnitDir(registerUnitDTO)) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEに新規登録しました。");
+                            try {
+                                StructUnit.creatSlip( // pdfの作成テスト。
+                                        registerUnitDTO,
+                                        "",//this.textFieldOverallSeriesId.getText(),
+                                        "",//this.textAreaOverallSeriesName.getText(),
+                                        "",//this.textFieldSeriesId.getText(),
+                                        "",//this.textAreaSeriesName.getText(),
+                                        ""//this.textAreaMainTitleName.getText()
+                                );
+                            } catch (IOException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (DocumentException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RuntimeException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEの登録に失敗しました。");
+                            // 変更以外はデータベースに遡って削除する。
+                            if (UnitDAO.deleteById(registerUnitDTO.getId())) {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗したのでデータベースレコード削除しました。");
+                            } else {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗しましたが、データベースレコードの削除はできませんでした。");
+                            }
+                            return; // 失敗したらそこで終了。
+                        }
+                        this.lockAllControls(true);
+                        clearAllView();
+                        textFieldId.clear();
+                        textFieldId.setDisable(false);
+                        textFieldId.requestFocus();
                     });
-
+            registerUnitDTO = null;
         }
     }
 
@@ -245,6 +308,20 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -261,7 +338,7 @@ public class FXMLTabPageUnitController implements Initializable {
                             + this.textFieldId.getText())
                     + "\n"
                     + "TITLE: "
-                            + "\n"
+                    + "\n"
                     + String.valueOf(unitDTO.get(0).getTitle()
                             + "\n"
                             + " から "
@@ -269,35 +346,54 @@ public class FXMLTabPageUnitController implements Initializable {
                             + this.textAreaTitle.getText()));
             // 大きさの制限をとりはらう(setMinSizeでも横幅は広がらなかった)
             alertRegisterNew.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                    // .setMinSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE); 
+            // .setMinSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE); 
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE))) {
+                        registerUnitDTO // 登録予定のUnitDTO
+                                = pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE);
+                        if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
-                            this.lockAllControls(true);
-                            clearAllView();
-                            textFieldId.clear();
-                            textFieldId.setDisable(false);
-                            textFieldId.requestFocus();
                         } else {
+                            registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
+                            return; // 失敗したらそこで終了。
                         }
-                    });
+                        if (OperationTool.createUnitDir(registerUnitDTO)) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEに変更登録しました。");
+                        } else {
+                            Alert alertFileError = new Alert(Alert.AlertType.WARNING,
+                                    "ファイルシステムに異常が起こりました。\n"
+                                    + "設定を見直した上で、再度画面を呼出し\n"
+                                    + "上書き登録をしてください。"
+                            );
+                            Optional<ButtonType> ans = alertFileError.showAndWait();
+                            return; // 失敗したらそこで終了。
+                        }
+                        this.lockAllControls(true);
+                        clearAllView();
+                        textFieldId.clear();
+                        textFieldId.setDisable(false);
+                        textFieldId.requestFocus();
+                    }
+                    );
+            registerUnitDTO = null;
         }
     }
 
     @FXML
-    private void makeAnotherVersion() { // コピペしただけで細部の調整はまだ
+
+    private void makeAnotherVersion() { // 細部の調整はまだ
         /*
         条件buttonMakeAnotherVersionの押下
         もともと索引されているUnitDTOの内容と登録しようとしている画面の内容を比較
             IDが入力されており、CUT日を含みそれ以前で、
             かつCLOSEが本日を含みそれ以前であること
          */
-        if (textFieldId.getText()==String.valueOf(unitDTO.get(0).getId())) { //IDが一致しない。通常は有り得ない。
+        if (textFieldId.getText() == String.valueOf(unitDTO.get(0).getId())) { //IDが一致しない。通常は有り得ない。
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "IDが呼び出し時と一致していません。\n"
                     + "プログラムを見直す必要があります。"
@@ -317,6 +413,20 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -330,30 +440,53 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
-                    "変更登録：既存のユニットを変更します。"
-                    + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+                    "別版新規：既存のユニットの改変を作成します。"
+                    + "ID:" + this.textFieldId.getText()
                     + "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION))) {
+                        registerUnitDTO // 登録予定のUnitDTO
+                                = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
+                        System.out.println("call version");
+                        if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
-                            this.lockAllControls(true);
-                            clearAllView();
-                            textFieldId.clear();
-                            textFieldId.setDisable(false);
-                            textFieldId.requestFocus();
+
                         } else {
+                            registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
+                            return; // DBは失敗したらそこで終了。
                         }
+                        if (OperationTool.createUnitDir(registerUnitDTO)) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEに新規登録しました。");
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEの登録に失敗しました。");
+                            // 変更以外はデータベースに遡って削除する。
+                            if (UnitDAO.deleteById(registerUnitDTO.getId())) {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗したのでデータベースレコード削除しました。");
+                            } else {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗しましたが、データベースレコードの削除はできませんでした。");
+                            }
+                            return; // 失敗したらそこで終了。
+                        }
+                        this.lockAllControls(true);
+                        clearAllView();
+                        textFieldId.clear();
+                        textFieldId.setDisable(false);
+                        textFieldId.requestFocus();
                     });
+            registerUnitDTO = null;
         }
     }
 
     @FXML
-    private void makeFromTemplate() {  // コピペしただけで細部の調整はまだ
+    private void makeFromTemplate() {  // 細部の調整はまだ
         /*
         条件buttonRegisterChangeの押下
             IDが入力されており、CUT日を含みそれ以前で、
@@ -378,6 +511,20 @@ public class FXMLTabPageUnitController implements Initializable {
                     + "すでに閉鎖済みである場合は一旦登録後に閉鎖処理をして下さい"
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaTitle.getText() == null
+                || textAreaTitle.getText().trim().length() == 0) {
+            //タイトルが空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "タイトル名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
+        } else if (textAreaCreator.getText() == null
+                || textAreaCreator.getText().trim().length() == 0) {
+            //製作者が空白文字だけかゼロ文字
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "製作者名が不正です。\n"
+            );
+            Optional<ButtonType> showAndWait = alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "変更登録を開始します。\n"
@@ -393,19 +540,43 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        if (UnitDAO.register(pushDTO(new UnitDTO(), UnitAim.MAKE_FROM_TEMPLATE))) {
+                        registerUnitDTO // 登録予定のUnitDTO
+                                = pushDTO(new UnitDTO(), UnitAim.MAKE_FROM_TEMPLATE);
+                        System.out.println("call template");
+                        if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
-                            this.lockAllControls(true);
-                            clearAllView();
-                            textFieldId.clear();
-                            textFieldId.setDisable(false);
-                            textFieldId.requestFocus();
                         } else {
+                            registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データーベース登録に失敗しました。");
+                            return; // 失敗したらそこで終了。
                         }
+                        if (OperationTool.createUnitDir(registerUnitDTO)) {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEに新規登録しました。");
+                        } else {
+                            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                    "UNIT_BASEの登録に失敗しました。");
+                            // 変更以外はデータベースに遡って削除する。
+                            if (UnitDAO.deleteById(registerUnitDTO.getId())) {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗したのでデータベースレコード削除しました。");
+                            } else {
+                                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                                        "UNIT_BASEの登録に失敗しましたが、データベースレコードの削除はできませんでした。");
+                            }
+                            return; // 失敗したらDB削除して終了。
+                            // pdfの作成を行う
+
+                        }
+                        this.lockAllControls(true);
+                        clearAllView();
+                        textFieldId.clear();
+                        textFieldId.setDisable(false);
+                        textFieldId.requestFocus();
                     });
+            registerUnitDTO = null;
         }
     }
 
@@ -442,6 +613,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textAreaRemark.setDisable(value);
         this.textAreaSeriesName.setDisable(value);
         this.textAreaTitle.setDisable(value);
+        this.textAreaCreator.setDisable(value);
         this.textFieldMainTitleId.setDisable(value);
         this.textFieldOverallSeriesId.setDisable(value);
         this.textFieldSeriesId.setDisable(value);
@@ -457,6 +629,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textAreaRemark.setText(null);
         this.textAreaSeriesName.setText(null);
         this.textAreaTitle.setText(null);
+        this.textAreaCreator.setText(null);
         this.textFieldMainTitleId.setText(null);
         this.textFieldOverallSeriesId.setText(null);
         this.textFieldSeriesId.setText(null);
@@ -501,10 +674,12 @@ public class FXMLTabPageUnitController implements Initializable {
             case MAKE_ANOTHER_VERSION:
                 unitDTO.setId(Instant.now().getEpochSecond());
                 unitDTO.setVersionId(Long.parseLong(this.textFieldId.getText()));
+                System.out.println("version");
                 break;
             case MAKE_FROM_TEMPLATE:
                 unitDTO.setId(Instant.now().getEpochSecond());
                 unitDTO.setTemplateId(Long.parseLong(this.textFieldId.getText()));
+                System.out.println("template");
                 break;
         }
 
@@ -513,6 +688,7 @@ public class FXMLTabPageUnitController implements Initializable {
         }
         unitDTO.setMaintitleId(this.textFieldMainTitleId.getText());
         unitDTO.setTitle(this.textAreaTitle.getText());
+        unitDTO.setCreator(this.textAreaCreator.getText());
         if (datePickerMtg.getValue() != null) {
             unitDTO.setMtg(Date.valueOf(this.datePickerMtg.getValue()));
         }

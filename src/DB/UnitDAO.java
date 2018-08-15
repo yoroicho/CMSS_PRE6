@@ -63,6 +63,7 @@ public class UnitDAO implements IDAO {
                     dto.setClose(result.getDate("close"));
                     dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
+                    dto.setCreator(result.getString("creator"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
@@ -114,6 +115,7 @@ System.out.println("findById Called."+id);
                     dto.setClose(result.getDate("close"));
                     dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
+                    dto.setCreator(result.getString("creator"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
@@ -162,6 +164,7 @@ System.out.println("findById Called."+id);
                     dto.setClose(result.getDate("close"));
                     dto.setMaintitleId(result.getString("maintitleid"));
                     dto.setTitle(result.getString("title"));
+                    dto.setCreator(result.getString("creator"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
@@ -184,12 +187,42 @@ System.out.println("findById Called."+id);
         return unitDTO;
     }
 
+    public static boolean deleteById(Long id) {
+
+        // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
+        //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
+        //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
+        String sql = "DELETE FROM unit WHERE id = ?;";
+
+        // データベースへの接続
+        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                PreparedStatement statement = connection.prepareStatement(sql);) {
+            connection.setAutoCommit(false);
+            statement.setLong(1, id);
+            statement.addBatch();
+            ResultSet result = statement.executeQuery();
+            try {
+                connection.commit();
+                System.out.println("deleteById 成功");
+                return true;
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+                System.out.println("deleteById 失敗");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("deleteByID データべース障害");
+        }
+        return false;
+    }
+    
     public static boolean register(UnitDTO unitDTO) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?);";
+        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -199,12 +232,13 @@ System.out.println("findById Called."+id);
             statement.setDate(2, unitDTO.getClose());
             statement.setString(3, unitDTO.getMaintitleId());
             statement.setString(4, unitDTO.getTitle());
-            statement.setDate(5, unitDTO.getMtg());
-            statement.setDate(6, unitDTO.getCut());
-            statement.setDate(7, unitDTO.getEtd());
-            statement.setString(8, unitDTO.getRemark());
-            statement.setLong(9, unitDTO.getTemplateId());
-            statement.setLong(10, unitDTO.getVersionId());
+            statement.setString(5, unitDTO.getCreator());
+            statement.setDate(6, unitDTO.getMtg());
+            statement.setDate(7, unitDTO.getCut());
+            statement.setDate(8, unitDTO.getEtd());
+            statement.setString(9, unitDTO.getRemark());
+            statement.setLong(10, unitDTO.getTemplateId());
+            statement.setLong(11, unitDTO.getVersionId());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {

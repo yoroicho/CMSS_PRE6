@@ -16,26 +16,22 @@ import java.sql.Date;
  * @author tokyo
  */
 public class UnitDTO {
-    /**
-CREATE TABLE `unit` (
-  `id` bigint(20) NOT NULL,
-  `close` datetime DEFAULT NULL,
-  `maintitleid` varchar(4) DEFAULT NULL,
-  `title` text NOT NULL,
-  `mtg` datetime DEFAULT NULL,
-  `cut` datetime DEFAULT NULL,
-  `etd` datetime DEFAULT NULL,
-  `remark` text,
-  `templateId` bigint(20) DEFAULT NULL,
-  `versionId` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-     *
+
+    /*
+     * CREATE TABLE `unit` ( `id` bigint(20) NOT NULL, `close` date DEFAULT
+     * NULL, `maintitleid` varchar(4) DEFAULT NULL, `title` text NOT NULL,
+     * `creator` text NOT NULL, `mtg` date DEFAULT NULL, `cut` date DEFAULT
+     * NULL, `etd` date DEFAULT NULL, `remark` text, `templateid` bigint(20)
+     * DEFAULT NULL, `versionid` bigint(20) DEFAULT NULL, PRIMARY KEY (`id`) )
+     * ENGINE=InnoDB DEFAULT CHARSET=utf8
      */
+    
+    
     private long id;
     private Date close;
     private String maintitleId;
     private String title;
+    private String creator;
     private Date mtg;
     private Date cut;
     private Date etd;
@@ -51,13 +47,6 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param id the id to set
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
      * @return the close
      */
     public Date getClose() {
@@ -65,24 +54,10 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param close the close to set
-     */
-    public void setClose(Date close) {
-        this.close = close;
-    }
-
-    /**
-     * @return the maintitleid
+     * @return the maintitleId
      */
     public String getMaintitleId() {
         return maintitleId;
-    }
-
-    /**
-     * @param maintitleid the maintitleid to set
-     */
-    public void setMaintitleId(String maintitleId) {
-        this.maintitleId = maintitleId;
     }
 
     /**
@@ -93,10 +68,10 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param title the title to set
+     * @return the creator
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public String getCreator() {
+        return creator;
     }
 
     /**
@@ -107,24 +82,10 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param mtg the mtg to set
-     */
-    public void setMtg(Date mtg) {
-        this.mtg = mtg;
-    }
-
-    /**
      * @return the cut
      */
     public Date getCut() {
         return cut;
-    }
-
-    /**
-     * @param cut the cut to set
-     */
-    public void setCut(Date cut) {
-        this.cut = cut;
     }
 
     /**
@@ -135,24 +96,10 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param etd the etd to set
-     */
-    public void setEtd(Date etd) {
-        this.etd = etd;
-    }
-
-    /**
      * @return the remark
      */
     public String getRemark() {
         return remark;
-    }
-
-    /**
-     * @param remark the remark to set
-     */
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     /**
@@ -163,17 +110,80 @@ CREATE TABLE `unit` (
     }
 
     /**
-     * @param templateId the templateId to set
-     */
-    public void setTemplateId(long templateId) {
-        this.templateId = templateId;
-    }
-
-    /**
      * @return the versionId
      */
     public long getVersionId() {
         return versionId;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
+     * @param close the close to set
+     */
+    public void setClose(Date close) {
+        this.close = close;
+    }
+
+    /**
+     * @param maintitleId the maintitleId to set
+     */
+    public void setMaintitleId(String maintitleId) {
+        this.maintitleId = maintitleId;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @param creator the creator to set
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * @param mtg the mtg to set
+     */
+    public void setMtg(Date mtg) {
+        this.mtg = mtg;
+    }
+
+    /**
+     * @param cut the cut to set
+     */
+    public void setCut(Date cut) {
+        this.cut = cut;
+    }
+
+    /**
+     * @param etd the etd to set
+     */
+    public void setEtd(Date etd) {
+        this.etd = etd;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    /**
+     * @param templateId the templateId to set
+     */
+    public void setTemplateId(long templateId) {
+        this.templateId = templateId;
     }
 
     /**
@@ -182,6 +192,5 @@ CREATE TABLE `unit` (
     public void setVersionId(long versionId) {
         this.versionId = versionId;
     }
-
     
 }
