@@ -14,12 +14,18 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.Barcode128;
+import com.itextpdf.text.pdf.BarcodeEAN;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.Header;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import common.SystemPropertiesItem;
 import java.awt.Desktop;
 import java.awt.Image;
@@ -98,7 +104,7 @@ public class StructUnit {
         System.out.println("PDF dir " + fileFullDir);
         try {
             // step 1 紙の端ギリギリに印刷することもあるので、余白は0とする。
-            document = new Document(PageSize.A4, 60, 50, 50, 35);
+            document = new Document(PageSize.A4, 10, 20, 30, 40);
             // step 2 
             PdfWriter writer = PdfWriter.getInstance(
                     document,
@@ -108,7 +114,33 @@ public class StructUnit {
             document.open();
             // step 4
             PdfContentByte cb = writer.getDirectContent();
+            // タイトル設定、画面表示のみ表示された。
+            document.addTitle(String.valueOf(unitDTO.getId()));
 
+            // 印刷するためのヘッダーとフッターを設定
+            // https://stackoverflow.com/questions/19856583/how-to-add-header-and-footer-to-my-pdf-using-itext-in-java
+            class HeaderFooterPageEvent extends PdfPageEventHelper {
+
+                @Override
+                public void onStartPage(PdfWriter writer, Document document) {
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Left"), 30, 800, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Right"), 550, 800, 0);
+                }
+
+                @Override
+                public void onEndPage(PdfWriter writer, Document document) {
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("http://www.xxxx-your_example.com/"), 110, 30, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("page " + document.getPageNumber()), 550, 30, 0);
+                }
+            }
+
+            HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+            // 最初のページはフッダーしか表示されたないが、そういう文化なのだろう。
+            writer.setPageEvent(event);
+            // ヘッダーフッターの作成行程終わり。
+            
+            
+            
             // Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator) + 1);
@@ -123,20 +155,20 @@ public class StructUnit {
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
             //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
-            PdfPTable pdfPTable = new PdfPTable(8);
+            PdfPTable pdfPTable = new PdfPTable(5);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             pdfPTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             pdfPTable.getDefaultCell().setFixedHeight(150);
 
             pdfPTable.setWidthPercentage(100f);
-/*
+            /*
             int pdfPTableWidth[] // 20列の割合
                     = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                         5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
             
             pdfPTable.setWidths(pdfPTableWidth);
-  */          
+             */
 
             PdfPCell cell_1_1 = new PdfPCell(new Paragraph("title", ipaGothic));
             cell_1_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -145,7 +177,7 @@ public class StructUnit {
             PdfPCell cell_1_2 = new PdfPCell(new Paragraph(unitDTO.getTitle(), ipaGothic));
             cell_1_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_2.setHorizontalAlignment(Element.ALIGN_CENTER);
-            
+
             /*
             PdfPCell cell_2_1 = new PdfPCell(new Paragraph("締切日時", ipaGothic));
             cell_2_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -155,14 +187,13 @@ public class StructUnit {
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
              */
-            pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
+        
+                pdfPTable.addCell(cell_1_1);
+                pdfPTable.addCell(cell_1_2);
+                pdfPTable.addCell(cell_1_1);
+               // pdfPTable.addCell(cell_1_2);
+
+         
             /*
             pdfPTable.addCell(cell_2_1);
             pdfPTable.addCell(cell_2_2);
@@ -185,9 +216,10 @@ public class StructUnit {
 
             cellUrlValue.setFixedHeight(50);
             pdfPTable.addCell(cellUrlValue);
-
-            if (compData.length() != 0 && !noBarCodePrint) {
-                Image image = ZxingUti.getQRCode(compData); // 日本語対応 UTF-8
+*/
+            Boolean noBarCodePrint =false; // もしも付与の可否を行う場合のダミー
+            if ((unitDTO.getMaintitleId()+unitDTO.getTitle()).length() != 0 && !noBarCodePrint) {
+                Image image = ZxingUti.getQRCode(unitDTO.getMaintitleId()+unitDTO.getTitle()); // 日本語対応 UTF-8
                 com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(image, null);
                 PdfPCell cell = new PdfPCell(iTextImage);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -195,13 +227,13 @@ public class StructUnit {
                 cell.setFixedHeight(100);
                 pdfPTable.addCell(cell); // 日本語対応 UTF-8
             } else {
-                PdfPCell cellUrlValueQr = new PdfPCell(new Paragraph("", ipaGothic));
+                PdfPCell cellUrlValueQr = new PdfPCell(new Paragraph("QRなし", ipaGothic));
                 cellUrlValueQr.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cellUrlValueQr.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cellUrlValueQr.setFixedHeight(80);
                 pdfPTable.addCell(cellUrlValueQr);
             }
-
+/*
             PdfPCell cellUserNameKey = new PdfPCell(new Paragraph("作成者", ipaGothic));
             cellUserNameKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellUserNameKey.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -214,9 +246,11 @@ public class StructUnit {
             cellUserNameValue.setFixedHeight(30);
             pdfPTable.addCell(cellUserNameValue);
 
-            if (makerName.length() != 0 && !noBarCodePrint) {
+            */
+                // EANコードで作った方が数字に関しては最適化されているかも。
+            if (String.valueOf(unitDTO.getId()).length() != 0 && !noBarCodePrint) {
                 Barcode128 code128 = new Barcode128();
-                code128.setCode(makerName);
+                code128.setCode(String.valueOf(unitDTO.getId()));
                 code128.setFont(ipaGothic.getBaseFont());
                 code128.setBarHeight(40f);
                 PdfPCell cellUserNameValueBc = new PdfPCell(code128.createImageWithBarcode(cb, null, null));
@@ -231,7 +265,7 @@ public class StructUnit {
                 cellUserNameValueBc.setFixedHeight(80);
                 pdfPTable.addCell(cellUserNameValueBc);
             }
-
+/*
             PdfPCell cellPassCodeKey = new PdfPCell(new Paragraph("符号", ipaGothic));
             cellPassCodeKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellPassCodeKey.setHorizontalAlignment(Element.ALIGN_CENTER);
