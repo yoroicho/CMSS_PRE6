@@ -14,6 +14,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.Barcode128;
+import com.itextpdf.text.pdf.BarcodeEAN;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -154,7 +155,7 @@ public class StructUnit {
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
             //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
-            PdfPTable pdfPTable = new PdfPTable(4);
+            PdfPTable pdfPTable = new PdfPTable(5);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             pdfPTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -186,16 +187,13 @@ public class StructUnit {
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
              */
-            for (int i = 0; i < 100; i++) {
+        
                 pdfPTable.addCell(cell_1_1);
                 pdfPTable.addCell(cell_1_2);
                 pdfPTable.addCell(cell_1_1);
-                pdfPTable.addCell(cell_1_2);
-                pdfPTable.addCell(cell_1_1);
-                pdfPTable.addCell(cell_1_2);
-                pdfPTable.addCell(cell_1_1);
-                pdfPTable.addCell(cell_1_2);
-            }
+               // pdfPTable.addCell(cell_1_2);
+
+         
             /*
             pdfPTable.addCell(cell_2_1);
             pdfPTable.addCell(cell_2_2);
@@ -218,9 +216,10 @@ public class StructUnit {
 
             cellUrlValue.setFixedHeight(50);
             pdfPTable.addCell(cellUrlValue);
-
-            if (compData.length() != 0 && !noBarCodePrint) {
-                Image image = ZxingUti.getQRCode(compData); // 日本語対応 UTF-8
+*/
+            Boolean noBarCodePrint =false; // もしも付与の可否を行う場合のダミー
+            if ((unitDTO.getMaintitleId()+unitDTO.getTitle()).length() != 0 && !noBarCodePrint) {
+                Image image = ZxingUti.getQRCode(unitDTO.getMaintitleId()+unitDTO.getTitle()); // 日本語対応 UTF-8
                 com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(image, null);
                 PdfPCell cell = new PdfPCell(iTextImage);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -228,13 +227,13 @@ public class StructUnit {
                 cell.setFixedHeight(100);
                 pdfPTable.addCell(cell); // 日本語対応 UTF-8
             } else {
-                PdfPCell cellUrlValueQr = new PdfPCell(new Paragraph("", ipaGothic));
+                PdfPCell cellUrlValueQr = new PdfPCell(new Paragraph("QRなし", ipaGothic));
                 cellUrlValueQr.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cellUrlValueQr.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cellUrlValueQr.setFixedHeight(80);
                 pdfPTable.addCell(cellUrlValueQr);
             }
-
+/*
             PdfPCell cellUserNameKey = new PdfPCell(new Paragraph("作成者", ipaGothic));
             cellUserNameKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellUserNameKey.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -247,9 +246,11 @@ public class StructUnit {
             cellUserNameValue.setFixedHeight(30);
             pdfPTable.addCell(cellUserNameValue);
 
-            if (makerName.length() != 0 && !noBarCodePrint) {
+            */
+                // EANコードで作った方が数字に関しては最適化されているかも。
+            if (String.valueOf(unitDTO.getId()).length() != 0 && !noBarCodePrint) {
                 Barcode128 code128 = new Barcode128();
-                code128.setCode(makerName);
+                code128.setCode(String.valueOf(unitDTO.getId()));
                 code128.setFont(ipaGothic.getBaseFont());
                 code128.setBarHeight(40f);
                 PdfPCell cellUserNameValueBc = new PdfPCell(code128.createImageWithBarcode(cb, null, null));
@@ -264,7 +265,7 @@ public class StructUnit {
                 cellUserNameValueBc.setFixedHeight(80);
                 pdfPTable.addCell(cellUserNameValueBc);
             }
-
+/*
             PdfPCell cellPassCodeKey = new PdfPCell(new Paragraph("符号", ipaGothic));
             cellPassCodeKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellPassCodeKey.setHorizontalAlignment(Element.ALIGN_CENTER);
