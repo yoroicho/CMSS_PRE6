@@ -20,6 +20,11 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.Header;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import common.SystemPropertiesItem;
 import java.awt.Desktop;
 import java.awt.Image;
@@ -108,11 +113,33 @@ public class StructUnit {
             document.open();
             // step 4
             PdfContentByte cb = writer.getDirectContent();
-            document.addTitle(String.valueOf(unitDTO.getId())); // タイトル設定
-            document.addHeader("name", "content");
-           
-            
+            // タイトル設定、画面表示のみ表示された。
+            document.addTitle(String.valueOf(unitDTO.getId()));
 
+            // 印刷するためのヘッダーとフッターを設定
+            // https://stackoverflow.com/questions/19856583/how-to-add-header-and-footer-to-my-pdf-using-itext-in-java
+            class HeaderFooterPageEvent extends PdfPageEventHelper {
+
+                @Override
+                public void onStartPage(PdfWriter writer, Document document) {
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Left"), 30, 800, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Right"), 550, 800, 0);
+                }
+
+                @Override
+                public void onEndPage(PdfWriter writer, Document document) {
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("http://www.xxxx-your_example.com/"), 110, 30, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("page " + document.getPageNumber()), 550, 30, 0);
+                }
+            }
+
+            HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+            // 最初のページはフッダーしか表示されたないが、そういう文化なのだろう。
+            writer.setPageEvent(event);
+            // ヘッダーフッターの作成行程終わり。
+            
+            
+            
             // Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator) + 1);
