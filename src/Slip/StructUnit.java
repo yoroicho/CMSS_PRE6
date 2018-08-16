@@ -98,8 +98,8 @@ public class StructUnit {
                 // Unitの番号からファイルを特定しきれない。
                 // 2018-08-15T15:16:10.708+09:00 (このフォーマットパターン)
                 //+ "_"
-                + DateTimeFormatter.ISO_OFFSET_DATE_TIME
-                        .format(ZonedDateTime.now(ZoneId.systemDefault()))
+                //+ DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                //        .format(ZonedDateTime.now(ZoneId.systemDefault()))
                 + ".pdf";
         System.out.println("PDF dir " + fileFullDir);
         try {
