@@ -98,7 +98,7 @@ public class StructUnit {
         System.out.println("PDF dir " + fileFullDir);
         try {
             // step 1 紙の端ギリギリに印刷することもあるので、余白は0とする。
-            document = new Document(PageSize.A4, 60, 50, 50, 35);
+            document = new Document(PageSize.A4, 10, 20, 30, 40);
             // step 2 
             PdfWriter writer = PdfWriter.getInstance(
                     document,
@@ -108,6 +108,10 @@ public class StructUnit {
             document.open();
             // step 4
             PdfContentByte cb = writer.getDirectContent();
+            document.addTitle(String.valueOf(unitDTO.getId())); // タイトル設定
+            document.addHeader("name", "content");
+           
+            
 
             // Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
@@ -123,20 +127,20 @@ public class StructUnit {
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
             //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
-            PdfPTable pdfPTable = new PdfPTable(8);
+            PdfPTable pdfPTable = new PdfPTable(4);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             pdfPTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             pdfPTable.getDefaultCell().setFixedHeight(150);
 
             pdfPTable.setWidthPercentage(100f);
-/*
+            /*
             int pdfPTableWidth[] // 20列の割合
                     = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                         5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
             
             pdfPTable.setWidths(pdfPTableWidth);
-  */          
+             */
 
             PdfPCell cell_1_1 = new PdfPCell(new Paragraph("title", ipaGothic));
             cell_1_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -145,7 +149,7 @@ public class StructUnit {
             PdfPCell cell_1_2 = new PdfPCell(new Paragraph(unitDTO.getTitle(), ipaGothic));
             cell_1_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_2.setHorizontalAlignment(Element.ALIGN_CENTER);
-            
+
             /*
             PdfPCell cell_2_1 = new PdfPCell(new Paragraph("締切日時", ipaGothic));
             cell_2_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -155,14 +159,16 @@ public class StructUnit {
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
              */
-            pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
-                        pdfPTable.addCell(cell_1_1);
-            pdfPTable.addCell(cell_1_2);
+            for (int i = 0; i < 100; i++) {
+                pdfPTable.addCell(cell_1_1);
+                pdfPTable.addCell(cell_1_2);
+                pdfPTable.addCell(cell_1_1);
+                pdfPTable.addCell(cell_1_2);
+                pdfPTable.addCell(cell_1_1);
+                pdfPTable.addCell(cell_1_2);
+                pdfPTable.addCell(cell_1_1);
+                pdfPTable.addCell(cell_1_2);
+            }
             /*
             pdfPTable.addCell(cell_2_1);
             pdfPTable.addCell(cell_2_2);
