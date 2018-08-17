@@ -88,18 +88,26 @@ public class StructUnit {
             String mainTitleName
     ) throws IOException, DocumentException, RuntimeException {
         Document document = null;
+        ZonedDateTime structZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
         String fileFullDir
                 = UNIT_BASE
                 + FILE_SEPARATOR
                 + String.valueOf(unitDTO.getId())
                 + FILE_SEPARATOR
                 + String.valueOf(unitDTO.getId())
-                // ファイル名に日付けを入れれば世代管理できるが、
-                // Unitの番号からファイルを特定しきれない。
-                // 2018-08-15T15:16:10.708+09:00 (このフォーマットパターン)
-                //+ "_"
-                //+ DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                /*                
+                ファイル名に日付けを入れれば世代管理できるが、時間が経過したあと
+                UNIT名称だけでpdfを特定することが難しくなる。
+                また、2018-08-15T15:16:10.708+09:00 ←このフォーマットパターン
+                ではWindows環境でファイルを作成できなかった。
+                + "_"
+                // + DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                DateTimeFormatter.
                 //        .format(ZonedDateTime.now(ZoneId.systemDefault()))
+                 */
+                + "-"
+                + DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                        .format(structZonedDateTime)
                 + ".pdf";
         System.out.println("PDF dir " + fileFullDir);
         try {
@@ -115,7 +123,9 @@ public class StructUnit {
             // step 4
             PdfContentByte cb = writer.getDirectContent();
             // タイトル設定、画面表示のみ表示された。
-            document.addTitle(String.valueOf(unitDTO.getId()));
+            document.addTitle(String.valueOf(unitDTO.getId())
+                    + DateTimeFormatter.ISO_ZONED_DATE_TIME
+                            .format(structZonedDateTime));
 
             // 印刷するためのヘッダーとフッターを設定
             // https://stackoverflow.com/questions/19856583/how-to-add-header-and-footer-to-my-pdf-using-itext-in-java
@@ -123,14 +133,22 @@ public class StructUnit {
 
                 @Override
                 public void onStartPage(PdfWriter writer, Document document) {
-                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Left"), 30, 800, 0);
-                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Top Right"), 550, 800, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(),
+                             Element.ALIGN_CENTER, new Phrase("Top Left"), 30, 800, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(),
+                             Element.ALIGN_CENTER, new Phrase("Top Right"), 550, 800, 0);
                 }
 
                 @Override
                 public void onEndPage(PdfWriter writer, Document document) {
-                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("http://www.xxxx-your_example.com/"), 110, 30, 0);
-                    ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("page " + document.getPageNumber()), 550, 30, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(),
+                            Element.ALIGN_CENTER,
+                            new Phrase(String.valueOf(unitDTO.getId())
+                                    + DateTimeFormatter.ISO_ZONED_DATE_TIME
+                                            .format(structZonedDateTime)), 110, 30, 0);
+                    ColumnText.showTextAligned(writer.getDirectContent(),
+                            Element.ALIGN_CENTER,
+                            new Phrase("page " + document.getPageNumber()), 550, 30, 0);
                 }
             }
 
@@ -138,9 +156,7 @@ public class StructUnit {
             // 最初のページはフッダーしか表示されたないが、そういう文化なのだろう。
             writer.setPageEvent(event);
             // ヘッダーフッターの作成行程終わり。
-            
-            
-            
+
             // Properties props = new Properties();
             String jarPath = System.getProperty("java.class.path");
             String dirPath = jarPath.substring(0, jarPath.lastIndexOf(File.separator) + 1);
@@ -187,13 +203,11 @@ public class StructUnit {
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
              */
-        
-                pdfPTable.addCell(cell_1_1);
-                pdfPTable.addCell(cell_1_2);
-                pdfPTable.addCell(cell_1_1);
-               // pdfPTable.addCell(cell_1_2);
+            pdfPTable.addCell(cell_1_1);
+            pdfPTable.addCell(cell_1_2);
+            pdfPTable.addCell(cell_1_1);
+            // pdfPTable.addCell(cell_1_2);
 
-         
             /*
             pdfPTable.addCell(cell_2_1);
             pdfPTable.addCell(cell_2_2);
@@ -216,10 +230,10 @@ public class StructUnit {
 
             cellUrlValue.setFixedHeight(50);
             pdfPTable.addCell(cellUrlValue);
-*/
-            Boolean noBarCodePrint =false; // もしも付与の可否を行う場合のダミー
-            if ((unitDTO.getMaintitleId()+unitDTO.getTitle()).length() != 0 && !noBarCodePrint) {
-                Image image = ZxingUti.getQRCode(unitDTO.getMaintitleId()+unitDTO.getTitle()); // 日本語対応 UTF-8
+             */
+            Boolean noBarCodePrint = false; // もしも付与の可否を行う場合のダミー
+            if ((unitDTO.getMaintitleId() + unitDTO.getTitle()).length() != 0 && !noBarCodePrint) {
+                Image image = ZxingUti.getQRCode(unitDTO.getMaintitleId() + unitDTO.getTitle()); // 日本語対応 UTF-8
                 com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(image, null);
                 PdfPCell cell = new PdfPCell(iTextImage);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -233,7 +247,7 @@ public class StructUnit {
                 cellUrlValueQr.setFixedHeight(80);
                 pdfPTable.addCell(cellUrlValueQr);
             }
-/*
+            /*
             PdfPCell cellUserNameKey = new PdfPCell(new Paragraph("作成者", ipaGothic));
             cellUserNameKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellUserNameKey.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -246,8 +260,8 @@ public class StructUnit {
             cellUserNameValue.setFixedHeight(30);
             pdfPTable.addCell(cellUserNameValue);
 
-            */
-                // EANコードで作った方が数字に関しては最適化されているかも。
+             */
+            // EANコードで作った方が数字に関しては最適化されているかも。
             if (String.valueOf(unitDTO.getId()).length() != 0 && !noBarCodePrint) {
                 Barcode128 code128 = new Barcode128();
                 code128.setCode(String.valueOf(unitDTO.getId()));
@@ -265,7 +279,7 @@ public class StructUnit {
                 cellUserNameValueBc.setFixedHeight(80);
                 pdfPTable.addCell(cellUserNameValueBc);
             }
-/*
+            /*
             PdfPCell cellPassCodeKey = new PdfPCell(new Paragraph("符号", ipaGothic));
             cellPassCodeKey.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cellPassCodeKey.setHorizontalAlignment(Element.ALIGN_CENTER);
