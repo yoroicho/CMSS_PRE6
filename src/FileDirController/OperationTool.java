@@ -69,7 +69,7 @@ public class OperationTool {
         String unitDir = unitBase + System.getProperty("file.separator")
                 + String.valueOf(unitDTO.getId());
         String logFile = unitDir + System.getProperty("file.separator")
-                + String.valueOf(unitDTO.getId());
+                + String.valueOf(unitDTO.getId())+"-log.txt";
         String templateDir = unitBase + System.getProperty("file.separator")
                 + String.valueOf(unitDTO.getTemplateId());
         String versionDir = unitBase + System.getProperty("file.separator")
