@@ -9,7 +9,7 @@ import DB.UnitDAO;
 import DB.UnitDTO;
 import FileDirController.OperationTool;
 import Slip.StructSheet;
-import Slip.StructUnit;
+import Slip.StructUnitSlip;
 import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesAcc;
 import java.io.IOException;
@@ -243,7 +243,7 @@ public class FXMLTabPageUnitController implements Initializable {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "UNIT_BASEに新規登録しました。");
                             try {
-                                StructUnit.creatSlip( // pdfの作成テスト。
+                                StructUnitSlip.creatSlip( // pdfの作成テスト。
                                         registerUnitDTO,
                                         "",//this.textFieldOverallSeriesId.getText(),
                                         "",//this.textAreaOverallSeriesName.getText(),

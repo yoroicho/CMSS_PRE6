@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  *
  * @author
  */
-public class StructUnit {
+public class StructUnitSlip {
 
     /**
      * Unitを出力するため専用。 他の情報と共に制作プランとして出力する事も視野に入れる。
