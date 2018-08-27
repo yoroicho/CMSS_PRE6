@@ -16,7 +16,8 @@ import java.sql.Date;
  * @author tokyo
  */
 public class UnitDTO {
-/*
+
+    /*
 CREATE TABLE `unit` (
   `id` bigint(20) NOT NULL,
   `close` date DEFAULT NULL,
@@ -33,9 +34,8 @@ CREATE TABLE `unit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
     DB側でタイムスタンプにデフォルト値を設定しているので注意する。
-*/
-    
-    
+     */
+
     private long id;
     private Date close;
     private String maintitleId;
@@ -47,6 +47,7 @@ CREATE TABLE `unit` (
     private String remark;
     private long templateId;
     private long versionId;
+    private Timestamp timestamp;
 
     /**
      * @return the id
@@ -126,6 +127,13 @@ CREATE TABLE `unit` (
     }
 
     /**
+     * @return the timestamp
+     */
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    /**
      * @param id the id to set
      */
     public void setId(long id) {
@@ -201,5 +209,12 @@ CREATE TABLE `unit` (
     public void setVersionId(long versionId) {
         this.versionId = versionId;
     }
-    
+
+    /**
+     * @param timestamp the timestamp to set
+     */
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
 }

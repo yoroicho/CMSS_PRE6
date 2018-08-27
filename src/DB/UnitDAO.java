@@ -5,7 +5,6 @@
  */
 package DB;
 
-import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -70,6 +69,7 @@ public class UnitDAO implements IDAO {
                     dto.setRemark(result.getString("remark"));
                     dto.setTemplateId(result.getLong("templateid"));
                     dto.setVersionId(result.getLong("versionid"));
+                    dto.setTimestamp(result.getTimestamp("timestamp"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -122,6 +122,7 @@ System.out.println("findById Called."+id);
                     dto.setRemark(result.getString("remark"));
                     dto.setTemplateId(result.getLong("templateid"));
                     dto.setVersionId(result.getLong("versionid"));
+                    dto.setTimestamp(result.getTimestamp("timestamp"));
                     unitDTO.add(dto);
 
                 }
@@ -171,6 +172,7 @@ System.out.println("findById Called."+id);
                     dto.setRemark(result.getString("remark"));
                     dto.setTemplateId(result.getLong("templateid"));
                     dto.setVersionId(result.getLong("versionid"));
+                    dto.setTimestamp(result.getTimestamp("timestamp"));
                     // インスタンスをListに格納
                     unitDTO.add(dto);
                     // while文で次のレコードの処理へ
@@ -222,7 +224,7 @@ System.out.println("findById Called."+id);
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?,?);";
+        String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -239,6 +241,7 @@ System.out.println("findById Called."+id);
             statement.setString(9, unitDTO.getRemark());
             statement.setLong(10, unitDTO.getTemplateId());
             statement.setLong(11, unitDTO.getVersionId());
+            statement.setTimestamp(12, unitDTO.getTimestamp());
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
