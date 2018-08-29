@@ -12,11 +12,14 @@ import Slip.StructSheet;
 import Slip.StructUnitSlip;
 import com.itextpdf.text.DocumentException;
 import common.SystemPropertiesAcc;
+import common.TimestampUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -699,7 +702,9 @@ public class FXMLTabPageUnitController implements Initializable {
             unitDTO.setEtd(Date.valueOf(this.datePickerEtd.getValue()));
         }
         unitDTO.setRemark(this.textAreaRemark.getText());
-
+        unitDTO.setTimestamp(TimestampUtil.current());
+//String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
+//System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
         return unitDTO;
     }
 }

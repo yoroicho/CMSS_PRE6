@@ -63,13 +63,13 @@ public class OperationTool {
         text.add("REMARK: " + unitDTO.getRemark());
         text.add("TEMPLATE ID: " + String.valueOf(unitDTO.getTemplateId()));
         text.add("VERSION ID: " + String.valueOf(unitDTO.getVersionId()));
-        text.add("--- " + ZonedDateTime.now(ZoneId.systemDefault()).toString() + " ---");
-
+        //text.add("--- " + ZonedDateTime.now(ZoneId.systemDefault()).toString() + " ---");
+        text.add("TIMESTAMP :" + unitDTO.getTimestamp().toString());
         String unitBase = SystemPropertiesItem.SHIP_BASE;
         String unitDir = unitBase + System.getProperty("file.separator")
                 + String.valueOf(unitDTO.getId());
         String logFile = unitDir + System.getProperty("file.separator")
-                + String.valueOf(unitDTO.getId())+"-log.txt";
+                + String.valueOf(unitDTO.getId()) + "-log.txt";
         String templateDir = unitBase + System.getProperty("file.separator")
                 + String.valueOf(unitDTO.getTemplateId());
         String versionDir = unitBase + System.getProperty("file.separator")

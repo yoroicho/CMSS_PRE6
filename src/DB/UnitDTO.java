@@ -18,22 +18,9 @@ import java.sql.Date;
 public class UnitDTO {
 
     /*
-CREATE TABLE `unit` (
-  `id` bigint(20) NOT NULL,
-  `close` date DEFAULT NULL,
-  `maintitleid` varchar(4) DEFAULT NULL,
-  `title` text NOT NULL,
-  `creator` text NOT NULL,
-  `mtg` date DEFAULT NULL,
-  `cut` date DEFAULT NULL,
-  `etd` date DEFAULT NULL,
-  `remark` text,
-  `templateid` bigint(20) DEFAULT NULL,
-  `versionid` bigint(20) DEFAULT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+CREATE TABLE `unit` (  `id` bigint(20) NOT NULL,  `close` date DEFAULT NULL,  `maintitleid` varchar(4) DEFAULT NULL,  `title` text NOT NULL,  `creator` text NOT NULL,  `mtg` date DEFAULT NULL,  `cut` date DEFAULT NULL,  `etd` date DEFAULT NULL,  `remark` text,  `templateid` bigint(20) DEFAULT NULL,  `versionid` bigint(20) DEFAULT NULL,  `timestamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8
     DB側でタイムスタンプにデフォルト値を設定しているので注意する。
+
      */
 
     private long id;
