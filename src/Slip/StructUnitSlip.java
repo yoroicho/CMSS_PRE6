@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -88,7 +89,7 @@ public class StructUnitSlip {
             String mainTitleName
     ) throws IOException, DocumentException, RuntimeException {
         Document document = null;
-        ZonedDateTime structZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
+        // ZonedDateTime structZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault());
         String fileFullDir
                 = UNIT_BASE
                 + FILE_SEPARATOR
@@ -106,8 +107,10 @@ public class StructUnitSlip {
                 //        .format(ZonedDateTime.now(ZoneId.systemDefault()))
                  */
                 + "-"
-                + DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-                        .format(structZonedDateTime)
+                + DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                       // .format(structZonedDateTime)
+                        
+                .format(unitDTO.getTimestamp().toLocalDateTime())
                 + ".pdf";
         System.out.println("PDF dir " + fileFullDir);
         try {
@@ -124,8 +127,10 @@ public class StructUnitSlip {
             PdfContentByte cb = writer.getDirectContent();
             // タイトル設定、画面表示のみ表示された。
             document.addTitle(String.valueOf(unitDTO.getId())
-                    + DateTimeFormatter.ISO_ZONED_DATE_TIME
-                            .format(structZonedDateTime));
+                    +"@"
+                   // + DateTimeFormatter.ISO_ZONED_DATE_TIME
+                      + DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                            .format(unitDTO.getTimestamp().toLocalDateTime()));
 
             // 印刷するためのヘッダーとフッターを設定
             // https://stackoverflow.com/questions/19856583/how-to-add-header-and-footer-to-my-pdf-using-itext-in-java
@@ -144,8 +149,9 @@ public class StructUnitSlip {
                     ColumnText.showTextAligned(writer.getDirectContent(),
                             Element.ALIGN_CENTER,
                             new Phrase(String.valueOf(unitDTO.getId())
-                                    + DateTimeFormatter.ISO_ZONED_DATE_TIME
-                                            .format(structZonedDateTime)), 110, 30, 0);
+                                    +"@"
+                                    + DateTimeFormatter.ofPattern("yyyy'/'MM'/'dd'-'HH':'mm':'ss':'SSS")
+                                            .format(unitDTO.getTimestamp().toLocalDateTime())), 110, 30, 0);
                     ColumnText.showTextAligned(writer.getDirectContent(),
                             Element.ALIGN_CENTER,
                             new Phrase("page " + document.getPageNumber()), 550, 30, 0);
