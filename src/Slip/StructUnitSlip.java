@@ -115,7 +115,7 @@ public class StructUnitSlip {
         System.out.println("PDF dir " + fileFullDir);
         try {
             // step 1 紙の端ギリギリに印刷することもあるので、余白は0とする。
-            document = new Document(PageSize.A4, 10, 20, 30, 40);
+            document = new Document(PageSize.A4, 90, 90, 90, 90);
             // step 2 
             PdfWriter writer = PdfWriter.getInstance(
                     document,
@@ -151,7 +151,7 @@ public class StructUnitSlip {
                             new Phrase(String.valueOf(unitDTO.getId())
                                     +"@"
                                     + DateTimeFormatter.ofPattern("yyyy'/'MM'/'dd'-'HH':'mm':'ss':'SSS")
-                                            .format(unitDTO.getTimestamp().toLocalDateTime())), 110, 30, 0);
+                                            .format(unitDTO.getTimestamp().toLocalDateTime())), 150, 30, 0);
                     ColumnText.showTextAligned(writer.getDirectContent(),
                             Element.ALIGN_CENTER,
                             new Phrase("page " + document.getPageNumber()), 550, 30, 0);
@@ -177,20 +177,19 @@ public class StructUnitSlip {
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
             //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
-            PdfPTable pdfPTable = new PdfPTable(5);
+            PdfPTable pdfPTable = new PdfPTable(2);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             pdfPTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             pdfPTable.getDefaultCell().setFixedHeight(150);
 
             pdfPTable.setWidthPercentage(100f);
-            /*
-            int pdfPTableWidth[] // 20列の割合
-                    = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                        5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
             
+            
+            int pdfPTableWidth[] // 2列の割合
+                    = {10, 90};        
             pdfPTable.setWidths(pdfPTableWidth);
-             */
+         
 
             PdfPCell cell_1_1 = new PdfPCell(new Paragraph("title", ipaGothic));
             cell_1_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -267,6 +266,8 @@ public class StructUnitSlip {
             pdfPTable.addCell(cellUserNameValue);
 
              */
+            pdfPTable.addCell("ID");
+           
             // EANコードで作った方が数字に関しては最適化されているかも。
             if (String.valueOf(unitDTO.getId()).length() != 0 && !noBarCodePrint) {
                 Barcode128 code128 = new Barcode128();
