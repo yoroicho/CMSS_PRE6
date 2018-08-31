@@ -11,6 +11,7 @@ import FileDirController.OperationTool;
 import Slip.StructSheet;
 import Slip.StructUnitSlip;
 import com.itextpdf.text.DocumentException;
+import com.sun.javafx.runtime.SystemProperties;
 import common.SystemPropertiesAcc;
 import common.TimestampUtil;
 import java.io.IOException;
@@ -109,6 +110,8 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private TextArea textAreaMainTitleName;
 
+    String ls = SystemProperties.getProperty("line.separator");
+    
     private enum UnitAim {
         // PEEK,DELETEは確定でない。
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
@@ -235,7 +238,9 @@ public class FXMLTabPageUnitController implements Initializable {
                                 = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                                    "データベースに新規登録しました。");
+                                    "データベースに新規登録しました。"
+                            );
+                            System.out.println(registerUnitDTO.toString());
                         } else {
                             registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(

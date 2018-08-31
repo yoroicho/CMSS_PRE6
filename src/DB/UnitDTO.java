@@ -5,6 +5,7 @@
  */
 package DB;
 
+import com.sun.javafx.runtime.SystemProperties;
 import common.TimestampUtil;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,7 +23,6 @@ CREATE TABLE `unit` (  `id` bigint(20) NOT NULL,  `close` date DEFAULT NULL, 
     DB側でタイムスタンプにデフォルト値を設定しているので注意する。
 
      */
-
     private long id;
     private Date close;
     private String maintitleId;
@@ -35,6 +35,35 @@ CREATE TABLE `unit` (  `id` bigint(20) NOT NULL,  `close` date DEFAULT NULL, 
     private long templateId;
     private long versionId;
     private Timestamp timestamp;
+
+    @Override
+    public String toString() {
+        String ls = System.lineSeparator();
+        //String ls = SystemProperties.getProperty("line.separator");
+        return "id: " + String.valueOf(id)
+                + ls
+                //+ "close: " + close.toString()
+                + ls
+                + "maintitleId: " + maintitleId
+                + ls
+                + "title: " + title
+                + ls
+                + "creator: " + creator
+                + ls
+                //+ "mtg: " + mtg.toString()
+                + ls
+                //+ "cut: " + cut.toString()
+                + ls
+                //+ "etd: " + etd.toString()
+                + ls
+                + "remark: " + remark
+                + ls
+                + "templateId: " + String.valueOf(templateId)
+                + ls
+                + "versionId: " + String.valueOf(versionId)
+                + ls
+                + "timestamp: " + timestamp.toString();
+    }
 
     /**
      * @return the id
