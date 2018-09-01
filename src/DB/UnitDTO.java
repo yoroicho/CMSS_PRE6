@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.sql.Date;
+import java.util.Optional;
 
 /**
  *
@@ -40,8 +41,10 @@ CREATE TABLE `unit` (  `id` bigint(20) NOT NULL,  `close` date DEFAULT NULL, 
     public String toString() {
         String ls = System.lineSeparator();
         //String ls = SystemProperties.getProperty("line.separator");
+
         return "id: " + String.valueOf(id)
                 + ls
+                + "close: " + String.valueOf(close)
                 //+ "close: " + close.toString()
                 + ls
                 + "maintitleId: " + maintitleId
@@ -50,10 +53,13 @@ CREATE TABLE `unit` (  `id` bigint(20) NOT NULL,  `close` date DEFAULT NULL, 
                 + ls
                 + "creator: " + creator
                 + ls
+                + "mtg: " + String.valueOf(mtg)
                 //+ "mtg: " + mtg.toString()
                 + ls
+                + "cut: " + String.valueOf(cut)
                 //+ "cut: " + cut.toString()
                 + ls
+                + "etd: " + String.valueOf(etd)
                 //+ "etd: " + etd.toString()
                 + ls
                 + "remark: " + remark
