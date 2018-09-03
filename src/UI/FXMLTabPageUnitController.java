@@ -227,15 +227,18 @@ public class FXMLTabPageUnitController implements Initializable {
             // blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("新規登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
+            registerUnitDTO // 登録予定のUnitDTO
+                    = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "新規登録：新しいユニットを作成します。"
+      +registerUnitDTO.toString());
                     // + "ID:" + this.textFieldId.getText() // IDは表示されないはず
-                    + "TITLE:" + this.textAreaTitle.getText());
+                    //+ "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        registerUnitDTO // 登録予定のUnitDTO
-                                = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
+                       // registerUnitDTO // 登録予定のUnitDTO
+                         //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データベースに新規登録しました。"

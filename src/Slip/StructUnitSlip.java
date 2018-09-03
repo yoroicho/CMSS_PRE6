@@ -176,7 +176,7 @@ public class StructUnitSlip {
             Font ipaGothic14 = new Font(BaseFont.createFont(System.getProperty("user.dir") + FILE_SEPARATOR + "res" + FILE_SEPARATOR + "ipag.ttf",
                     BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
 
-            //表を作成(24列) 細かく割ってエクセル方眼方式をとる。
+            
             PdfPTable pdfPTable = new PdfPTable(2);
 
             pdfPTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -191,26 +191,51 @@ public class StructUnitSlip {
             pdfPTable.setWidths(pdfPTableWidth);
          
 
-            PdfPCell cell_1_1 = new PdfPCell(new Paragraph("title", ipaGothic));
+            PdfPCell cell_1_1 = new PdfPCell(new Paragraph("船社", ipaGothic));
             cell_1_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_1.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_1_1.setFixedHeight(50);
-            PdfPCell cell_1_2 = new PdfPCell(new Paragraph(unitDTO.getTitle(), ipaGothic));
+            PdfPCell cell_1_2 = new PdfPCell(new Paragraph(
+                    overallSeriesId+":"+overallSeriesName, ipaGothic));
             cell_1_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_1_2.setHorizontalAlignment(Element.ALIGN_CENTER);
 
-            /*
-            PdfPCell cell_2_1 = new PdfPCell(new Paragraph("締切日時", ipaGothic));
+            PdfPCell cell_2_1 = new PdfPCell(new Paragraph("航路", ipaGothic));
             cell_2_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_2_1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            PdfPCell cell_2_2 = new PdfPCell(new Paragraph(cutDateTime, ipaGothic));
+            cell_2_1.setFixedHeight(50);
+            PdfPCell cell_2_2 = new PdfPCell(new Paragraph(
+                    seriesId+":"+seriesName, ipaGothic));
+            cell_2_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            
+            PdfPCell cell_3_1 = new PdfPCell(new Paragraph("本船", ipaGothic));
+            cell_3_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell_3_1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell_3_1.setFixedHeight(50);
+            PdfPCell cell_3_2 = new PdfPCell(new Paragraph(
+                    unitDTO.getMaintitleId()+":"+mainTitleName, ipaGothic));
+                    cell_3_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell_3_2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            
+            
+         
+            PdfPCell cell_4_1 = new PdfPCell(new Paragraph("UNIT", ipaGothic));
+            cell_2_1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell_2_1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            PdfPCell cell_4_2 = new PdfPCell(new Paragraph(unitDTO.toString(), ipaGothic));
             cell_2_2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell_2_2.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell_2_2.setFixedHeight(50);
-             */
+            
             pdfPTable.addCell(cell_1_1);
             pdfPTable.addCell(cell_1_2);
-            pdfPTable.addCell(cell_1_1);
+            pdfPTable.addCell(cell_2_1);
+            pdfPTable.addCell(cell_2_2);
+            pdfPTable.addCell(cell_3_1);
+            pdfPTable.addCell(cell_3_2);
+            pdfPTable.addCell(cell_4_1);
+            pdfPTable.addCell(cell_4_2);
             // pdfPTable.addCell(cell_1_2);
 
             /*
@@ -238,7 +263,7 @@ public class StructUnitSlip {
              */
             Boolean noBarCodePrint = false; // もしも付与の可否を行う場合のダミー
             if ((unitDTO.getMaintitleId() + unitDTO.getTitle()).length() != 0 && !noBarCodePrint) {
-                Image image = ZxingUti.getQRCode(unitDTO.getMaintitleId() + unitDTO.getTitle()); // 日本語対応 UTF-8
+                Image image = ZxingUti.getQRCode(unitDTO.toString()); // 日本語対応 UTF-8
                 com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(image, null);
                 PdfPCell cell = new PdfPCell(iTextImage);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -266,7 +291,7 @@ public class StructUnitSlip {
             pdfPTable.addCell(cellUserNameValue);
 
              */
-            pdfPTable.addCell("ID");
+            //pdfPTable.addCell("ID");
            
             // EANコードで作った方が数字に関しては最適化されているかも。
             if (String.valueOf(unitDTO.getId()).length() != 0 && !noBarCodePrint) {
