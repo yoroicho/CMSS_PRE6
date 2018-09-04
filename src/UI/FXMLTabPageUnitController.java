@@ -262,7 +262,7 @@ public class FXMLTabPageUnitController implements Initializable {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "UNIT_BASEに新規登録しました。");
                             try {
-                                StructUnitSlip.creatSlip( // pdfの作成テスト。
+                                StructUnitSlip.creatSlip( // 伝票の作成
                                         registerUnitDTO,
                                         this.textFieldOverallSeriesId.getText(),
                                         this.textAreaOverallSeriesName.getText(),

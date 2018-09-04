@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -424,6 +425,8 @@ public static void printSlip(Long id,Timestamp timestamp) {
                     e.printStackTrace();
                 }
             }).start();
+        }else{
+            JOptionPane.showMessageDialog(null, "伝票の印刷ができませんでした。");
         }
     }
 
