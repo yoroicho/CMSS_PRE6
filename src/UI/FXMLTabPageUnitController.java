@@ -13,7 +13,10 @@ import Slip.StructUnitSlip;
 import com.itextpdf.text.DocumentException;
 import com.sun.javafx.runtime.SystemProperties;
 import common.SystemPropertiesAcc;
+import common.SystemPropertiesItem;
 import common.TimestampUtil;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -21,6 +24,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -36,6 +40,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
+import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -43,6 +48,9 @@ import javafx.scene.layout.Region;
  * @author kyokuto
  */
 public class FXMLTabPageUnitController implements Initializable {
+
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
 
     @FXML
     private FXMLBaseDocumentController FXMLBaseDocumentController;
@@ -111,7 +119,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private TextArea textAreaMainTitleName;
 
     String ls = SystemProperties.getProperty("line.separator");
-    
+
     private enum UnitAim {
         // PEEK,DELETEは確定でない。
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
@@ -231,14 +239,14 @@ public class FXMLTabPageUnitController implements Initializable {
                     = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "新規登録：新しいユニットを作成します。"
-      +registerUnitDTO.toString());
-                    // + "ID:" + this.textFieldId.getText() // IDは表示されないはず
-                    //+ "TITLE:" + this.textAreaTitle.getText());
+                    + registerUnitDTO.toString());
+            // + "ID:" + this.textFieldId.getText() // IDは表示されないはず
+            //+ "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                       // registerUnitDTO // 登録予定のUnitDTO
-                         //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
+                        // registerUnitDTO // 登録予定のUnitDTO
+                        //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "データベースに新規登録しました。"
@@ -256,17 +264,16 @@ public class FXMLTabPageUnitController implements Initializable {
                             try {
                                 StructUnitSlip.creatSlip( // pdfの作成テスト。
                                         registerUnitDTO,
-                                        "",//this.textFieldOverallSeriesId.getText(),
-                                        "",//this.textAreaOverallSeriesName.getText(),
-                                        "",//this.textFieldSeriesId.getText(),
-                                        "",//this.textAreaSeriesName.getText(),
-                                        ""//this.textAreaMainTitleName.getText()
+                                        this.textFieldOverallSeriesId.getText(),
+                                        this.textAreaOverallSeriesName.getText(),
+                                        this.textFieldSeriesId.getText(),
+                                        this.textAreaSeriesName.getText(),
+                                        this.textAreaMainTitleName.getText()
                                 );
-                            } catch (IOException ex) {
-                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (DocumentException ex) {
-                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (RuntimeException ex) {
+                                // 伝票の出力
+                                JOptionPane.showMessageDialog(null, "伝票印刷します。");
+                                StructUnitSlip.printSlip(registerUnitDTO.getId(), registerUnitDTO.getTimestamp());
+                            } catch (IOException | DocumentException | RuntimeException ex) {
                                 Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         } else {
@@ -341,28 +348,30 @@ public class FXMLTabPageUnitController implements Initializable {
             // blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
+            registerUnitDTO // UnitDTO
+                    = pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE);
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
-                    "変更\n"
+                    "変更" + ls
                     + "ID: "
                     + String.valueOf(unitDTO.get(0).getId()
                             + " から "
-                            + this.textFieldId.getText())
-                    + "\n"
-                    + "TITLE: "
-                    + "\n"
-                    + String.valueOf(unitDTO.get(0).getTitle()
-                            + "\n"
-                            + " から "
-                            + "\n"
-                            + this.textAreaTitle.getText()));
+                            + String.valueOf(registerUnitDTO.getId())
+                            + ls
+                            + "TITLE: "
+                            + ls
+                            + String.valueOf(unitDTO.get(0).getTitle()
+                                    + ls
+                                    + " から "
+                                    + ls
+                                    + String.valueOf(registerUnitDTO.getTitle()))));
             // 大きさの制限をとりはらう(setMinSizeでも横幅は広がらなかった)
             alertRegisterNew.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             // .setMinSize(Region.USE_PREF_SIZE,Region.USE_PREF_SIZE); 
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        registerUnitDTO // 登録予定のUnitDTO
-                                = pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE);
+                        //registerUnitDTO // 登録予定のUnitDTO
+                        //      = pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE);
                         if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "変更登録しました。");
@@ -375,6 +384,18 @@ public class FXMLTabPageUnitController implements Initializable {
                         if (OperationTool.createUnitDir(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
                                     "UNIT_BASEに変更登録しました。");
+                            try {
+                                StructUnitSlip.creatSlip( // pdf???????
+                                        registerUnitDTO,
+                                        this.textFieldOverallSeriesId.getText(),
+                                        this.textAreaOverallSeriesName.getText(),
+                                        this.textFieldSeriesId.getText(),
+                                        this.textAreaSeriesName.getText(),
+                                        this.textAreaMainTitleName.getText()
+                                );
+                            } catch (IOException | DocumentException | RuntimeException ex) {
+                                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         } else {
                             Alert alertFileError = new Alert(Alert.AlertType.WARNING,
                                     "ファイルシステムに異常が起こりました。\n"
@@ -715,4 +736,5 @@ public class FXMLTabPageUnitController implements Initializable {
 //System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
         return unitDTO;
     }
+
 }

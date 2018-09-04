@@ -32,6 +32,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -398,4 +399,33 @@ public class StructUnitSlip {
             throw ex;
         }
     }
+
+public static void printSlip(Long id,Timestamp timestamp) {
+        if (Desktop.isDesktopSupported()) {
+            new Thread(() -> {
+                String fileFullDir
+                        = UNIT_BASE
+                        + FILE_SEPARATOR
+                        + String.valueOf(id)
+                        + FILE_SEPARATOR
+                        + String.valueOf(id)
+                        + "-"
+                        + DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                                .format(timestamp.toLocalDateTime())
+                        + ".pdf";
+                try {
+                    System.out.println("tyr open file");
+                    File file = new File(
+                            fileFullDir
+                    );
+                    Desktop.getDesktop().open(file);
+                    System.out.println("opend file");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+
 }
