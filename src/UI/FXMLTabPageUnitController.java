@@ -12,10 +12,15 @@ import Slip.StructSheet;
 import Slip.StructUnitSlip;
 import com.itextpdf.text.DocumentException;
 import com.sun.javafx.runtime.SystemProperties;
+import com.sun.javafx.scene.control.behavior.BehaviorBase;
+import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import common.SystemPropertiesAcc;
 import common.SystemPropertiesItem;
 import common.TimestampUtil;
 import java.awt.Desktop;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,14 +36,18 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Region;
 import javax.swing.JOptionPane;
 
@@ -736,5 +745,14 @@ public class FXMLTabPageUnitController implements Initializable {
 //System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
         return unitDTO;
     }
-
+/*
+    private void tabInit() {
+   //Creating the mouse event handler
+   EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
+       @Override
+       public void handle(KeyEvent event) {
+           throw new UnsupportedOperationException("Not supported yet.");
+       }
+   } //To change body of generated methods, choose Tools | Templates.            }        };        //Adding event Filter         textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);    }
+*/
 }
