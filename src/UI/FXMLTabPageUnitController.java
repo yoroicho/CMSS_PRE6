@@ -35,7 +35,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -50,6 +53,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Region;
 import javax.swing.JOptionPane;
+import javax.xml.stream.EventFilter;
+import javax.xml.stream.events.XMLEvent;
 
 /**
  * FXML Controller class
@@ -745,8 +750,24 @@ public class FXMLTabPageUnitController implements Initializable {
 //System.out.println(TimestampUtil.formattedTimestamp(TimestampUtil.current(), TIME_FORMAT));
         return unitDTO;
     }
-/*
+
     private void tabInit() {
+        textAreaTitle.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        EventHandler eventFilter = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        
+        textAreaTitle.addEventFilter(EventType.ROOT, eventFilter);
+    }
+    /*
    //Creating the mouse event handler
    EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
        @Override
