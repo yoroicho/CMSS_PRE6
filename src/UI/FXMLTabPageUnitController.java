@@ -761,6 +761,9 @@ public class FXMLTabPageUnitController implements Initializable {
         EventHandler eventFilter = new EventHandler() {
             @Override
             public void handle(Event event) {
+                if(event.getEventType()==EventType.ROOT){
+                   
+                }
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
