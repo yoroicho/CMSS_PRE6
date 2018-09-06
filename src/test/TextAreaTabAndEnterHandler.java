@@ -6,6 +6,7 @@
 package test;
 
 /**
+ * https://code-examples.net/ja/q/fe171e
  *
  * @author kyokuto
  */
@@ -54,7 +55,8 @@ public class TextAreaTabAndEnterHandler extends Application {
     class ClearStatusListener implements ChangeListener<String> {
 
         @Override
-        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        public void changed(ObservableValue<? extends String> observable,
+                String oldValue, String newValue) {
             status.setText("");
         }
     }
@@ -95,7 +97,8 @@ public class TextAreaTabAndEnterHandler extends Application {
                                 recodedEvent = recodeWithoutControlDown(event);
                                 myTextArea.fireEvent(recodedEvent);
                             } else {
-                                ObservableList<Node> children = parent.getChildrenUnmodifiable();
+                                ObservableList<Node> children
+                                        = parent.getChildrenUnmodifiable();
                                 int idx = children.indexOf(myTextArea);
                                 if (idx >= 0) {
                                     for (int i = idx + 1; i < children.size(); i++) {
@@ -119,7 +122,9 @@ public class TextAreaTabAndEnterHandler extends Application {
             }
 
             private KeyEvent recodeWithoutControlDown(KeyEvent event) {
-                return new KeyEvent(event.getEventType(), event.getCharacter(), event.getText(), event.getCode(), event.isShiftDown(), false, event.isAltDown(), event.isMetaDown());
+                return new KeyEvent(event.getEventType(), event.getCharacter(),
+                        event.getText(), event.getCode(), event.isShiftDown(),
+                        false, event.isAltDown(), event.isMetaDown());
             }
         }
     }
