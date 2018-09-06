@@ -19,6 +19,7 @@ import common.SystemPropertiesAcc;
 import common.SystemPropertiesItem;
 import common.TimestampUtil;
 import java.awt.Desktop;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -50,11 +51,20 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javax.swing.JOptionPane;
 import javax.xml.stream.EventFilter;
 import javax.xml.stream.events.XMLEvent;
+
+import com.sun.javafx.scene.control.behavior.*;
+import com.sun.javafx.scene.control.skin.*;
+import static javafx.scene.input.KeyCode.T;
+
+import javafx.scene.input.KeyEvent.*;
+import static sun.misc.Signal.handle;
 
 /**
  * FXML Controller class
@@ -628,6 +638,7 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private void initializeAllItems() {
+        tabInit();
         textFieldId.clear();
         textFieldId.setDisable(false);
         lockAllControls(true);
@@ -751,32 +762,9 @@ public class FXMLTabPageUnitController implements Initializable {
         return unitDTO;
     }
 
+    
+    
     private void tabInit() {
-        textAreaTitle.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        EventHandler eventFilter = new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                if(event.getEventType()==EventType.ROOT){
-                   
-                }
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
-        
-        textAreaTitle.addEventFilter(EventType.ROOT, eventFilter);
+
     }
-    /*
-   //Creating the mouse event handler
-   EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() {
-       @Override
-       public void handle(KeyEvent event) {
-           throw new UnsupportedOperationException("Not supported yet.");
-       }
-   } //To change body of generated methods, choose Tools | Templates.            }        };        //Adding event Filter         textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);    }
-*/
 }
