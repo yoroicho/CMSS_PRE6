@@ -72,6 +72,8 @@ public class TextAreaTabAndEnterHandler extends Application {
 
         TabAndEnterIgnoringTextArea() {
             addEventFilter(KeyEvent.KEY_PRESSED, new TabAndEnterHandler());
+           //ここに移植したがなにもかわらなかった。 
+           myTextArea.textProperty().addListener(new ClearStatusListener());
         }
 
         class TabAndEnterHandler implements EventHandler<KeyEvent> {
@@ -80,11 +82,15 @@ public class TextAreaTabAndEnterHandler extends Application {
 
             @Override
             public void handle(KeyEvent event) {
+                
                 if (recodedEvent != null) {
                     recodedEvent = null;
                     return;
                 }
+
                 Parent parent = myTextArea.getParent();
+                System.out.println("MyParent ID"+ parent.getId());
+                System.out.println("MyParent String"+ parent.toString());
                 if (parent != null) {
                     switch (event.getCode()) {
                         case ENTER:

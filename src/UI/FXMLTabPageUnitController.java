@@ -768,5 +768,6 @@ TextArea textArea = new TextArea();
 textArea.addEventFilter(KeyEvent.KEY_PRESSED, new TabAndEnterHandler());
          */
         TextAreaTabAndEnterHandler text = new TextAreaTabAndEnterHandler();
+        //getChildren().setAll(textArea1, textArea2, defaultButton, status);
     }
 }
