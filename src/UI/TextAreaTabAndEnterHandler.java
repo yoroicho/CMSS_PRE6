@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+package UI;
 
 /**
  * https://code-examples.net/ja/q/fe171e
@@ -24,7 +24,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 
 public class TextAreaTabAndEnterHandler extends Application {
-
+/*
+    public static createTabAndEnterIgnoringTextArea (){
+        return new 
+    }
+*/
+    
     final Label status = new Label();
 
     public static void main(String[] args) {

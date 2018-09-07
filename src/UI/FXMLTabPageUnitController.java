@@ -20,7 +20,6 @@ import common.SystemPropertiesItem;
 import common.TimestampUtil;
 import java.awt.Desktop;
 import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +62,7 @@ import com.sun.javafx.scene.control.behavior.*;
 import com.sun.javafx.scene.control.skin.*;
 import static javafx.scene.input.KeyCode.T;
 
-import javafx.scene.input.KeyEvent.*;
+import javafx.scene.input.KeyEvent;
 import static sun.misc.Signal.handle;
 
 /**
@@ -112,12 +111,13 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private TextField textFieldMainTitleId;
 
-    @FXML
-    private TextArea textAreaTitle;
-
-    @FXML
-    private TextArea textAreaCreator;
-
+   // @FXML
+   // private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaTitle;
+private final TextArea textAreaTitle = new TextAreaTabAndEnterHandler().new TabAndEnterIgnoringTextArea();
+    
+  //  @FXML
+  //  private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaCreator;
+private final TextArea textAreaCreator = new TextAreaTabAndEnterHandler().new TabAndEnterIgnoringTextArea();
     @FXML
     private DatePicker datePickerMtg;
 
@@ -762,9 +762,11 @@ public class FXMLTabPageUnitController implements Initializable {
         return unitDTO;
     }
 
-    
-    
     private void tabInit() {
-
+        /*
+TextArea textArea = new TextArea();
+textArea.addEventFilter(KeyEvent.KEY_PRESSED, new TabAndEnterHandler());
+         */
+        TextAreaTabAndEnterHandler text = new TextAreaTabAndEnterHandler();
     }
 }
