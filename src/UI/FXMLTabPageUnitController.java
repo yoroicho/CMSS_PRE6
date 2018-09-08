@@ -60,9 +60,12 @@ import javax.xml.stream.events.XMLEvent;
 
 import com.sun.javafx.scene.control.behavior.*;
 import com.sun.javafx.scene.control.skin.*;
+import javafx.scene.control.ScrollPane;
 import static javafx.scene.input.KeyCode.T;
 
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import static sun.misc.Signal.handle;
 
 /**
@@ -70,11 +73,21 @@ import static sun.misc.Signal.handle;
  *
  * @author kyokuto
  */
-public class FXMLTabPageUnitController implements Initializable {
+public class FXMLTabPageUnitController extends TextAreaTabAndEnterHandler implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
 
+        @FXML
+    private ScrollPane scrollPaneUnit;
+    
+      @FXML
+    private VBox vBoxLayout;
+    
+    
+       @FXML
+    private AnchorPane unitAnchorPane;
+    
     @FXML
     private FXMLBaseDocumentController FXMLBaseDocumentController;
 
@@ -111,13 +124,14 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private TextField textFieldMainTitleId;
 
-   // @FXML
-   // private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaTitle;
-private final TextArea textAreaTitle = new TextAreaTabAndEnterHandler().new TabAndEnterIgnoringTextArea();
-    
-  //  @FXML
-  //  private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaCreator;
-private final TextArea textAreaCreator = new TextAreaTabAndEnterHandler().new TabAndEnterIgnoringTextArea();
+    // @FXML
+    // private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaTitle;
+    private final TextArea textAreaTitle = new TabAndEnterIgnoringTextArea();
+
+    //  @FXML
+    //  private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaCreator;
+    private final TextArea textAreaCreator = new TabAndEnterIgnoringTextArea();
+
     @FXML
     private DatePicker datePickerMtg;
 
@@ -699,7 +713,12 @@ private final TextArea textAreaCreator = new TextAreaTabAndEnterHandler().new Ta
     public void initialize(URL url, ResourceBundle rb) {
         clearAllView();
         lockAllControls(true);
-
+        textAreaTitle.textProperty().addListener(new ClearStatusListener());
+        textAreaCreator.textProperty().addListener(new ClearStatusListener());
+//        this.unitAnchorPane.getChildren().setAll(textAreaTitle,textAreaCreator);
+      vBoxLayout.getChildren().setAll(textAreaTitle,textAreaCreator);
+   //scrollPaneUnit.getChildrenUnmodifiable().setAll(textAreaTitle,textAreaCreator);
+        System.out.println("textAreaTitle's parent"+textAreaTitle.getParent().toString());
     }
 
     /**

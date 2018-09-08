@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UI;
+package test;
 
 /**
  *
  * @author kyokuto
  */
-import test.*;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.value.*;
@@ -44,7 +43,7 @@ public class TextAreaTabAndEnterHandler extends Application {
     textArea2.textProperty().addListener(new ClearStatusListener());
 
     VBox layout = new VBox(10);
-    layout.setStyle("-fx-bac    kground-color: cornsilk; -fx-padding: 10px;");
+    layout.setStyle("-fx-background-color: cornsilk; -fx-padding: 10px;");
     layout.getChildren().setAll(
       textArea1, 
       textArea2, 
