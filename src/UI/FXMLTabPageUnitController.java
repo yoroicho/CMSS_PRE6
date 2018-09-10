@@ -788,11 +788,11 @@ public class FXMLTabPageUnitController  implements Initializable {
 
         textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             if (event.getCode() == KeyCode.TAB) {
+                System.out.println("TAB");
                 //SkinBase skin = (SkinBase) textAreaTitle.getSkin();
                 TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
                 BehaviorBase<?> bb = skin.getBehavior();
-                if (!(bb instanceof TextAreaBehavior)) {
-                
+                if (bb instanceof TextAreaBehavior) {                 
                     //if (skin.getBehavior() instanceof TextAreaBehavior) {
                     TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
                     if (event.isControlDown()) {
@@ -803,7 +803,11 @@ public class FXMLTabPageUnitController  implements Initializable {
                         behavior.callAction("TraverseNext");
                     }
                     event.consume();
+                }else{
+                    System.out.println("Is not instance of");
                 }
+            }else{
+                System.out.println("Not TAB");
             }
         });
 
