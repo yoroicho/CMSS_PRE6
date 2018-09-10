@@ -5,6 +5,8 @@
  */
 package UI;
 
+import com.sun.javafx.scene.control.behavior. *;
+
 import DB.UnitDAO;
 import DB.UnitDTO;
 import FileDirController.OperationTool;
@@ -73,21 +75,20 @@ import static sun.misc.Signal.handle;
  *
  * @author kyokuto
  */
-public class FXMLTabPageUnitController extends TextAreaTabAndEnterHandler implements Initializable {
+public class FXMLTabPageUnitController  implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
 
-        @FXML
+    @FXML
     private ScrollPane scrollPaneUnit;
-    
-      @FXML
+
+    @FXML
     private VBox vBoxLayout;
-    
-    
-       @FXML
+
+    @FXML
     private AnchorPane unitAnchorPane;
-    
+
     @FXML
     private FXMLBaseDocumentController FXMLBaseDocumentController;
 
@@ -124,13 +125,13 @@ public class FXMLTabPageUnitController extends TextAreaTabAndEnterHandler implem
     @FXML
     private TextField textFieldMainTitleId;
 
-    // @FXML
-    // private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaTitle;
-    private final TextArea textAreaTitle = new TabAndEnterIgnoringTextArea();
+    @FXML
+    private TextArea textAreaTitle;
+    //private final TextArea textAreaTitle = new TabAndEnterIgnoringTextArea();
 
-    //  @FXML
-    //  private TextAreaTabAndEnterHandler.TabAndEnterIgnoringTextArea textAreaCreator;
-    private final TextArea textAreaCreator = new TabAndEnterIgnoringTextArea();
+    @FXML
+    private TextArea  textAreaCreator;
+    //private final TextArea textAreaCreator = new TabAndEnterIgnoringTextArea();
 
     @FXML
     private DatePicker datePickerMtg;
@@ -713,12 +714,14 @@ public class FXMLTabPageUnitController extends TextAreaTabAndEnterHandler implem
     public void initialize(URL url, ResourceBundle rb) {
         clearAllView();
         lockAllControls(true);
-        textAreaTitle.textProperty().addListener(new ClearStatusListener());
-        textAreaCreator.textProperty().addListener(new ClearStatusListener());
+        this.tabInit();
+        //textAreaTitle.textProperty().addListener(new ClearStatusListener());
+       // textAreaCreator.textProperty().addListener(new ClearStatusListener());
 //        this.unitAnchorPane.getChildren().setAll(textAreaTitle,textAreaCreator);
-      vBoxLayout.getChildren().setAll(textAreaTitle,textAreaCreator);
-   //scrollPaneUnit.getChildrenUnmodifiable().setAll(textAreaTitle,textAreaCreator);
-        System.out.println("textAreaTitle's parent"+textAreaTitle.getParent().toString());
+        // 今のところ完動するのはこのパターンのみ ↓ 
+        // vBoxLayout.getChildren().setAll(textAreaTitle, textAreaCreator);
+        //scrollPaneUnit.getChildrenUnmodifiable().setAll(textAreaTitle,textAreaCreator);
+       // System.out.println("textAreaTitle's parent" + textAreaTitle.getParent().toString());
     }
 
     /**
@@ -782,11 +785,58 @@ public class FXMLTabPageUnitController extends TextAreaTabAndEnterHandler implem
     }
 
     private void tabInit() {
+
+        textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode() == KeyCode.TAB) {
+                //SkinBase skin = (SkinBase) textAreaTitle.getSkin();
+                TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
+                BehaviorBase<?> bb = skin.getBehavior();
+                if (!(bb instanceof TextAreaBehavior)) {
+                
+                    //if (skin.getBehavior() instanceof TextAreaBehavior) {
+                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
+                    if (event.isControlDown()) {
+                        System.out.println("ControlDown");
+                        behavior.callAction("InsertTab");
+                    } else {
+                        System.out.println("Contorl not down");
+                        behavior.callAction("TraverseNext");
+                    }
+                    event.consume();
+                }
+            }
+        });
+
         /*
-TextArea textArea = new TextArea();
-textArea.addEventFilter(KeyEvent.KEY_PRESSED, new TabAndEnterHandler());
+        //import com.sun.javafx.scene.control.behavior. *;
+        // import com.sun.javafx.scene.control.skin. *;
+        textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode() != KeyCode.TAB) {
+                return;
+            }
+            
+            if (!tabTraverse) {
+            return;
+            
+            try {
+                TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
+                BehaviorBase<?> bb = skin.getBehavior();
+                if (!(bb instanceof TextAreaBehavior)) {
+                    return;
+                }
+                TextAreaBehavior behavior = (TextAreaBehavior) bb;
+                if (event.isControlDown()) {
+                    behavior.callAction("InsertTab");
+                } else if (event.isShiftDown()) {
+                    behavior.callAction("TraversePrevious");
+                } else {
+                    behavior.callAction("TraverseNext");
+                }
+                event.consume();
+            } catch (NoClassDefFoundError ex) {
+// Java9\u3067JavaFX\u306e\u4ed5\u69d8\u5909\u66f4\u3002\u4ee3\u66ff\u7b56\u306a\u3057
+            }
+        });
          */
-        TextAreaTabAndEnterHandler text = new TextAreaTabAndEnterHandler();
-        //getChildren().setAll(textArea1, textArea2, defaultButton, status);
     }
 }
