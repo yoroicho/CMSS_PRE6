@@ -786,7 +786,7 @@ public class FXMLTabPageUnitController implements Initializable {
                 if (bb instanceof TextAreaBehavior) {
                     TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
                     if (event.isControlDown()) {
-                        
+
                         System.out.println("CTNR PUSH");
                         // behavior.callAction("InsertTab"); 作動しない
                         textArea.replaceSelection("\t");
@@ -805,5 +805,35 @@ public class FXMLTabPageUnitController implements Initializable {
         });
     }
 
-    
-}
+    private void unitProcess() {
+        if (UnitDAO.register(registerUnitDTO)) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("????????????????");
+            System.out.println(registerUnitDTO.toString());
+        } else {
+            registerUnitDTO = null;
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("?????????????????");
+            return;
+// ??????????? 
+        }
+        if (OperationTool.createUnitDir(registerUnitDTO)) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("UNIT_BASE??????????");
+            try {
+                StructUnitSlip.creatSlip(
+                        // ????? 
+                        registerUnitDTO, this.textFieldOverallSeriesId.getText(), this.textAreaOverallSeriesName.getText(), this.textFieldSeriesId.getText(), this.textAreaSeriesName.getText(), this.textAreaMainTitleName.getText());
+// ????? 
+                JOptionPane.showMessageDialog(null, "????????");
+                StructUnitSlip.printSlip(registerUnitDTO.getId(), registerUnitDTO.getTimestamp());
+            } catch (IOException | DocumentException | RuntimeException ex) {
+                Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("UNIT_BASE???????????");
+            // ???????????????????? 
+            if (UnitDAO.deleteById(registerUnitDTO.getId())) { FXMLBaseDocumentController.getLabelCentralMessage().setText( "UNIT_BASE???????????????????????????");
+            
+            }} else { FXMLBaseDocumentController.getLabelCentralMessage().setText( "UNIT_BASE???????????????????????????????????");
+                    } return; 
+// ??????????? } this.lockAllControls(true); clearAllView(); textFieldId.clear(); textFieldId.setDisable(false); textFieldId.requestFocus();
+        }
+    }
