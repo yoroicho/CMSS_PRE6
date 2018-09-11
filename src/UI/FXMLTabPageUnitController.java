@@ -5,7 +5,7 @@
  */
 package UI;
 
-import com.sun.javafx.scene.control.behavior. *;
+import com.sun.javafx.scene.control.behavior.*;
 
 import DB.UnitDAO;
 import DB.UnitDTO;
@@ -75,7 +75,7 @@ import static sun.misc.Signal.handle;
  *
  * @author kyokuto
  */
-public class FXMLTabPageUnitController  implements Initializable {
+public class FXMLTabPageUnitController implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
@@ -130,7 +130,7 @@ public class FXMLTabPageUnitController  implements Initializable {
     //private final TextArea textAreaTitle = new TabAndEnterIgnoringTextArea();
 
     @FXML
-    private TextArea  textAreaCreator;
+    private TextArea textAreaCreator;
     //private final TextArea textAreaCreator = new TabAndEnterIgnoringTextArea();
 
     @FXML
@@ -714,14 +714,17 @@ public class FXMLTabPageUnitController  implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         clearAllView();
         lockAllControls(true);
-        this.tabInit();
+        putTabOrderTextArea(textAreaTitle);
+        putTabOrderTextArea(textAreaCreator);
+        putTabOrderTextArea(textAreaRemark);
+        //this.tabInit();
         //textAreaTitle.textProperty().addListener(new ClearStatusListener());
-       // textAreaCreator.textProperty().addListener(new ClearStatusListener());
-//        this.unitAnchorPane.getChildren().setAll(textAreaTitle,textAreaCreator);
+        // textAreaCreator.textProperty().addListener(new ClearStatusListener());
+        //this.unitAnchorPane.getChildren().setAll(textAreaTitle,textAreaCreator);
         // 今のところ完動するのはこのパターンのみ ↓ 
         // vBoxLayout.getChildren().setAll(textAreaTitle, textAreaCreator);
         //scrollPaneUnit.getChildrenUnmodifiable().setAll(textAreaTitle,textAreaCreator);
-       // System.out.println("textAreaTitle's parent" + textAreaTitle.getParent().toString());
+        // System.out.println("textAreaTitle's parent" + textAreaTitle.getParent().toString());
     }
 
     /**
@@ -784,6 +787,31 @@ public class FXMLTabPageUnitController  implements Initializable {
         return unitDTO;
     }
 
+    // IF JAVA 9 LOOK AT -> https://code.i-harness.com/ja/q/c43c3e
+    private void putTabOrderTextArea(TextArea textArea) {
+        textArea.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode() == KeyCode.TAB) {
+                TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
+                BehaviorBase<?> bb = skin.getBehavior();
+                if (bb instanceof TextAreaBehavior) {
+                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
+                    if (event.isControlDown()) {
+                        
+                        System.out.println("CTNR PUSH");
+                        behavior.callAction("InsertTab");
+                    } else if (event.isShiftDown()) {
+                        behavior.callAction("TraversePrevious");
+                    } else {
+                        behavior.callAction("TraverseNext");
+                    }
+                    event.consume();
+                } else {
+                }
+            } else {
+            }
+        });
+    }
+
     private void tabInit() {
 
         textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
@@ -792,21 +820,24 @@ public class FXMLTabPageUnitController  implements Initializable {
                 //SkinBase skin = (SkinBase) textAreaTitle.getSkin();
                 TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
                 BehaviorBase<?> bb = skin.getBehavior();
-                if (bb instanceof TextAreaBehavior) {                 
+                if (bb instanceof TextAreaBehavior) {
                     //if (skin.getBehavior() instanceof TextAreaBehavior) {
                     TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
                     if (event.isControlDown()) {
                         System.out.println("ControlDown");
                         behavior.callAction("InsertTab");
+                    } else if (event.isShiftDown()) {
+
+                        behavior.callAction("TraversePrevious");
                     } else {
                         System.out.println("Contorl not down");
                         behavior.callAction("TraverseNext");
                     }
                     event.consume();
-                }else{
+                } else {
                     System.out.println("Is not instance of");
                 }
-            }else{
+            } else {
                 System.out.println("Not TAB");
             }
         });
