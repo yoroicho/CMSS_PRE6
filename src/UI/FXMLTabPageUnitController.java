@@ -456,7 +456,6 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     @FXML
-
     private void makeAnotherVersion() { // 細部の調整はまだ
         /*
         条件buttonMakeAnotherVersionの押下
