@@ -806,34 +806,56 @@ public class FXMLTabPageUnitController implements Initializable {
     }
 
     private void unitProcess() {
+
+        // registerUnitDTO // 登録予定のUnitDTO
+        //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
         if (UnitDAO.register(registerUnitDTO)) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("????????????????");
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "データベースに新規登録しました。"
+            );
             System.out.println(registerUnitDTO.toString());
         } else {
             registerUnitDTO = null;
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("?????????????????");
-            return;
-// ??????????? 
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "データーベース登録に失敗しました。");
+            return; // 失敗したらそこで終了。
         }
         if (OperationTool.createUnitDir(registerUnitDTO)) {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("UNIT_BASE??????????");
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "UNIT_BASEに新規登録しました。");
             try {
-                StructUnitSlip.creatSlip(
-                        // ????? 
-                        registerUnitDTO, this.textFieldOverallSeriesId.getText(), this.textAreaOverallSeriesName.getText(), this.textFieldSeriesId.getText(), this.textAreaSeriesName.getText(), this.textAreaMainTitleName.getText());
-// ????? 
-                JOptionPane.showMessageDialog(null, "????????");
+                StructUnitSlip.creatSlip( // 伝票の作成
+                        registerUnitDTO,
+                        this.textFieldOverallSeriesId.getText(),
+                        this.textAreaOverallSeriesName.getText(),
+                        this.textFieldSeriesId.getText(),
+                        this.textAreaSeriesName.getText(),
+                        this.textAreaMainTitleName.getText()
+                );
+                // 伝票の出力
+                JOptionPane.showMessageDialog(null, "伝票印刷します。");
                 StructUnitSlip.printSlip(registerUnitDTO.getId(), registerUnitDTO.getTimestamp());
             } catch (IOException | DocumentException | RuntimeException ex) {
                 Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("UNIT_BASE???????????");
-            // ???????????????????? 
-            if (UnitDAO.deleteById(registerUnitDTO.getId())) { FXMLBaseDocumentController.getLabelCentralMessage().setText( "UNIT_BASE???????????????????????????");
-            
-            }} else { FXMLBaseDocumentController.getLabelCentralMessage().setText( "UNIT_BASE???????????????????????????????????");
-                    } return; 
-// ??????????? } this.lockAllControls(true); clearAllView(); textFieldId.clear(); textFieldId.setDisable(false); textFieldId.requestFocus();
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "UNIT_BASEの登録に失敗しました。");
+            // 変更以外はデータベースに遡って削除する。
+            if (UnitDAO.deleteById(registerUnitDTO.getId())) {
+                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                        "UNIT_BASEの登録に失敗したのでデータベースレコード削除しました。");
+            } else {
+                FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                        "UNIT_BASEの登録に失敗しましたが、データベースレコードの削除はできませんでした。");
+            }
+            return; // 失敗したらそこで終了。
         }
+        this.lockAllControls(true);
+        clearAllView();
+        textFieldId.clear();
+        textFieldId.setDisable(false);
+        textFieldId.requestFocus();
+
     }
+}
