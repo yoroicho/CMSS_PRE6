@@ -653,7 +653,6 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private void initializeAllItems() {
-        tabInit();
         textFieldId.clear();
         textFieldId.setDisable(false);
         lockAllControls(true);
@@ -717,14 +716,6 @@ public class FXMLTabPageUnitController implements Initializable {
         putTabOrderTextArea(textAreaTitle);
         putTabOrderTextArea(textAreaCreator);
         putTabOrderTextArea(textAreaRemark);
-        //this.tabInit();
-        //textAreaTitle.textProperty().addListener(new ClearStatusListener());
-        // textAreaCreator.textProperty().addListener(new ClearStatusListener());
-        //this.unitAnchorPane.getChildren().setAll(textAreaTitle,textAreaCreator);
-        // 今のところ完動するのはこのパターンのみ ↓ 
-        // vBoxLayout.getChildren().setAll(textAreaTitle, textAreaCreator);
-        //scrollPaneUnit.getChildrenUnmodifiable().setAll(textAreaTitle,textAreaCreator);
-        // System.out.println("textAreaTitle's parent" + textAreaTitle.getParent().toString());
     }
 
     /**
@@ -815,66 +806,5 @@ public class FXMLTabPageUnitController implements Initializable {
         });
     }
 
-    private void tabInit() {
-
-        textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (event.getCode() == KeyCode.TAB) {
-                System.out.println("TAB");
-                //SkinBase skin = (SkinBase) textAreaTitle.getSkin();
-                TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
-                BehaviorBase<?> bb = skin.getBehavior();
-                if (bb instanceof TextAreaBehavior) {
-                    //if (skin.getBehavior() instanceof TextAreaBehavior) {
-                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
-                    if (event.isControlDown()) {
-                        System.out.println("ControlDown");
-                        behavior.callAction("InsertTab");
-                    } else if (event.isShiftDown()) {
-
-                        behavior.callAction("TraversePrevious");
-                    } else {
-                        System.out.println("Contorl not down");
-                        behavior.callAction("TraverseNext");
-                    }
-                    event.consume();
-                } else {
-                    System.out.println("Is not instance of");
-                }
-            } else {
-                System.out.println("Not TAB");
-            }
-        });
-
-        /*
-        //import com.sun.javafx.scene.control.behavior. *;
-        // import com.sun.javafx.scene.control.skin. *;
-        textAreaTitle.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-            if (event.getCode() != KeyCode.TAB) {
-                return;
-            }
-            
-            if (!tabTraverse) {
-            return;
-            
-            try {
-                TextAreaSkin skin = (TextAreaSkin) textAreaTitle.getSkin();
-                BehaviorBase<?> bb = skin.getBehavior();
-                if (!(bb instanceof TextAreaBehavior)) {
-                    return;
-                }
-                TextAreaBehavior behavior = (TextAreaBehavior) bb;
-                if (event.isControlDown()) {
-                    behavior.callAction("InsertTab");
-                } else if (event.isShiftDown()) {
-                    behavior.callAction("TraversePrevious");
-                } else {
-                    behavior.callAction("TraverseNext");
-                }
-                event.consume();
-            } catch (NoClassDefFoundError ex) {
-// Java9\u3067JavaFX\u306e\u4ed5\u69d8\u5909\u66f4\u3002\u4ee3\u66ff\u7b56\u306a\u3057
-            }
-        });
-         */
-    }
+    
 }
