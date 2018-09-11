@@ -798,11 +798,14 @@ public class FXMLTabPageUnitController implements Initializable {
                     if (event.isControlDown()) {
                         
                         System.out.println("CTNR PUSH");
-                        behavior.callAction("InsertTab");
+                        // behavior.callAction("InsertTab"); 作動しない
+                        textArea.replaceSelection("\t");
                     } else if (event.isShiftDown()) {
-                        behavior.callAction("TraversePrevious");
+                        behavior.traversePrevious(); // java9 available?
+                        //behavior.callAction("TraversePrevious"); 
                     } else {
-                        behavior.callAction("TraverseNext");
+                        behavior.traverseNext(); // java9 available?
+                        //behavior.callAction("TraverseNext");
                     }
                     event.consume();
                 } else {
