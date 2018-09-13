@@ -283,7 +283,9 @@ public class FXMLTabPageUnitController implements Initializable {
             //+ "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
-                    .ifPresent(response -> {
+                    .ifPresent((ButtonType response) -> {
+                        unitProcess();
+                      /*  
                         // registerUnitDTO // 登録予定のUnitDTO
                         //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
@@ -333,6 +335,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
+                    */
                     });
             registerUnitDTO = null;
         }
@@ -409,6 +412,8 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
+                        this.unitProcess();
+                        /*
                         //registerUnitDTO // 登録予定のUnitDTO
                         //      = pushDTO(new UnitDTO(), UnitAim.REGISTER_CHANGE);
                         if (UnitDAO.register(registerUnitDTO)) {
@@ -449,6 +454,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
+                        */
                     }
                     );
             registerUnitDTO = null;
@@ -516,6 +522,8 @@ public class FXMLTabPageUnitController implements Initializable {
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
+                        this.unitProcess();
+                        /*
                         registerUnitDTO // 登録予定のUnitDTO
                                 = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
                         System.out.println("call version");
@@ -550,6 +558,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
+                        */
                     });
             registerUnitDTO = null;
         }
@@ -601,21 +610,25 @@ public class FXMLTabPageUnitController implements Initializable {
             );
             Optional<ButtonType> showAndWait = alert.showAndWait();
             // blockRegisterButton();
-            FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
+            FXMLBaseDocumentController.getLabelCentralMessage().setText(
+                    "テンプレート複写の受付中。");
             // ここでプレビューと可否の入力を受け付け
+            registerUnitDTO = pushDTO(new UnitDTO(), UnitAim.MAKE_FROM_TEMPLATE);
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
-                    "変更登録：既存のユニットを変更します。"
+                    "テンプレート複写登録：既存のユニットからテンプレート複写します。"
                     + "ID:" + this.textFieldId.getText() // IDは表示されないはず
                     + "TITLE:" + this.textAreaTitle.getText());
             alertRegisterNew.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
+                        this.unitProcess();
+                        /*
                         registerUnitDTO // 登録予定のUnitDTO
                                 = pushDTO(new UnitDTO(), UnitAim.MAKE_FROM_TEMPLATE);
                         System.out.println("call template");
                         if (UnitDAO.register(registerUnitDTO)) {
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
-                                    "変更登録しました。");
+                                    "複写登録しました。");
                         } else {
                             registerUnitDTO = null;
                             FXMLBaseDocumentController.getLabelCentralMessage().setText(
@@ -645,6 +658,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
+                    */
                     });
             registerUnitDTO = null;
         }
