@@ -515,6 +515,9 @@ public class FXMLTabPageUnitController implements Initializable {
             // blockRegisterButton();
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
+            registerUnitDTO // ?????UnitDTO
+                                = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
+                        System.out.println("call version");
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "別版新規：既存のユニットの改変を作成します。"
                     + "ID:" + this.textFieldId.getText()
