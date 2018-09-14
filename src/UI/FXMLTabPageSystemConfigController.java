@@ -73,7 +73,7 @@ public class FXMLTabPageSystemConfigController implements Initializable {
     private TextArea textArea_SHIP_REMARK;
 
     @FXML
-    private TextField textFieldShipBaseDir;
+    private TextField textFieldUnitBaseDir;
 
     private Label labelEnterCreateShipDir;
 
@@ -100,7 +100,7 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
     private void handleShipBaseDirButtonAction(ActionEvent event) {
         final DirectoryChooser fc = new DirectoryChooser();
         fc.setTitle("ディレクトリ選択");
-        textFieldShipBaseDir.setText(fc.showDialog(null).getPath());
+        textFieldUnitBaseDir.setText(fc.showDialog(null).getPath());
     }
 
     @FXML
@@ -110,11 +110,10 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
         System.out.println("Check"+(textFieldDatabaseUrl.getText()==null?"nulled":"conted"));
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> SystemPropertiesAcc.storeSystemProperties(
-                textFieldDatabaseUrl.getText()==null?"":textFieldDatabaseUrl.getText().trim(),
+                .ifPresent(response -> SystemPropertiesAcc.storeSystemProperties(textFieldDatabaseUrl.getText()==null?"":textFieldDatabaseUrl.getText().trim(),
                 textFieldDatabaseUser.getText()==null?"":textFieldDatabaseUser.getText().trim(),
                 passwordFieldDatabasePass.getText()==null?"":passwordFieldDatabasePass.getText(), // パスワードは前後の空白を除かない
-                textFieldShipBaseDir.getText()==null?"":textFieldShipBaseDir.getText().trim(),
+                textFieldUnitBaseDir.getText()==null?"":textFieldUnitBaseDir.getText().trim(),
                 "",
                 "",
                 ""));
@@ -172,7 +171,7 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
         textFieldDatabaseUrl.setText(SystemPropertiesItem.DB_URL);
         textFieldDatabaseUser.setText(SystemPropertiesItem.DB_USER);
         passwordFieldDatabasePass.setText(SystemPropertiesItem.DB_PASS);
-        textFieldShipBaseDir.setText(SystemPropertiesItem.SHIP_BASE);
+        textFieldUnitBaseDir.setText(SystemPropertiesItem.SHIP_BASE);
     }
 
 //    private void initFocuseConditionForTask() {
