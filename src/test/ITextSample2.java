@@ -1,9 +1,11 @@
+package test;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+
 
 import java.io.FileOutputStream;
 
@@ -26,6 +28,8 @@ public class ITextSample2 {
     /**
      * @param args
      */
+    static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
     public static void main(String[] args) {
         ITextSample2 itext = new ITextSample2();
         itext.exeCreate();
@@ -126,6 +130,8 @@ public class ITextSample2 {
         public void execute() {
 
             try {
+
+                //Font ipaGothic14 = new Font(BaseFont.createFont(System.getProperty("user.dir") + FILE_SEPARATOR + "res" + FILE_SEPARATOR + "ipag.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 14);
                 // 明朝体，ゴシック体フォントを設定
                 mincho = BaseFont.createFont(MINCHO, HORIZONTAL_HW, false);
                 gothic = BaseFont.createFont(GOTHIC, HORIZONTAL, false);
@@ -141,7 +147,7 @@ public class ITextSample2 {
                 PdfWriter writer
                         = PdfWriter.getInstance(
                                 document,
-                                new FileOutputStream("C:/ITextSample2.pdf"));
+                                new FileOutputStream(System.getProperty("user.dir") + FILE_SEPARATOR + "res" + FILE_SEPARATOR + "test.pdf"));
                 writer.setPageEvent(this);
                 // ドキュメントをオープン
                 document.open();
@@ -330,7 +336,7 @@ public class ITextSample2 {
                     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     htable1.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase("ああああああああ", mincho15));
+                    cell = new PdfPCell(new Phrase("あ1Il|_\\O0", mincho15));
                     cell.setFixedHeight(30f);
                     cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
