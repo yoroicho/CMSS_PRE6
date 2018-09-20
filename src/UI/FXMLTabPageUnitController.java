@@ -78,7 +78,7 @@ import static sun.misc.Signal.handle;
 public class FXMLTabPageUnitController implements Initializable {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
+    private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
 
     @FXML
     private ScrollPane scrollPaneUnit;

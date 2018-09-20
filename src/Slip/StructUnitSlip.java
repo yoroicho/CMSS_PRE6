@@ -70,7 +70,7 @@ public class StructUnitSlip {
     private TextArea textAreaCreator;
      */
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
+    private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
 
     /**
      * @param unitDTO

@@ -44,7 +44,6 @@ import javax.swing.JOptionPane;
  */
 public class FXMLTabPageSystemConfigController implements Initializable {
 
-
     private boolean flgExsistShip;
 
     /**
@@ -64,13 +63,13 @@ public class FXMLTabPageSystemConfigController implements Initializable {
 
     private Label label;
 
-    private TextField textField_SHIP_ID;
+    private TextField textField_UNIT_ID;
 
-    private TextField textField_SHIP_SERVICE;
+    private TextField textField_UNIT_SERVICE;
 
-    private TextArea textArea_SHIP_NAME;
+    private TextArea textArea_UNIT_NAME;
 
-    private TextArea textArea_SHIP_REMARK;
+    private TextArea textArea_UNIT_REMARK;
 
     @FXML
     private TextField textFieldUnitBaseDir;
@@ -79,14 +78,19 @@ public class FXMLTabPageSystemConfigController implements Initializable {
 
     public TextField testTextField;
     @FXML
-    private Button SHIP_BASE_DIR;
+    private Button UNIT_BASE_DIR;
     @FXML
     private Button ButtonEnterSystemProperties;
     @FXML
     private Button buttonReloadPropertiesOnMemory;
 
+    @FXML
+    private TextField textFieldUnitWorkspaceDir;
+    @FXML
+    private Button UNIT_WORKSPACE_DIR;
+
     private void testButtonAction(ActionEvent event) {
-testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2));
+        testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText()) * 2));
     }
 
     private void handleButtonAction(ActionEvent event) {
@@ -97,50 +101,56 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
     }
 
     @FXML
-    private void handleShipBaseDirButtonAction(ActionEvent event) {
+    private void handleUnitBaseDirButtonAction(ActionEvent event) {
         final DirectoryChooser fc = new DirectoryChooser();
-        fc.setTitle("ディレクトリ選択");
+        fc.setTitle("SLECT UNIT BASE DIR");
         textFieldUnitBaseDir.setText(fc.showDialog(null).getPath());
+    }
+
+    @FXML
+    private void handleUnitWorkspaceDirButtonAction(ActionEvent event) {
+        final DirectoryChooser fc = new DirectoryChooser();
+        fc.setTitle("SELECT UNIT WORKSPACE");
+        textFieldUnitWorkspaceDir.setText(fc.showDialog(null).getPath());
     }
 
     @FXML
     private void handleButtonEnterSystemPropertiesButtonAction(ActionEvent event) {
         JOptionPane.showMessageDialog(null, "この設定が有効になるのはシステム再起動後です。");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "厳重確認：この操作は重大な影響を永続的に及ばします。");
-        System.out.println("Check"+(textFieldDatabaseUrl.getText()==null?"nulled":"conted"));
+        System.out.println("Check" + (textFieldDatabaseUrl.getText() == null ? "nulled" : "conted"));
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> SystemPropertiesAcc.storeSystemProperties(textFieldDatabaseUrl.getText()==null?"":textFieldDatabaseUrl.getText().trim(),
-                textFieldDatabaseUser.getText()==null?"":textFieldDatabaseUser.getText().trim(),
-                passwordFieldDatabasePass.getText()==null?"":passwordFieldDatabasePass.getText(), // パスワードは前後の空白を除かない
-                textFieldUnitBaseDir.getText()==null?"":textFieldUnitBaseDir.getText().trim(),
+                .ifPresent(response -> SystemPropertiesAcc.storeSystemProperties(
+                textFieldDatabaseUrl.getText() == null ? "" : textFieldDatabaseUrl.getText().trim(),
+                textFieldDatabaseUser.getText() == null ? "" : textFieldDatabaseUser.getText().trim(),
+                passwordFieldDatabasePass.getText() == null ? "" : passwordFieldDatabasePass.getText(), // パスワードは前後の空白を除かない
+                textFieldUnitBaseDir.getText() == null ? "" : textFieldUnitBaseDir.getText().trim(),
                 "",
                 "",
                 ""));
     }
 
-    
-    
     private void handleButtonEnterCreateShipDirButtonAction(ActionEvent event) {
         ConnectionShip.replaceShip( // データベースを更新。
-                Normalizer.normalize(textField_SHIP_ID.getText(), Normalizer.Form.NFKC), // 全角を限り無く半角に
-                textField_SHIP_SERVICE.getText(),
-                textArea_SHIP_NAME.getText(),
-                textArea_SHIP_REMARK.getText()
+                Normalizer.normalize(textField_UNIT_ID.getText(), Normalizer.Form.NFKC), // 全角を限り無く半角に
+                textField_UNIT_SERVICE.getText(),
+                textArea_UNIT_NAME.getText(),
+                textArea_UNIT_REMARK.getText()
         );
         if (flgExsistShip) {
             // ファイルに上書きを行う処理。フルパスをDBに登録する必要がある。
             // UUIDからの導出では増設HDDにBASEが切り替わった時に迷子になる。
             // 結局フォルダを作るのはUUIDではなく主キーの方がいいのかもしれない。
         } else {
-            String createdDir = CreateUnderDir.makeUnderDirUUID("SHIP-", SystemPropertiesItem.SHIP_BASE);
+            String createdDir = CreateUnderDir.makeUnderDirUUID("UNIT-", SystemPropertiesItem.UNIT_BASE);
             Date d = new Date();
             List<String> list = new ArrayList<>();
             list.add(createdDir);
-            list.add("SHIP_ID:" + Normalizer.normalize(textField_SHIP_ID.getText(), Normalizer.Form.NFKC));// 全角を限り無く半角に
-            list.add("SHIP_SERVICE:" + this.textField_SHIP_SERVICE.getText());
-            list.add("SHIP_NAME:" + this.textArea_SHIP_NAME.getText());
-            list.add("SHIP_REMARK" + this.textArea_SHIP_REMARK.getText());
+            list.add("UNIT_ID:" + Normalizer.normalize(textField_UNIT_ID.getText(), Normalizer.Form.NFKC));// 全角を限り無く半角に
+            list.add("UNIT_SERVICE:" + this.textField_UNIT_SERVICE.getText());
+            list.add("UNIT_NAME:" + this.textArea_UNIT_NAME.getText());
+            list.add("UNIT_REMARK" + this.textArea_UNIT_REMARK.getText());
             list.add("----------------------------------------");
             list.add(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(d));
             list.add(new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒").format(d));
@@ -154,7 +164,7 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
     @FXML // すべての内容を現在メモリに登録している状態にもどす。
     private void handleButtonReloadPropertiesOnMemory(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to reload Properties from this system's memory?");
-        System.out.println("DB_URL: "+common.StaticSystemPropertiesAcc.DB_URL); // 取得に成功。
+        System.out.println("DB_URL: " + common.StaticSystemPropertiesAcc.DB_URL); // 取得に成功。
         alert.showAndWait()
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> initializeSystemPropertiesWindow());
@@ -171,27 +181,27 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
         textFieldDatabaseUrl.setText(SystemPropertiesItem.DB_URL);
         textFieldDatabaseUser.setText(SystemPropertiesItem.DB_USER);
         passwordFieldDatabasePass.setText(SystemPropertiesItem.DB_PASS);
-        textFieldUnitBaseDir.setText(SystemPropertiesItem.SHIP_BASE);
+        textFieldUnitBaseDir.setText(SystemPropertiesItem.UNIT_BASE);
     }
 
 //    private void initFocuseConditionForTask() {
-//        this.textField_SHIP_ID.focusedProperty().addListener(new ChangeListener<Boolean>() {
+//        this.textField_UNIT_ID.focusedProperty().addListener(new ChangeListener<Boolean>() {
 //            @Override
 //            public void changed(ObservableValue<? extends Boolean> arg0,
 //                    Boolean oldPropertyValue, Boolean newPropertyValue) {
 //                if (newPropertyValue) {
-//                    //textField_SHIP_ID.setEditable(true);
+//                    //textField_UNIT_ID.setEditable(true);
 //                    System.out.println("Textfield on focus");
 //                } else {
-//                    //textField_SHIP_ID.setEditable(false);
-//                    textField_SHIP_ID.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
+//                    //textField_UNIT_ID.setEditable(false);
+//                    textField_UNIT_ID.setDisable(true); // 編集不可になっていることが明確。ただし文字は見にくい。
 //                    System.out.println("Textfield out focus");
-//                    ResultSet rs = DatabaseUty.getResultSetByKey("ship", "id", textField_SHIP_ID.getText().trim());
+//                    ResultSet rs = DatabaseUty.getResultSetByKey("ship", "id", textField_UNIT_ID.getText().trim());
 //                    try {
 //                        rs.next();
-//                        textField_SHIP_SERVICE.setText(rs.getString("SERVICE"));
-//                        textArea_SHIP_NAME.setText(rs.getString("NAME"));
-//                        textArea_SHIP_REMARK.setText(rs.getString("REMARK"));
+//                        textField_UNIT_SERVICE.setText(rs.getString("SERVICE"));
+//                        textArea_UNIT_NAME.setText(rs.getString("NAME"));
+//                        textArea_UNIT_REMARK.setText(rs.getString("REMARK"));
 //                        flgExsistShip = true;
 //                    } catch (SQLException ex) {
 //                        Logger.getLogger(FXMLTabPageSystemConfigController.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,7 +213,4 @@ testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText())*2
 //            }
 //        });
 //    }
-
-   
-    
 }

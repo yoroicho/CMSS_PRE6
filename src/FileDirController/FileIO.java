@@ -34,9 +34,9 @@ public class FileIO {
             Boolean isExsistId, // idが存在することが前提となっている場合true
             Boolean isExsistDivDateTime, // DivDateTimeが存在することが前提となっている場合true
             List<String> text) {
-        // 用途的にSHIP_BASEが正しいかどうかは分からない。
+        // 用途的にUNIT_BASEが正しいかどうかは分からない。
         // これから定数名を整理する必要がある。
-        String idPath = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + id;
+        String idPath = SystemPropertiesItem.UNIT_BASE + FILE_SEPARATOR + id;
         File idPathFile = new File(idPath);
         File divDateTimeFile = new File(idPath + FILE_SEPARATOR + divDateTime);
         if (idPathFile.exists()) { // Exsist すでにある
@@ -51,7 +51,7 @@ public class FileIO {
             }
         } else {
             // New id mode.
-            //makeUnderDirNamed(id,SystemPropertiesItem.SHIP_BASE);
+            //makeUnderDirNamed(id,SystemPropertiesItem.UNIT_BASE);
 
         }
     }
