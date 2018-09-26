@@ -20,30 +20,15 @@ import java.util.List;
  */
 public class MainTitleDAO implements IDAO {
 
-    public static ResultSet getResultSetByKey(String tableName, String keyName, String id) {
-        String sql = "SELECT * from " + tableName + " WHERE " + keyName + " = (?);";
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-            connection.setAutoCommit(false);
-            statement.setString(1, id);
-            statement.addBatch();
-            System.out.println("getResultSetByKey statement is " + statement.toString());
-            ResultSet result = statement.executeQuery();
-            System.out.println("getResultSetByKey 検索：" + result.getFetchSize() + "件"); // 下の行と逆っぽい
-            connection.commit();
-            System.out.println("getResultSetByKey 検索成功");
-            return result;
-        } catch (SQLException e) {
-            System.out.println("getResultSetByKey 検索失敗");
-            e.printStackTrace();
-        }
-        return null;
+    public static ResultSet getResultSetByKey(
+            String tableName, String keyName, String id) throws SQLException {
+        return IDAO.getResultSetByKey(tableName, keyName, id);
     }
 
-    public static List<UnitDTO> findAll() {
-        String sql = "SELECT * from unit;";
+    public static List<MainTitleDTO> findAll() {
+        String sql = "SELECT * from maintitle;";
         // DTOクラスのインスタンス格納用
-        List<UnitDTO> unitDTO = new ArrayList<>();
+        List<MainTitleDTO> mainTitleDTO = new ArrayList<>();
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -56,22 +41,22 @@ public class MainTitleDAO implements IDAO {
                 // データベースから取得した値がある間、
                 while (result.next()) {
                     // OrdersDTOクラスのインスタンスを生成
-                    UnitDTO dto = new UnitDTO();
+                    MainTitleDTO dto = new MainTitleDTO();
                     // カラムの値をフィールドにセット
-                    dto.setId(result.getLong("id"));
+                    dto.setId(result.getString("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setMaintitleId(result.getString("maintitleid"));
-                    dto.setTitle(result.getString("title"));
+                    dto.setSeriesid("seriesid");
+                    dto.setMaintitle(result.getString("maintitle"));
+                    dto.setMainkana(result.getString("mainkana"));
+                    dto.setLang(result.getString("lang"));
                     dto.setCreator(result.getString("creator"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
                     dto.setRemark(result.getString("remark"));
-                    dto.setTemplateId(result.getLong("templateid"));
-                    dto.setVersionId(result.getLong("versionid"));
                     dto.setTimestamp(result.getTimestamp("timestamp"));
                     // インスタンスをListに格納
-                    unitDTO.add(dto);
+                    mainTitleDTO.add(dto);
                     // while文で次のレコードの処理へ
                 }
             } catch (SQLException e) {
@@ -84,11 +69,11 @@ public class MainTitleDAO implements IDAO {
             System.out.println("データべース障害");
         }
         // DTOクラスのインスタンスのListを返す
-        return unitDTO;
+        return mainTitleDTO;
     }
 
     public static List<UnitDTO> findById(long id) {
-System.out.println("findById Called."+id);
+        System.out.println("findById Called." + id);
         String sql = "SELECT * from unit WHERE id = (?) ; ";
         //String sql = "SELECT * from unit ;";
 // DTO?????????????
@@ -98,7 +83,7 @@ System.out.println("findById Called."+id);
             connection.setAutoCommit(false);
             statement.setLong(1, id);
             statement.addBatch();
-            System.out.println("findById "+statement.toString());
+            System.out.println("findById " + statement.toString());
 
             ResultSet result = statement.executeQuery();
             System.out.println("Total" + result.getFetchDirection() + "items");
@@ -218,7 +203,7 @@ System.out.println("findById Called."+id);
         }
         return false;
     }
-    
+
     public static boolean register(UnitDTO unitDTO) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
