@@ -45,7 +45,7 @@ public class MainTitleDAO implements IDAO {
                     // カラムの値をフィールドにセット
                     dto.setId(result.getString("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setSeriesid("seriesid");
+                    dto.setSeriesid(result.getString("seriesid"));
                     dto.setMaintitle(result.getString("maintitle"));
                     dto.setMainkana(result.getString("mainkana"));
                     dto.setLang(result.getString("lang"));
@@ -72,12 +72,9 @@ public class MainTitleDAO implements IDAO {
         return mainTitleDTO;
     }
 
-    public static List<UnitDTO> findById(long id) {
-        System.out.println("findById Called." + id);
-        String sql = "SELECT * from unit WHERE id = (?) ; ";
-        //String sql = "SELECT * from unit ;";
-// DTO?????????????
-        List<UnitDTO> unitDTO = new ArrayList<>();
+    public static List<MainTitleDTO> findById(long id) {
+        String sql = "SELECT * from maintitle WHERE id = (?) ; ";
+        List<MainTitleDTO> mainTitleDTO = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
@@ -90,25 +87,21 @@ public class MainTitleDAO implements IDAO {
 
             try {
                 connection.commit();
-                System.out.println("E-1");
-                // ??????????????????
                 while (result.next()) {
-                    // OrdersDTO?????????????
-                    UnitDTO dto = new UnitDTO();
-                    // ???????????????
-                    dto.setId(result.getLong("id"));
+                    MainTitleDTO dto = new MainTitleDTO();
+                    dto.setId(result.getString("id"));
                     dto.setClose(result.getDate("close"));
-                    dto.setMaintitleId(result.getString("maintitleid"));
-                    dto.setTitle(result.getString("title"));
+                    dto.setSeriesid(result.getString("seriesid"));
+                    dto.setMaintitle(result.getString("maintitle"));
+                    dto.setMainkana(result.getString("mainkana"));
+                    dto.setLang(result.getString("lang"));
                     dto.setCreator(result.getString("creator"));
                     dto.setMtg(result.getDate("mtg"));
                     dto.setCut(result.getDate("cut"));
                     dto.setEtd(result.getDate("etd"));
                     dto.setRemark(result.getString("remark"));
-                    dto.setTemplateId(result.getLong("templateid"));
-                    dto.setVersionId(result.getLong("versionid"));
                     dto.setTimestamp(result.getTimestamp("timestamp"));
-                    unitDTO.add(dto);
+                    mainTitleDTO.add(dto);
 
                 }
             } catch (SQLException e) {
@@ -120,72 +113,21 @@ public class MainTitleDAO implements IDAO {
             System.out.println("E-3");
             e.printStackTrace();
         }
-        return unitDTO;
+        return mainTitleDTO;
     }
-
-    public static List<UnitDTO> findById(Timestamp id) {
-        //Timestamp id = Timestamp.valueOf(idText);
-        String sql = "SELECT * from unit WHERE id = (?);";
-        // DTOクラスのインスタンス格納用
-        List<UnitDTO> unitDTO = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-            connection.setAutoCommit(false);
-            statement.setTimestamp(1, id);
-            statement.addBatch();
-            System.out.println(statement.toString());
-
-            ResultSet result = statement.executeQuery();
-            System.out.println("検索：" + result.getFetchSize() + "件");
-
-            try {
-                connection.commit();
-                System.out.println("検索成功");
-                // データベースから取得した値がある間、
-                while (result.next()) {
-                    // OrdersDTOクラスのインスタンスを生成
-                    UnitDTO dto = new UnitDTO();
-                    // カラムの値をフィールドにセット
-                    dto.setId(result.getLong("id"));
-                    dto.setClose(result.getDate("close"));
-                    dto.setMaintitleId(result.getString("maintitleid"));
-                    dto.setTitle(result.getString("title"));
-                    dto.setCreator(result.getString("creator"));
-                    dto.setMtg(result.getDate("mtg"));
-                    dto.setCut(result.getDate("cut"));
-                    dto.setEtd(result.getDate("etd"));
-                    dto.setRemark(result.getString("remark"));
-                    dto.setTemplateId(result.getLong("templateid"));
-                    dto.setVersionId(result.getLong("versionid"));
-                    dto.setTimestamp(result.getTimestamp("timestamp"));
-                    // インスタンスをListに格納
-                    unitDTO.add(dto);
-                    // while文で次のレコードの処理へ
-                }
-            } catch (SQLException e) {
-                // connection.rollback(); 
-                e.printStackTrace();
-                System.out.println("検索失敗");
-            }
-        } catch (SQLException e) {
-            System.out.println("データベース障害");
-            e.printStackTrace();
-        }
-        return unitDTO;
-    }
-
-    public static boolean deleteById(Long id) {
+    
+    public static boolean deleteById(String id) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
         //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
         //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
-        String sql = "DELETE FROM unit WHERE id = ?;";
+        String sql = "DELETE FROM maintitle WHERE id = ?;";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
-            statement.setLong(1, id);
+            statement.setString(1, id);
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
@@ -204,29 +146,27 @@ public class MainTitleDAO implements IDAO {
         return false;
     }
 
-    public static boolean register(UnitDTO unitDTO) {
+    public static boolean register(MainTitleDTO mainTitleDTO) {
 
-        // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
-        //String sql = "INSERT INTO unit values (?,?,?,?,?,?,?,?);";
-        //仮に海外に行っても時差時間内に作業を再開するとは考えにくいので方針変更
         String sql = "REPLACE INTO unit values (?,?,?,?,?,?,?,?,?,?,?,?);";
 
         // データベースへの接続
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
-            statement.setLong(1, unitDTO.getId());
-            statement.setDate(2, unitDTO.getClose());
-            statement.setString(3, unitDTO.getMaintitleId());
-            statement.setString(4, unitDTO.getTitle());
-            statement.setString(5, unitDTO.getCreator());
-            statement.setDate(6, unitDTO.getMtg());
-            statement.setDate(7, unitDTO.getCut());
-            statement.setDate(8, unitDTO.getEtd());
-            statement.setString(9, unitDTO.getRemark());
-            statement.setLong(10, unitDTO.getTemplateId());
-            statement.setLong(11, unitDTO.getVersionId());
-            statement.setTimestamp(12, unitDTO.getTimestamp());
+            statement.setString(1, mainTitleDTO.getId());
+            statement.setDate(2, mainTitleDTO.getClose());
+            statement.setString(3, mainTitleDTO.getSeriesid());
+            statement.setString(4, mainTitleDTO.getMaintitle());
+            statement.setString(5, mainTitleDTO.getMainkana());
+            statement.setString(6, mainTitleDTO.getLang());
+            statement.setString(7, mainTitleDTO.getCreator());
+            statement.setDate(8, mainTitleDTO.getMtg());
+            statement.setDate(9, mainTitleDTO.getCut());
+            statement.setDate(10, mainTitleDTO.getEtd());
+            statement.setString(11, mainTitleDTO.getRemark());
+            statement.setTimestamp(12, mainTitleDTO.getTimestamp());
+
             statement.addBatch();
             ResultSet result = statement.executeQuery();
             try {
