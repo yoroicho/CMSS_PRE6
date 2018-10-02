@@ -72,13 +72,13 @@ public class MainTitleDAO implements IDAO {
         return mainTitleDTO;
     }
 
-    public static List<MainTitleDTO> findById(long id) {
+    public static List<MainTitleDTO> findById(String id) {
         String sql = "SELECT * from maintitle WHERE id = (?) ; ";
         List<MainTitleDTO> mainTitleDTO = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql);) {
             connection.setAutoCommit(false);
-            statement.setLong(1, id);
+            statement.setString(1, id);
             statement.addBatch();
             System.out.println("findById " + statement.toString());
 
