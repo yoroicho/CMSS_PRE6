@@ -228,12 +228,13 @@ public class FXMLTabPageUnitController implements Initializable {
             public void changed(
                     ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 System.out.println("TextField mainTitleId Changed (newValue: " + newValue + ")");
-                pickMainTitleOuterData(textFieldMainTitleId.getText());
+                pickMainTitleOuterData(textFieldMainTitleId.getText()); 
             };
         });
     }
 
-    private Boolean pickMainTitleOuterData(String id){
+    private Boolean pickMainTitleOuterData(String id){ 
+//登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合もある。
         return false;
     }
     
