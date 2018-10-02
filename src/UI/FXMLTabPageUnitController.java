@@ -102,6 +102,9 @@ public class FXMLTabPageUnitController implements Initializable {
     private DatePicker datePickerClose;
 
     @FXML
+    private TextField textFieldMainTitleId;
+
+    @FXML
     private Button buttonCloseToday;
 
     @FXML
@@ -121,9 +124,6 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private Button buttonRegisterNew;
-
-    @FXML
-    private TextField textFieldMainTitleId;
 
     @FXML
     private TextArea textAreaTitle;
@@ -222,6 +222,21 @@ public class FXMLTabPageUnitController implements Initializable {
         }
     }
 
+    private void mainTitleIdChangeListener() {
+        textFieldMainTitleId.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("TextField mainTitleId Changed (newValue: " + newValue + ")");
+                pickMainTitleOuterData(textFieldMainTitleId.getText());
+            };
+        });
+    }
+
+    private Boolean pickMainTitleOuterData(String id){
+        return false;
+    }
+    
     @FXML
     private void buttonClearOnAction(ActionEvent event) {
         initializeAllItems();
@@ -285,7 +300,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent((ButtonType response) -> {
                         unitProcess();
-                      /*  
+                        /*  
                         // registerUnitDTO // 登録予定のUnitDTO
                         //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
@@ -335,7 +350,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                    */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -454,7 +469,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                        */
+                         */
                     }
                     );
             registerUnitDTO = null;
@@ -516,8 +531,8 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             registerUnitDTO // ?????UnitDTO
-                                = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
-                        System.out.println("call version");
+                    = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
+            System.out.println("call version");
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "別版新規：既存のユニットの改変を作成します。"
                     + "ID:" + this.textFieldId.getText()
@@ -561,7 +576,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                        */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -661,7 +676,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                    */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -732,6 +747,7 @@ public class FXMLTabPageUnitController implements Initializable {
         putTabOrderTextArea(textAreaTitle);
         putTabOrderTextArea(textAreaCreator);
         putTabOrderTextArea(textAreaRemark);
+        mainTitleIdChangeListener();
     }
 
     /**
