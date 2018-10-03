@@ -80,6 +80,14 @@ public class FXMLTabPageUnitController implements Initializable {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
 
+    // データ受け渡し用の構造体
+    String overallSeriesId;
+    String overallSeriesName;
+    String seriesId;
+    String seriesName;
+    String mainTitleId;
+    String mainTitleName;
+
     @FXML
     private ScrollPane scrollPaneUnit;
 
@@ -228,16 +236,25 @@ public class FXMLTabPageUnitController implements Initializable {
             public void changed(
                     ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 System.out.println("TextField mainTitleId Changed (newValue: " + newValue + ")");
-                pickMainTitleOuterData(textFieldMainTitleId.getText()); 
-            };
-        });
+                pickMainTitleOuterData(textFieldMainTitleId.getText());
+            }
+        ;
     }
 
-    private Boolean pickMainTitleOuterData(String id){ 
-//登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合もある。
-        return false;
+    );
     }
-    
+
+    private class MainTitleOuterData {
+        // UnitDTO unitDTO, String overallSeriesId, String overallSeriesName, String seriesId, String seriesName, String mainTitleName
+    }
+
+    private FXMLTabPageUnitController pickMainTitleOuterData(String id) {
+        //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合もある。
+        FXMLTabPageUnitController fXMLTabPageUnitController = new FXMLTabPageUnitController();
+        fXMLTabPageUnitController.mainTitleId="";
+        return fXMLTabPageUnitController;
+    }
+
     @FXML
     private void buttonClearOnAction(ActionEvent event) {
         initializeAllItems();
