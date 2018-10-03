@@ -77,16 +77,100 @@ import static sun.misc.Signal.handle;
  */
 public class FXMLTabPageUnitController implements Initializable {
 
+    /**
+     * @return the overallSeriesId
+     */
+    public String getOverallSeriesId() {
+        return overallSeriesId;
+    }
+
+    /**
+     * @return the overallSeriesName
+     */
+    public String getOverallSeriesName() {
+        return overallSeriesName;
+    }
+
+    /**
+     * @return the seriesId
+     */
+    public String getSeriesId() {
+        return seriesId;
+    }
+
+    /**
+     * @return the seriesName
+     */
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    /**
+     * @return the mainTitleId
+     */
+    public String getMainTitleId() {
+        return mainTitleId;
+    }
+
+    /**
+     * @return the mainTitleName
+     */
+    public String getMainTitleName() {
+        return mainTitleName;
+    }
+
+    /**
+     * @param overallSeriesId the overallSeriesId to set
+     */
+    public void setOverallSeriesId(String overallSeriesId) {
+        this.overallSeriesId = overallSeriesId;
+    }
+
+    /**
+     * @param overallSeriesName the overallSeriesName to set
+     */
+    public void setOverallSeriesName(String overallSeriesName) {
+        this.overallSeriesName = overallSeriesName;
+    }
+
+    /**
+     * @param seriesId the seriesId to set
+     */
+    public void setSeriesId(String seriesId) {
+        this.seriesId = seriesId;
+    }
+
+    /**
+     * @param seriesName the seriesName to set
+     */
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
+    }
+
+    /**
+     * @param mainTitleId the mainTitleId to set
+     */
+    public void setMainTitleId(String mainTitleId) {
+        this.mainTitleId = mainTitleId;
+    }
+
+    /**
+     * @param mainTitleName the mainTitleName to set
+     */
+    public void setMainTitleName(String mainTitleName) {
+        this.mainTitleName = mainTitleName;
+    }
+
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
 
     // データ受け渡し用の構造体
-    String overallSeriesId;
-    String overallSeriesName;
-    String seriesId;
-    String seriesName;
-    String mainTitleId;
-    String mainTitleName;
+    private String overallSeriesId;
+    private String overallSeriesName;
+    private String seriesId;
+    private String seriesName;
+    private String mainTitleId;
+    private String mainTitleName;
 
     @FXML
     private ScrollPane scrollPaneUnit;
@@ -251,7 +335,7 @@ public class FXMLTabPageUnitController implements Initializable {
     private FXMLTabPageUnitController pickMainTitleOuterData(String id) {
         //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合もある。
         FXMLTabPageUnitController fXMLTabPageUnitController = new FXMLTabPageUnitController();
-        fXMLTabPageUnitController.mainTitleId="";
+        fXMLTabPageUnitController.setMainTitleId("");
         return fXMLTabPageUnitController;
     }
 
