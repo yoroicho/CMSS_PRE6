@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  *
- * @author tokyo
+ * @author tokyo 2018/10/04 21:08
  */
 public class MainTitleDAO implements IDAO {
 
@@ -102,7 +102,6 @@ public class MainTitleDAO implements IDAO {
                     dto.setRemark(result.getString("remark"));
                     dto.setTimestamp(result.getTimestamp("timestamp"));
                     mainTitleDTO.add(dto);
-
                 }
             } catch (SQLException e) {
                 // connection.rollback(); 
@@ -115,7 +114,7 @@ public class MainTitleDAO implements IDAO {
         }
         return mainTitleDTO;
     }
-    
+
     public static boolean deleteById(String id) {
 
         // 時計の誤差や海外時刻などで不用意に上書きしないようupdateは使わない。
@@ -184,5 +183,4 @@ public class MainTitleDAO implements IDAO {
         }
         return false;
     }
-    
 }
