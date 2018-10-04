@@ -65,7 +65,7 @@ public class OperationTool {
         text.add("VERSION ID: " + String.valueOf(unitDTO.getVersionId()));
         //text.add("--- " + ZonedDateTime.now(ZoneId.systemDefault()).toString() + " ---");
         text.add("TIMESTAMP :" + unitDTO.getTimestamp().toString());
-        String unitBase = SystemPropertiesItem.SHIP_BASE;
+        String unitBase = SystemPropertiesItem.UNIT_BASE;
         String unitDir = unitBase + System.getProperty("file.separator")
                 + String.valueOf(unitDTO.getId());
         String logFile = unitDir + System.getProperty("file.separator")

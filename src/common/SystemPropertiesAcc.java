@@ -30,7 +30,7 @@ public class SystemPropertiesAcc {
             String DB_URL,
             String DB_USER,
             String DB_PASS,
-            String SHIP_BASE,
+            String UNIT_BASE,
             String VOYAGE_BASE,
             String BOOKING_BASE,
             String CARGO_BASE
@@ -40,7 +40,7 @@ public class SystemPropertiesAcc {
         properties.setProperty("DB_URL", DB_URL);
         properties.setProperty("DB_USER", DB_USER);
         properties.setProperty("DB_PASS", DB_PASS);
-        properties.setProperty("SHIP_BASE", SHIP_BASE);
+        properties.setProperty("UNIT_BASE", UNIT_BASE);
         properties.setProperty("VOYAGE_BASE", VOYAGE_BASE);
         properties.setProperty("BOOKING_BASE", BOOKING_BASE);
         properties.setProperty("CARGO_BASE", CARGO_BASE);
@@ -67,7 +67,7 @@ public class SystemPropertiesAcc {
             SystemPropertiesItem.DB_URL = properties.getProperty("DB_URL");
             SystemPropertiesItem.DB_USER = properties.getProperty("DB_USER");
             SystemPropertiesItem.DB_PASS = properties.getProperty("DB_PASS");
-            SystemPropertiesItem.SHIP_BASE = properties.getProperty("SHIP_BASE");
+            SystemPropertiesItem.UNIT_BASE = properties.getProperty("UNIT_BASE");
             SystemPropertiesItem.VOYAGE_BASE = properties.getProperty("VOYAGE_BASE");
             SystemPropertiesItem.BOOKING_BASE = properties.getProperty("BOOKING_BASE");
             SystemPropertiesItem.CARGO_BASE = properties.getProperty("CARGO_BASE");

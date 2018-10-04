@@ -27,7 +27,7 @@ public class StaticSystemPropertiesAcc {
     public static final String DB_URL;
     public static final String DB_USER;
     public static final String DB_PASS;
-    public static final String SHIP_BASE;
+    public static final String UNIT_BASE;
     public static final String VOYAGE_BASE;
     public static final String BOOKING_BASE;
     public static final String CARGO_BASE;
@@ -38,7 +38,7 @@ public class StaticSystemPropertiesAcc {
             String DB_URL,
             String DB_USER,
             String DB_PASS,
-            String SHIP_BASE,
+            String UNIT_BASE,
             String VOYAGE_BASE,
             String BOOKING_BASE,
             String CARGO_BASE
@@ -48,7 +48,7 @@ public class StaticSystemPropertiesAcc {
         properties.setProperty("DB_URL", DB_URL);
         properties.setProperty("DB_USER", DB_USER);
         properties.setProperty("DB_PASS", DB_PASS);
-        properties.setProperty("SHIP_BASE", SHIP_BASE);
+        properties.setProperty("UNIT_BASE", UNIT_BASE);
         properties.setProperty("VOYAGE_BASE", VOYAGE_BASE);
         properties.setProperty("BOOKING_BASE", BOOKING_BASE);
         properties.setProperty("CARGO_BASE", CARGO_BASE);
@@ -71,7 +71,7 @@ public class StaticSystemPropertiesAcc {
             properties.loadFromXML(istream);
             SystemPropertiesItem.DB_USER = properties.getProperty("DB_USER");
             SystemPropertiesItem.DB_PASS = properties.getProperty("DB_PASS");
-            SystemPropertiesItem.SHIP_BASE = properties.getProperty("SHIP_BASE");
+            SystemPropertiesItem.UNIT_BASE = properties.getProperty("UNIT_BASE");
             SystemPropertiesItem.VOYAGE_BASE = properties.getProperty("VOYAGE_BASE");
             SystemPropertiesItem.BOOKING_BASE = properties.getProperty("BOOKING_BASE");
             SystemPropertiesItem.CARGO_BASE = properties.getProperty("CARGO_BASE");
@@ -88,7 +88,7 @@ public class StaticSystemPropertiesAcc {
         DB_URL = properties.getProperty("DB_URL");
         DB_USER = properties.getProperty("DB_USER");
         DB_PASS = properties.getProperty("DB_PASS");
-        SHIP_BASE = properties.getProperty("SHIP_BASE");
+        UNIT_BASE = properties.getProperty("UNIT_BASE");
         VOYAGE_BASE = properties.getProperty("VOYAGE_BASE");
         BOOKING_BASE = properties.getProperty("BOOKING_BASE");
         CARGO_BASE = properties.getProperty("CARGO_BASE");
@@ -106,7 +106,7 @@ public class StaticSystemPropertiesAcc {
             SystemPropertiesItem.DB_URL = properties.getProperty("DB_URL");
             SystemPropertiesItem.DB_USER = properties.getProperty("DB_USER");
             SystemPropertiesItem.DB_PASS = properties.getProperty("DB_PASS");
-            SystemPropertiesItem.SHIP_BASE = properties.getProperty("SHIP_BASE");
+            SystemPropertiesItem.UNIT_BASE = properties.getProperty("UNIT_BASE");
             SystemPropertiesItem.VOYAGE_BASE = properties.getProperty("VOYAGE_BASE");
             SystemPropertiesItem.BOOKING_BASE = properties.getProperty("BOOKING_BASE");
             SystemPropertiesItem.CARGO_BASE = properties.getProperty("CARGO_BASE");

@@ -233,16 +233,16 @@ public class FXMLTabPageProcessController implements Initializable {
                     /*
                     // まず収納すべき親を作る。
                     FileIO.makeUnderDirNamed(
-                            SystemPropertiesItem.SHIP_BASE,
+                            SystemPropertiesItem.UNIT_BASE,
                             String.valueOf(tempId)
                     );
                     // 次に新しく作った親に子をコピー。
                     String NewParentDirString // 新しい親のフルパス
-                            = SystemPropertiesItem.SHIP_BASE
+                            = SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(tempId);
                     String OldChildDirString // 元の子のフルパス
-                            = SystemPropertiesItem.SHIP_BASE
+                            = SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + this.textFieldId.getText()
                             + FILE_SEPARATOR
@@ -255,7 +255,7 @@ public class FXMLTabPageProcessController implements Initializable {
                     コピーとリネームが同時にできるのでこの機能を利用する。
                      */
                     String newParentDirString // 新しい親のフルパス
-                            = SystemPropertiesItem.SHIP_BASE
+                            = SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(tempId);
                     String newChildDirString // 新しい子の名称変更前のフルパス
@@ -268,7 +268,7 @@ public class FXMLTabPageProcessController implements Initializable {
                             + String.valueOf(tempDivTime);
 
                     String oldChildDirString // 元の子のフルパス 使わないかも？
-                            = SystemPropertiesItem.SHIP_BASE
+                            = SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + this.textFieldId.getText()
                             + FILE_SEPARATOR
@@ -276,10 +276,10 @@ public class FXMLTabPageProcessController implements Initializable {
                     //System.out.println("newChild" + oldChildDirString);
                     System.out.println("NewParent" + newParentDirString);
                     IOLib.copy(
-                            SystemPropertiesItem.SHIP_BASE
+                            SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(this.textFieldId.getText()),
-                            SystemPropertiesItem.SHIP_BASE
+                            SystemPropertiesItem.UNIT_BASE
                             + FILE_SEPARATOR
                             + String.valueOf(tempId));
 
@@ -443,11 +443,11 @@ public class FXMLTabPageProcessController implements Initializable {
 //processDTO.setETD(Timestamp.valueOf("2018-05-16 00:00:00"));
 // ... ここでDTOにすべての要素を登録をする
         String parentDirString // 親のフルパス
-                = SystemPropertiesItem.SHIP_BASE + FILE_SEPARATOR + String.valueOf(processDTO.getId());
+                = SystemPropertiesItem.UNIT_BASE + FILE_SEPARATOR + String.valueOf(processDTO.getId());
         // 親がないことになっていれば親を作る。
         if (isNewIdMode) {
             FileIO.makeUnderDirNamed(
-                    SystemPropertiesItem.SHIP_BASE,
+                    SystemPropertiesItem.UNIT_BASE,
                     String.valueOf(processDTO.getId())
             );
             isNewIdMode = false; // この段階でリセットすべきか疑問は残る。

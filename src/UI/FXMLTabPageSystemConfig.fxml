@@ -14,7 +14,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="432.0" prefWidth="725.0">
                <children>
                     <TextField fx:id="textFieldUnitBaseDir" editable="false" layoutX="35.0" layoutY="179.0" prefHeight="28.0" prefWidth="475.0" />
-                    <Button fx:id="SHIP_BASE_DIR" layoutX="532.0" layoutY="179.0" mnemonicParsing="false" onAction="#handleShipBaseDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
+                    <Button fx:id="UNIT_BASE_DIR" layoutX="532.0" layoutY="179.0" mnemonicParsing="false" onAction="#handleUnitBaseDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
                     <Button fx:id="ButtonEnterSystemProperties" layoutX="532.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleButtonEnterSystemPropertiesButtonAction" text="ENTER" />
                     <Button fx:id="buttonReloadPropertiesOnMemory" layoutX="314.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleButtonReloadPropertiesOnMemory" text="Reload properties on memory." />
                     <Label layoutX="38.0" layoutY="28.0" text="DATABASE URL" />
@@ -23,6 +23,10 @@
                     <TextField fx:id="textFieldDatabaseUrl" layoutX="34.0" layoutY="46.0" prefHeight="28.0" prefWidth="549.0" />
                     <TextField fx:id="textFieldDatabaseUser" layoutX="34.0" layoutY="112.0" prefHeight="28.0" prefWidth="172.0" />
                     <PasswordField fx:id="passwordFieldDatabasePass" layoutX="329.0" layoutY="112.0" prefHeight="28.0" prefWidth="254.0" />
+                  <Label layoutX="35.0" layoutY="161.0" text="UNIT STORAGE BASE" />
+                  <Label layoutX="36.0" layoutY="226.0" text="UNIT WORKSPACE" />
+                  <TextField fx:id="textFieldUnitWorkspaceDir" layoutX="38.0" layoutY="243.0" prefHeight="28.0" prefWidth="472.0" />
+                  <Button fx:id="UNIT_WORKSPACE_DIR" layoutX="533.0" layoutY="243.0" mnemonicParsing="false" onAction="#handleUnitWorkspaceDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
                </children>
             </AnchorPane>
         </content>

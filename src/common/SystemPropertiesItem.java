@@ -14,7 +14,7 @@ public class SystemPropertiesItem {
     public static String DB_URL;
     public static String DB_USER;
     public static String DB_PASS;
-    public static String SHIP_BASE;
+    public static String UNIT_BASE;
     public static String VOYAGE_BASE;
     public static String BOOKING_BASE;
     public static String CARGO_BASE;

@@ -5,6 +5,8 @@
  */
 package UI;
 
+import DB.MainTitleDAO;
+import DB.MainTitleDTO;
 import com.sun.javafx.scene.control.behavior.*;
 
 import DB.UnitDAO;
@@ -77,8 +79,100 @@ import static sun.misc.Signal.handle;
  */
 public class FXMLTabPageUnitController implements Initializable {
 
+    /**
+     * @return the overallSeriesId
+     */
+    public String getOverallSeriesId() {
+        return overallSeriesId;
+    }
+
+    /**
+     * @return the overallSeriesName
+     */
+    public String getOverallSeriesName() {
+        return overallSeriesName;
+    }
+
+    /**
+     * @return the seriesId
+     */
+    public String getSeriesId() {
+        return seriesId;
+    }
+
+    /**
+     * @return the seriesName
+     */
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    /**
+     * @return the mainTitleId
+     */
+    public String getMainTitleId() {
+        return mainTitleId;
+    }
+
+    /**
+     * @return the mainTitleName
+     */
+    public String getMainTitleName() {
+        return mainTitleName;
+    }
+
+    /**
+     * @param overallSeriesId the overallSeriesId to set
+     */
+    public void setOverallSeriesId(String overallSeriesId) {
+        this.overallSeriesId = overallSeriesId;
+    }
+
+    /**
+     * @param overallSeriesName the overallSeriesName to set
+     */
+    public void setOverallSeriesName(String overallSeriesName) {
+        this.overallSeriesName = overallSeriesName;
+    }
+
+    /**
+     * @param seriesId the seriesId to set
+     */
+    public void setSeriesId(String seriesId) {
+        this.seriesId = seriesId;
+    }
+
+    /**
+     * @param seriesName the seriesName to set
+     */
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
+    }
+
+    /**
+     * @param mainTitleId the mainTitleId to set
+     */
+    public void setMainTitleId(String mainTitleId) {
+        this.mainTitleId = mainTitleId;
+    }
+
+    /**
+     * @param mainTitleName the mainTitleName to set
+     */
+    public void setMainTitleName(String mainTitleName) {
+        this.mainTitleName = mainTitleName;
+    }
+
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String UNIT_BASE = SystemPropertiesItem.SHIP_BASE;
+    private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
+
+    // データ受け渡し用の構造体
+    private String overallSeriesId;
+    private String overallSeriesName;
+    private String seriesId;
+    private String seriesName;
+    private String mainTitleId;
+    private String mainTitleName;
 
     @FXML
     private ScrollPane scrollPaneUnit;
@@ -102,6 +196,9 @@ public class FXMLTabPageUnitController implements Initializable {
     private DatePicker datePickerClose;
 
     @FXML
+    private TextField textFieldMainTitleId;
+
+    @FXML
     private Button buttonCloseToday;
 
     @FXML
@@ -121,9 +218,6 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private Button buttonRegisterNew;
-
-    @FXML
-    private TextField textFieldMainTitleId;
 
     @FXML
     private TextArea textAreaTitle;
@@ -170,6 +264,8 @@ public class FXMLTabPageUnitController implements Initializable {
 
     private UnitDTO registerUnitDTO; // 登録予定のUnitDTO
 
+    private List<MainTitleDTO> mainTitleDTO; //ひとつ上の階層情報
+
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
@@ -182,7 +278,6 @@ public class FXMLTabPageUnitController implements Initializable {
             this.buttonMakeFromTemplate.setDisable(true);
             this.buttonMakeAnotherVersion.setDisable(true);
         } else { //入力があればDB索引
-            // List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
             System.out.println("textFieldIdOnAction size " + unitDTO.size());
             if (unitDTO.size() > 1) {
@@ -222,8 +317,54 @@ public class FXMLTabPageUnitController implements Initializable {
         }
     }
 
+    private void mainTitleIdChangeListener() {
+        textFieldMainTitleId.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("TextField mainTitleId Changed (newValue: " + newValue + ")");
+                pickMainTitleOuterData(textFieldMainTitleId.getText()); //tlim()?
+            }
+        ;
+    }
+
+    );
+    }
+/*
+    private class MainTitleOuterData {
+        // 構造体は外側のクラスに持たせることにした。
+        // UnitDTO unitDTO, String overallSeriesId, String overallSeriesName, String seriesId, String seriesName, String mainTitleName
+    }
+*/
+    private void pickMainTitleOuterData(String id) {
+        //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合は別メソッドにする。
+
+        mainTitleDTO = MainTitleDAO.findById(id);
+
+        if (mainTitleDTO.size() > 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("????? DB cmss.unit.id ??Key??");
+        } else if (mainTitleDTO.isEmpty()) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("???????????");
+        } else if (mainTitleDTO.size() == 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("??????????");
+            mainTitleDTO.forEach(s -> {
+                // ??????????????????????
+                System.out.println("MAIN TITLE ID " + String.valueOf(s.getId()));
+//this.textFieldId.setText(String.valueOf(s.getId())); 
+                textFieldMainTitleId.setText(s.getId());
+                textAreaMainTitleName.setText(s.getMaintitle());
+
+            });
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("Looked up mainttle.");
+
+        }
+        //return fXMLTabPageUnitController;
+    }
+
     @FXML
-    private void buttonClearOnAction(ActionEvent event) {
+
+    private void buttonClearOnAction(ActionEvent event
+    ) {
         initializeAllItems();
     }
 
@@ -285,7 +426,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent((ButtonType response) -> {
                         unitProcess();
-                      /*  
+                        /*  
                         // registerUnitDTO // 登録予定のUnitDTO
                         //       = pushDTO(new UnitDTO(), UnitAim.REGISTER_NEW);
                         if (UnitDAO.register(registerUnitDTO)) {
@@ -335,7 +476,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                    */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -454,7 +595,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                        */
+                         */
                     }
                     );
             registerUnitDTO = null;
@@ -516,8 +657,8 @@ public class FXMLTabPageUnitController implements Initializable {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("変更登録の受付中。");
             // ここでプレビューと可否の入力を受け付け
             registerUnitDTO // ?????UnitDTO
-                                = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
-                        System.out.println("call version");
+                    = pushDTO(new UnitDTO(), UnitAim.MAKE_ANOTHER_VERSION);
+            System.out.println("call version");
             Alert alertRegisterNew = new Alert(Alert.AlertType.CONFIRMATION,
                     "別版新規：既存のユニットの改変を作成します。"
                     + "ID:" + this.textFieldId.getText()
@@ -561,7 +702,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                        */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -661,7 +802,7 @@ public class FXMLTabPageUnitController implements Initializable {
                         textFieldId.clear();
                         textFieldId.setDisable(false);
                         textFieldId.requestFocus();
-                    */
+                         */
                     });
             registerUnitDTO = null;
         }
@@ -732,6 +873,7 @@ public class FXMLTabPageUnitController implements Initializable {
         putTabOrderTextArea(textAreaTitle);
         putTabOrderTextArea(textAreaCreator);
         putTabOrderTextArea(textAreaRemark);
+        mainTitleIdChangeListener();
     }
 
     /**
@@ -842,6 +984,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "UNIT_BASEに新規登録しました。");
             try {
                 StructUnitSlip.creatSlip( // 伝票の作成
+                        // 構造体に詰めて渡そうとしたが変数とテキストエリアをバインドさせないと意味がなかったかも？
                         registerUnitDTO,
                         this.textFieldOverallSeriesId.getText(),
                         this.textAreaOverallSeriesName.getText(),
