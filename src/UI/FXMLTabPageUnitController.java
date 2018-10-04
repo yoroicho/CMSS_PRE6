@@ -5,6 +5,8 @@
  */
 package UI;
 
+import DB.MainTitleDAO;
+import DB.MainTitleDTO;
 import com.sun.javafx.scene.control.behavior.*;
 
 import DB.UnitDAO;
@@ -262,6 +264,8 @@ public class FXMLTabPageUnitController implements Initializable {
 
     private UnitDTO registerUnitDTO; // 登録予定のUnitDTO
 
+    private List<MainTitleDTO> mainTitleDTO; //ひとつ上の階層情報
+
     @FXML
     private void textFieldIdOnAction(ActionEvent event) {
         System.out.println("textFieldIdOnAction called." + textFieldId.getText());
@@ -274,7 +278,6 @@ public class FXMLTabPageUnitController implements Initializable {
             this.buttonMakeFromTemplate.setDisable(true);
             this.buttonMakeAnotherVersion.setDisable(true);
         } else { //入力があればDB索引
-            // List<UnitDTO> unitDTO; // そもそも1件しかありえないのでListにする必要はない（コピペ元用）
             unitDTO = UnitDAO.findById(Long.parseLong(textFieldId.getText()));
             System.out.println("textFieldIdOnAction size " + unitDTO.size());
             if (unitDTO.size() > 1) {
@@ -320,27 +323,48 @@ public class FXMLTabPageUnitController implements Initializable {
             public void changed(
                     ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 System.out.println("TextField mainTitleId Changed (newValue: " + newValue + ")");
-                pickMainTitleOuterData(textFieldMainTitleId.getText());
+                pickMainTitleOuterData(textFieldMainTitleId.getText()); //tlim()?
             }
         ;
     }
 
     );
     }
-
+/*
     private class MainTitleOuterData {
+        // 構造体は外側のクラスに持たせることにした。
         // UnitDTO unitDTO, String overallSeriesId, String overallSeriesName, String seriesId, String seriesName, String mainTitleName
     }
+*/
+    private void pickMainTitleOuterData(String id) {
+        //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合は別メソッドにする。
 
-    private FXMLTabPageUnitController pickMainTitleOuterData(String id) {
-        //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合もある。
-        FXMLTabPageUnitController fXMLTabPageUnitController = new FXMLTabPageUnitController();
-        fXMLTabPageUnitController.setMainTitleId("");
-        return fXMLTabPageUnitController;
+        mainTitleDTO = MainTitleDAO.findById(id);
+
+        if (mainTitleDTO.size() > 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("????? DB cmss.unit.id ??Key??");
+        } else if (mainTitleDTO.isEmpty()) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("???????????");
+        } else if (mainTitleDTO.size() == 1) {
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("??????????");
+            mainTitleDTO.forEach(s -> {
+                // ??????????????????????
+                System.out.println("MAIN TITLE ID " + String.valueOf(s.getId()));
+//this.textFieldId.setText(String.valueOf(s.getId())); 
+                textFieldMainTitleId.setText(s.getId());
+                textAreaMainTitleName.setText(s.getMaintitle());
+
+            });
+            FXMLBaseDocumentController.getLabelCentralMessage().setText("Looked up mainttle.");
+
+        }
+        //return fXMLTabPageUnitController;
     }
 
     @FXML
-    private void buttonClearOnAction(ActionEvent event) {
+
+    private void buttonClearOnAction(ActionEvent event
+    ) {
         initializeAllItems();
     }
 
@@ -960,6 +984,7 @@ public class FXMLTabPageUnitController implements Initializable {
                     "UNIT_BASEに新規登録しました。");
             try {
                 StructUnitSlip.creatSlip( // 伝票の作成
+                        // 構造体に詰めて渡そうとしたが変数とテキストエリアをバインドさせないと意味がなかったかも？
                         registerUnitDTO,
                         this.textFieldOverallSeriesId.getText(),
                         this.textAreaOverallSeriesName.getText(),
