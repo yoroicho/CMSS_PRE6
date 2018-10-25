@@ -64,12 +64,16 @@ import javax.xml.stream.events.XMLEvent;
 
 import com.sun.javafx.scene.control.behavior.*;
 import com.sun.javafx.scene.control.skin.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import static javafx.scene.input.KeyCode.T;
 
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import static sun.misc.Signal.handle;
 import test.FXMLTestInvoke;
 
@@ -163,7 +167,7 @@ public class FXMLTabPageUnitController implements Initializable {
     public void setMainTitleName(String mainTitleName) {
         this.mainTitleName = mainTitleName;
     }
-    
+
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static final String UNIT_BASE = SystemPropertiesItem.UNIT_BASE;
 
@@ -174,52 +178,52 @@ public class FXMLTabPageUnitController implements Initializable {
     private String seriesName;
     private String mainTitleId;
     private String mainTitleName;
-    
+
     @FXML
     private ScrollPane scrollPaneUnit;
-    
+
     @FXML
     private VBox vBoxLayout;
-    
+
     @FXML
     private AnchorPane unitAnchorPane;
-    
+
     @FXML
     private FXMLBaseDocumentController FXMLBaseDocumentController;
-    
+
     @FXML
     private TextField textFieldId;
-    
+
     @FXML
     private Button buttonClear;
-    
+
     @FXML
     private DatePicker datePickerClose;
-    
+
     @FXML
     private TextField textFieldMainTitleId;
-    
+
     @FXML
     private Button buttonCloseToday;
-    
+
     @FXML
     private DatePicker datePickerCut;
-    
+
     @FXML
     private DatePicker datePickerEtd;
-    
+
     @FXML
     private Button buttonMakeFromTemplate;
-    
+
     @FXML
     private Button buttonMakeAnotherVersion;
-    
+
     @FXML
     private Button buttonRegisterChange;
-    
+
     @FXML
     private Button buttonRegisterNew;
-    
+
     @FXML
     private TextArea textAreaTitle;
     //private final TextArea textAreaTitle = new TabAndEnterIgnoringTextArea();
@@ -230,30 +234,33 @@ public class FXMLTabPageUnitController implements Initializable {
 
     @FXML
     private DatePicker datePickerMtg;
-    
+
     @FXML
     private TextArea textAreaRemark;
-    
+
     @FXML
     private Button buttonStartUp;
-    
+
     @FXML
     private TextArea textAreaSeriesName;
-    
+
     @FXML
     private TextArea textAreaOverallSeriesName;
-    
+
     @FXML
     private TextField textFieldOverallSeriesId;
-    
+
     @FXML
     private TextField textFieldSeriesId;
-    
+
     @FXML
     private TextArea textAreaMainTitleName;
-    
+
+    @FXML
+    private FXMLTestInvoke FXMLTestInvoke;
+
     String ls = SystemProperties.getProperty("line.separator");
-    
+
     private enum UnitAim {
         // PEEK,DELETEは確定でない。
         MAKE_FROM_TEMPLATE, MAKE_ANOTHER_VERSION, REGISTER_CHANGE, REGISTER_NEW, PEEK, DELETE
@@ -317,7 +324,7 @@ public class FXMLTabPageUnitController implements Initializable {
             }
         }
     }
-    
+
     private void mainTitleIdChangeListener() {
         textFieldMainTitleId.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -328,7 +335,7 @@ public class FXMLTabPageUnitController implements Initializable {
             }
         ;
     }
-    
+
     );
     }
 /*
@@ -341,7 +348,7 @@ public class FXMLTabPageUnitController implements Initializable {
         //登録直前に無効なIDが入力されていないかチェックするために直接呼ぶ場合は別メソッドにする。
 
         mainTitleDTO = MainTitleDAO.findById(id);
-        
+
         if (mainTitleDTO.size() > 1) {
             FXMLBaseDocumentController.getLabelCentralMessage().setText("????? DB cmss.unit.id ??Key??");
         } else if (mainTitleDTO.isEmpty()) {
@@ -354,21 +361,21 @@ public class FXMLTabPageUnitController implements Initializable {
 //this.textFieldId.setText(String.valueOf(s.getId())); 
                 textFieldMainTitleId.setText(s.getId());
                 textAreaMainTitleName.setText(s.getMaintitle());
-                
+
             });
             FXMLBaseDocumentController.getLabelCentralMessage().setText("Looked up mainttle.");
-            
+
         }
         //return fXMLTabPageUnitController;
     }
-    
+
     @FXML
-    
+
     private void buttonClearOnAction(ActionEvent event
     ) {
         initializeAllItems();
     }
-    
+
     @FXML
     private void registerNew() { //新規にレコードを追加
         /*
@@ -482,7 +489,7 @@ public class FXMLTabPageUnitController implements Initializable {
             registerUnitDTO = null;
         }
     }
-    
+
     @FXML
     private void registerChange() { //既存のレコードを変更
         /*
@@ -602,7 +609,7 @@ public class FXMLTabPageUnitController implements Initializable {
             registerUnitDTO = null;
         }
     }
-    
+
     @FXML
     private void makeAnotherVersion() { // 細部の調整はまだ
         /*
@@ -708,7 +715,7 @@ public class FXMLTabPageUnitController implements Initializable {
             registerUnitDTO = null;
         }
     }
-    
+
     @FXML
     private void makeFromTemplate() {  // 細部の調整はまだ
         /*
@@ -808,7 +815,7 @@ public class FXMLTabPageUnitController implements Initializable {
             registerUnitDTO = null;
         }
     }
-    
+
     @FXML
     private void initializeAllItems() {
         textFieldId.clear();
@@ -816,7 +823,7 @@ public class FXMLTabPageUnitController implements Initializable {
         lockAllControls(true);
         clearAllView();
     }
-    
+
     private void blockRegisterButton() {
         this.buttonRegisterChange.setDisable(true);
         this.buttonRegisterNew.setDisable(true);
@@ -847,7 +854,7 @@ public class FXMLTabPageUnitController implements Initializable {
         this.textFieldOverallSeriesId.setDisable(value);
         this.textFieldSeriesId.setDisable(value);
     }
-    
+
     private void clearAllView() {
         this.datePickerClose.setValue(null);
         this.datePickerCut.setValue(null);
@@ -914,7 +921,7 @@ public class FXMLTabPageUnitController implements Initializable {
                 System.out.println("template");
                 break;
         }
-        
+
         if (datePickerClose.getValue() != null) {
             unitDTO.setClose(Date.valueOf(datePickerClose.getValue()));
         }
@@ -946,7 +953,7 @@ public class FXMLTabPageUnitController implements Initializable {
                 if (bb instanceof TextAreaBehavior) {
                     TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
                     if (event.isControlDown()) {
-                        
+
                         System.out.println("CTNR PUSH");
                         // behavior.callAction("InsertTab"); 作動しない
                         textArea.replaceSelection("\t");
@@ -964,7 +971,7 @@ public class FXMLTabPageUnitController implements Initializable {
             }
         });
     }
-    
+
     private void unitProcess() {
 
         // registerUnitDTO // 登録予定のUnitDTO
@@ -1017,13 +1024,27 @@ public class FXMLTabPageUnitController implements Initializable {
         textFieldId.clear();
         textFieldId.setDisable(false);
         textFieldId.requestFocus();
-        
+
     }
-   
-    @FXML    
-    private void testInvoke(ActionEvent event) {  
-        
-        FXMLTestInvoke FXMLTestInvoke =  new FXMLTestInvoke();
+
+    @FXML
+    private void testInvoke(ActionEvent event) {
+
         FXMLTestInvoke.invokeWindowOpen();
+        /*
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("FXMLTestInvoke.fxml"));
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Stage newStage = new Stage();
+// \u30e2\u30fc\u30c0\u30eb\u30a6\u30a4\u30f3\u30c9\u30a6\u306b\u8a2d\u5b9a 
+        newStage.initModality(Modality.APPLICATION_MODAL);
+// \u30aa\u30fc\u30ca\u30fc\u3092\u8a2d\u5b9a 
+        newStage.initOwner(this.textFieldId.getScene().getWindow());
+
+        // FXMLTestInvoke FXMLTestInvoke =  new FXMLTestInvoke();
+        // FXMLTestInvoke.invokeWindowOpen();
+*/
     }
 }

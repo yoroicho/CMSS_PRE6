@@ -29,9 +29,9 @@ public class FXMLTestInvoke extends Application {
     @FXML
     public void invokeWindowOpen(){
         try {
-           // FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLTestInvoke.fxml"));
-            //BorderPane root = (BorderPane) loader.load();
-            Parent root = FXMLLoader.load(getClass().getResource("FXMLTestInvoke.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLTestInvoke.fxml"));
+            BorderPane root = (BorderPane) loader.load();
+            //Parent root = FXMLLoader.load(getClass().getResource("FXMLTestInvoke.fxml"));
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
