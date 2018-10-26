@@ -66,6 +66,7 @@ import com.sun.javafx.scene.control.behavior.*;
 import com.sun.javafx.scene.control.skin.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import static javafx.scene.input.KeyCode.T;
 
@@ -1030,21 +1031,34 @@ public class FXMLTabPageUnitController implements Initializable {
     @FXML
     private void testInvoke(ActionEvent event) {
 
-        FXMLTestInvoke.invokeWindowOpen();
-        /*
         try {
+            //FXMLTestInvoke.invokeWindowOpen();
+            /*
+            try {
             Parent root = FXMLLoader.load(getClass().getResource("FXMLTestInvoke.fxml"));
+            } catch (IOException ex) {
+            Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Stage newStage = new Stage();
+            // \u30e2\u30fc\u30c0\u30eb\u30a6\u30a4\u30f3\u30c9\u30a6\u306b\u8a2d\u5b9a
+            newStage.initModality(Modality.APPLICATION_MODAL);
+            // \u30aa\u30fc\u30ca\u30fc\u3092\u8a2d\u5b9a
+            newStage.initOwner(this.textFieldId.getScene().getWindow());
+            
+            // FXMLTestInvoke FXMLTestInvoke =  new FXMLTestInvoke();
+            // FXMLTestInvoke.invokeWindowOpen();
+            */
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLTestInvoke.fxml"));
+            //BorderPane root = (BorderPane) loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/test/FXMLTestInvoke.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene); 
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(FXMLTabPageUnitController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Stage newStage = new Stage();
-// \u30e2\u30fc\u30c0\u30eb\u30a6\u30a4\u30f3\u30c9\u30a6\u306b\u8a2d\u5b9a 
-        newStage.initModality(Modality.APPLICATION_MODAL);
-// \u30aa\u30fc\u30ca\u30fc\u3092\u8a2d\u5b9a 
-        newStage.initOwner(this.textFieldId.getScene().getWindow());
 
-        // FXMLTestInvoke FXMLTestInvoke =  new FXMLTestInvoke();
-        // FXMLTestInvoke.invokeWindowOpen();
-*/
     }
 }
