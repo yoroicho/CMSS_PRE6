@@ -70,7 +70,7 @@
                                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                             </textFill>
                         </Label>
-                  <TextField fx:id="textFieldBaseMasterId" layoutX="14.0" layoutY="53.0" prefHeight="28.0" prefWidth="194.0" />
+                        <TextField fx:id="textFieldBaseMasterId" layoutX="14.0" layoutY="53.0" prefHeight="28.0" prefWidth="194.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
@@ -97,9 +97,9 @@
                                         <fx:include fx:id="FXMLTabPageUnit" source="FXMLTabPageUnit.fxml" />
                                     </content>
                                 </Tab>
-                                <Tab text="Untitled Tab">
+                                <Tab fx:id="tabApplication" text="Application">
                                     <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                        <fx:include fx:id="FXMLTabPageApplication" source="FXMLTabPageApplication.fxml" />                                
                                     </content>
                                 </Tab>
                                 <Tab fx:id="configSystem" text="ConfigSystem">
@@ -129,9 +129,10 @@
                     </textFill>
                 </Label>
                 <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label fx:id="labelCentralMessage" text="Message" />
-               </children></Pane>
+                    <children>
+                        <Label fx:id="labelCentralMessage" text="Message" />
+                    </children>
+                </Pane>
                 <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
             </children>
             <padding>
