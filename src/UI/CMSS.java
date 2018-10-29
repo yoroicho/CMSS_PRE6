@@ -5,6 +5,7 @@
  */
 package UI;
 
+import common.StaticSystemPropertiesAcc;
 import common.SystemPropertiesAcc;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -33,7 +34,8 @@ public class CMSS extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-                SystemPropertiesAcc.loadSystemProperties(); //設定ファイルの読み込み
+                StaticSystemPropertiesAcc.loadSystemProperties(); 
+//設定ファイルの読み込みSystemPropertiesAccからStaticSystemPropertiesAccに変えた20181029
         launch(args);
     }
     
