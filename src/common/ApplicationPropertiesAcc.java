@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  *
  * @author tokyo
  */
-public class StaticApplicationPropertiesAcc {
+public class ApplicationPropertiesAcc {
 
     public static final Map<String, String> map = new HashMap<>();
 
@@ -40,10 +40,10 @@ public class StaticApplicationPropertiesAcc {
             OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
             properties.storeToXML(ostream, "ApplicatioProperties");
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(StaticApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "設定ファイルが見当たりません。");
         } catch (IOException ex) {
-            Logger.getLogger(StaticApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "設定ファイルの書き込み時に問題が発生しました。");
         }
     }
@@ -55,14 +55,16 @@ public class StaticApplicationPropertiesAcc {
             properties.loadFromXML(istream);
             properties.forEach((key, value) -> map.put((String) key, (String) value));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(StaticApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "???????????????");
 
         } catch (IOException ex) {
-            Logger.getLogger(StaticApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "???????????????????????");
             // System.exit(0);  
         }
+
+// Map???
 
 // Map???
     }
@@ -77,13 +79,13 @@ public class StaticApplicationPropertiesAcc {
       
 
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(StaticApplicationPropertiesAcc.class
+                Logger.getLogger(ApplicationPropertiesAcc.class
                         .getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "設定ファイルが見当たりません。");
                 return false;
 
             } catch (IOException ex) {
-                Logger.getLogger(StaticApplicationPropertiesAcc.class
+                Logger.getLogger(ApplicationPropertiesAcc.class
                         .getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "設定ファイルの読み込み時に問題が発生しました。");
                 // System.exit(0); 
