@@ -22,8 +22,8 @@ import javax.swing.JOptionPane;
  *
  * @author tokyo
  */
-public class StaticSystemPropertiesAcc {
-
+public abstract class StaticSystemPropertiesAcc {
+// Only static accsess by "abstract". Abstract class can't make instance with "new".
     public static final String DB_URL;
     public static final String DB_USER;
     public static final String DB_PASS;
