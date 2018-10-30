@@ -13,10 +13,11 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="598.0">
                <children>
-                  <ComboBox editable="true" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
+                  <ComboBox fx:id="cmbExtention" editable="true" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
                   <TextField fx:id="txtFldInvoker" layoutX="70.0" layoutY="80.0" prefHeight="28.0" prefWidth="441.0" />
                   <Button fx:id="btnInvoker" layoutX="527.0" layoutY="80.0" mnemonicParsing="false" onAction="#findInvlkerApp" text="..." />
                   <Label layoutX="14.0" layoutY="85.0" text="INVOKER" />
+                  <Button fx:id="btnApply" layoutX="511.0" layoutY="333.0" mnemonicParsing="false" onAction="#apply" text="Apply" />
                </children></AnchorPane>
         </content>
       </ScrollPane>

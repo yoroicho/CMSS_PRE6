@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -24,8 +27,12 @@ import javax.swing.JOptionPane;
  * @author tokyo
  */
 public class ApplicationPropertiesAcc {
+    
+    private ApplicationPropertiesAcc(){
+        
+    }
 
-    public static final Map<String, String> map = new HashMap<>();
+    public static Map<String, String> map = new HashMap<>();
 
     private static final String applicationPropertiesXmlFilePath = "APPLICATION_PROPERTIES.xml";
 
@@ -37,8 +44,16 @@ public class ApplicationPropertiesAcc {
         properties.setProperty("KEY", key);
         properties.setProperty("VALUE", value);
         try {
+            Path path = Paths.get(applicationPropertiesXmlFilePath);
+            if(Files.exists(path)){
+                System.out.println("Exsist");
+                //OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
+            }else{
+                System.out.println("nothing File");
+                //OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
+            }
             OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
-            properties.storeToXML(ostream, "ApplicatioProperties");
+            properties.storeToXML(ostream, "ApplicatioProperties","UTF-8");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "設定ファイルが見当たりません。");
@@ -64,9 +79,6 @@ public class ApplicationPropertiesAcc {
             // System.exit(0);  
         }
 
-// Map???
-
-// Map???
     }
 
     public static boolean loadApplicationProperties() {
