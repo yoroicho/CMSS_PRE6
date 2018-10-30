@@ -22,8 +22,9 @@ import javax.swing.JOptionPane;
  *
  * @author tokyo
  */
-public abstract class StaticSystemPropertiesAcc {
-// Only static accsess by "abstract". Abstract class can't make instance with "new".
+public class StaticSystemPropertiesAcc {
+//if this class will extends be attempt "abstract".(public abstract class ...)
+//Abstract class can't make instance with "new",but acsess to static method.
     public static final String DB_URL;
     public static final String DB_USER;
     public static final String DB_PASS;
@@ -34,6 +35,10 @@ public abstract class StaticSystemPropertiesAcc {
 
     private static final String systemPropertiesXmlFilePath = "SYSTEM_PROPERTIES.xml";
 
+    private StaticSystemPropertiesAcc(){
+    // private constractor. This Class can't "new".
+    };
+    
     public static void storeSystemProperties( // 登録画面から直接ファイルに書込
             String DB_URL,
             String DB_USER,
