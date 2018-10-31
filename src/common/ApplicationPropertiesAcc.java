@@ -41,8 +41,7 @@ public class ApplicationPropertiesAcc {
     ) {
         // 書き込み
         Properties properties = new Properties();
-        properties.setProperty("KEY", key);
-        properties.setProperty("VALUE", value);
+        properties.setProperty(key,value);
         try {
             Path path = Paths.get(applicationPropertiesXmlFilePath);
             if(Files.exists(path)){
@@ -54,6 +53,8 @@ public class ApplicationPropertiesAcc {
             }
             OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
             properties.storeToXML(ostream, "ApplicatioProperties","UTF-8");
+            ostream.flush();
+            ostream.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "設定ファイルが見当たりません。");
@@ -64,6 +65,7 @@ public class ApplicationPropertiesAcc {
     }
 
     static { // これは書き換えても構わないのでstaticイニシャライザーで読まなくてもよかった。
+        
         Properties properties = new Properties();
         try {
             InputStream istream = new FileInputStream(applicationPropertiesXmlFilePath);
