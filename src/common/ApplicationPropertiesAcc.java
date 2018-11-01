@@ -39,9 +39,11 @@ public class ApplicationPropertiesAcc {
     public static void storeApplicationProperties( // 登録画面から直接ファイルに書込
             String key, String value
     ) {
+        map.put(key, value);
         // 書き込み
         Properties properties = new Properties();
-        properties.setProperty(key,value);
+        map.forEach(properties::setProperty);
+        //properties.setProperty(key,value);
         try {
             Path path = Paths.get(applicationPropertiesXmlFilePath);
             if(Files.exists(path)){
@@ -53,8 +55,8 @@ public class ApplicationPropertiesAcc {
             }
             OutputStream ostream = new FileOutputStream(applicationPropertiesXmlFilePath);
             properties.storeToXML(ostream, "ApplicatioProperties","UTF-8");
-            ostream.flush();
-            ostream.close();
+            //ostream.flush();
+            //ostream.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ApplicationPropertiesAcc.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "設定ファイルが見当たりません。");

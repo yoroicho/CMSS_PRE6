@@ -5,6 +5,7 @@
  */
 package test;
 
+import common.ApplicationPropertiesAcc;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -35,8 +36,9 @@ public class FXMLTestInvokeController implements Initializable {
             fileChooser.setTitle("FileChooser");
             fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("prog file", "*.*", "*.*"));
             File file = fileChooser.showOpenDialog(null);
-
-            Process proc = new ProcessBuilder(file.getPath()).start();
+            String extention = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
+            Process proc = new ProcessBuilder(ApplicationPropertiesAcc.map.get(extention) , file.getPath()).start();
+            //Process proc = new ProcessBuilder(file.getPath()).start();
             proc.waitFor();
         } catch (IOException ex) {
             Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);

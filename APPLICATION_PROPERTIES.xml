@@ -2,5 +2,12 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>ApplicatioProperties</comment>
+<entry key="xml">StartXML</entry>
 <entry key="3">3</entry>
+<entry key="2">2</entry>
+<entry key="1">1</entry>
+<entry key="0">0</entry>
+<entry key="9">9</entry>
+<entry key="8">8</entry>
+<entry key="7">7</entry>
 </properties>

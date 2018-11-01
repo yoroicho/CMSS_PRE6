@@ -9,6 +9,8 @@ import com.sun.javafx.tk.FileChooserType;
 import common.ApplicationPropertiesAcc;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,6 +46,22 @@ public class FXMLTabPageApplicationController implements Initializable {
     }
 
     @FXML
+    void loadDataCmbExtention(){
+        cmbExtention.focusedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                //throw new UnsupportedOperationException("Not supported yet.");
+                if(newPropertyValue){
+                    cmbExtention.getItems().clear();
+                    ApplicationPropertiesAcc.map.forEach((k,v)->
+                    cmbExtention.getItems().add(k));
+                }
+            }
+        
+    });
+    }
+    
+    @FXML
     void syncroItem() {
         cmbExtention
                 .getSelectionModel()
@@ -51,10 +69,8 @@ public class FXMLTabPageApplicationController implements Initializable {
                 .addListener((r, o, newValue) -> {
                     System.out.println("Change");
                     ApplicationPropertiesAcc.loadApplicationProperties();
-                    this.txtFldInvoker.setText(
-                            ApplicationPropertiesAcc.map.get(
-                                    cmbExtention.selectionModelProperty()
-                                            .getValue()));
+                    this.txtFldInvoker.setText(                            
+                            ApplicationPropertiesAcc.map.get(newValue));
                 });
     }
 
@@ -72,6 +88,7 @@ public class FXMLTabPageApplicationController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         syncroItem();
+        loadDataCmbExtention();
     }
 
 }

@@ -24,9 +24,9 @@ public class CMSS extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLBaseDocument.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.show();
     }
@@ -35,10 +35,10 @@ public class CMSS extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-                StaticSystemPropertiesAcc.loadSystemProperties(); 
+        StaticSystemPropertiesAcc.loadSystemProperties();
 //設定ファイルの読み込みSystemPropertiesAccからStaticSystemPropertiesAccに変えた20181029
-//ApplicationPropertiesAcc.loadApplicationProperties();
+        ApplicationPropertiesAcc.loadApplicationProperties();
         launch(args);
     }
-    
+
 }
