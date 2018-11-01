@@ -31,19 +31,23 @@ public class FXMLTestInvokeController implements Initializable {
     @FXML
     private void invokeSystem(ActionEvent event) {
         System.out.println("Invoke");
-        try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("FileChooser");
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("prog file", "*.*", "*.*"));
-            File file = fileChooser.showOpenDialog(null);
-            String extention = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
-            Process proc = new ProcessBuilder(ApplicationPropertiesAcc.map.get(extention) , file.getPath()).start();
-            //Process proc = new ProcessBuilder(file.getPath()).start();
-            proc.waitFor();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("FileChooser");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Data file", "*.*", "*.*"));
+        File file = fileChooser.showOpenDialog(null);
+        int i = file.getPath().lastIndexOf(".");
+        if (i == -1) {
+            common.MsgBox.info("拡張子のないファイルは指定できません。");
+        } else {
+            try {
+                String extention = file.getPath().substring(i + 1);
+                Process proc = new ProcessBuilder(ApplicationPropertiesAcc.map.get(extention), file.getPath()).start();
+                proc.waitFor();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
