@@ -27,6 +27,9 @@
                   <Label layoutX="36.0" layoutY="226.0" text="UNIT WORKSPACE" />
                   <TextField fx:id="textFieldUnitWorkspaceDir" layoutX="38.0" layoutY="243.0" prefHeight="28.0" prefWidth="472.0" />
                   <Button fx:id="UNIT_WORKSPACE_DIR" layoutX="533.0" layoutY="243.0" mnemonicParsing="false" onAction="#handleUnitWorkspaceDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
+                  <Label layoutX="46.0" layoutY="285.0" text="UNIT BACKUP" />
+                  <TextField fx:id="textFieldUnitBackupDir" layoutX="35.0" layoutY="303.0" prefHeight="28.0" prefWidth="474.0" />
+                  <Button fx:id="UNIT_BACKUP_DIR" layoutX="534.0" layoutY="303.0" mnemonicParsing="false" onAction="#handleUnitBackupDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
                </children>
             </AnchorPane>
         </content>

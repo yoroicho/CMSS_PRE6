@@ -86,8 +86,12 @@ public class FXMLTabPageSystemConfigController implements Initializable {
 
     @FXML
     private TextField textFieldUnitWorkspaceDir;
+
     @FXML
     private Button UNIT_WORKSPACE_DIR;
+
+    @FXML
+    private TextField textFieldUnitBackupDir;
 
     private void testButtonAction(ActionEvent event) {
         testTextField.setText(String.valueOf(Integer.parseInt(testTextField.getText()) * 2));
@@ -102,16 +106,23 @@ public class FXMLTabPageSystemConfigController implements Initializable {
 
     @FXML
     private void handleUnitBaseDirButtonAction(ActionEvent event) {
-        final DirectoryChooser fc = new DirectoryChooser();
-        fc.setTitle("SLECT UNIT BASE DIR");
-        textFieldUnitBaseDir.setText(fc.showDialog(null).getPath());
+        final DirectoryChooser fcUnitBaseDir = new DirectoryChooser();
+        fcUnitBaseDir.setTitle("SLECT UNIT BASE DIR");
+        textFieldUnitBaseDir.setText(fcUnitBaseDir.showDialog(null).getPath());
     }
 
     @FXML
     private void handleUnitWorkspaceDirButtonAction(ActionEvent event) {
-        final DirectoryChooser fc = new DirectoryChooser();
-        fc.setTitle("SELECT UNIT WORKSPACE");
-        textFieldUnitWorkspaceDir.setText(fc.showDialog(null).getPath());
+        final DirectoryChooser fcUnitWorkspaceDir = new DirectoryChooser();
+        fcUnitWorkspaceDir.setTitle("SELECT UNIT WORKSPACE");
+        textFieldUnitWorkspaceDir.setText(fcUnitWorkspaceDir.showDialog(null).getPath());
+    }
+
+    @FXML
+    private void handleUnitBackupDirButtonAction(ActionEvent event) {
+        final DirectoryChooser fcUnitBackupDir = new DirectoryChooser();
+        fcUnitBackupDir.setTitle("SELECT UNIT BACKUP");
+        textFieldUnitBackupDir.setText(fcUnitBackupDir.showDialog(null).getPath());
     }
 
     @FXML
