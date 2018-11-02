@@ -39,14 +39,18 @@ public class FXMLTestInvokeController implements Initializable {
         if (i == -1) {
             common.MsgBox.info("拡張子のないファイルは指定できません。");
         } else {
-            try {
-                String extention = file.getPath().substring(i + 1);
-                Process proc = new ProcessBuilder(ApplicationPropertiesAcc.map.get(extention), file.getPath()).start();
-                proc.waitFor();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+            String extention = file.getPath().substring(i + 1);
+            if (ApplicationPropertiesAcc.map.keySet().stream().anyMatch(k -> k.equals(extention))) {
+                try {
+                    Process proc = new ProcessBuilder(ApplicationPropertiesAcc.map.get(extention), file.getPath()).start();
+                    proc.waitFor();
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FXMLTestInvokeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                common.MsgBox.info("拡張子と起動アプリをアプリケーションのタブウインドで関連づけてください");
             }
         }
 
