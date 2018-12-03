@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="345.0" prefWidth="662.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.FXMLTabPageSystemConfigController">
+    <children>
+      <ScrollPane prefHeight="345.0" prefWidth="662.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="432.0" prefWidth="725.0">
+               <children>
+                    <TextField fx:id="textFieldUnitBaseDir" editable="false" layoutX="35.0" layoutY="179.0" prefHeight="28.0" prefWidth="475.0" />
+                    <Button fx:id="UNIT_BASE_DIR" layoutX="532.0" layoutY="179.0" mnemonicParsing="false" onAction="#handleUnitBaseDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
+                    <Button fx:id="ButtonEnterSystemProperties" layoutX="532.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleButtonEnterSystemPropertiesButtonAction" text="ENTER" />
+                    <Button fx:id="buttonReloadPropertiesOnMemory" layoutX="314.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleButtonReloadPropertiesOnMemory" text="Reload properties on memory." />
+                    <Label layoutX="38.0" layoutY="28.0" text="DATABASE URL" />
+                    <Label layoutX="34.0" layoutY="94.0" text="DATABASE USER" />
+                    <Label layoutX="329.0" layoutY="94.0" text="DATABASE PASS" />
+                    <TextField fx:id="textFieldDatabaseUrl" layoutX="34.0" layoutY="46.0" prefHeight="28.0" prefWidth="549.0" />
+                    <TextField fx:id="textFieldDatabaseUser" layoutX="34.0" layoutY="112.0" prefHeight="28.0" prefWidth="172.0" />
+                    <PasswordField fx:id="passwordFieldDatabasePass" layoutX="329.0" layoutY="112.0" prefHeight="28.0" prefWidth="254.0" />
+                  <Label layoutX="35.0" layoutY="161.0" text="UNIT STORAGE BASE" />
+                  <Label layoutX="36.0" layoutY="226.0" text="UNIT WORKSPACE" />
+                  <TextField fx:id="textFieldUnitWorkspaceDir" layoutX="38.0" layoutY="243.0" prefHeight="28.0" prefWidth="472.0" />
+                  <Button fx:id="UNIT_WORKSPACE_DIR" layoutX="533.0" layoutY="243.0" mnemonicParsing="false" onAction="#handleUnitWorkspaceDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
+                  <Label layoutX="46.0" layoutY="285.0" text="UNIT BACKUP" />
+                  <TextField fx:id="textFieldUnitBackupDir" layoutX="35.0" layoutY="303.0" prefHeight="28.0" prefWidth="474.0" />
+                  <Button fx:id="UNIT_BACKUP_DIR" layoutX="534.0" layoutY="303.0" mnemonicParsing="false" onAction="#handleUnitBackupDirButtonAction" prefHeight="28.0" prefWidth="51.0" text="..." />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+    </children>
+</AnchorPane>

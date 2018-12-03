@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="438.0" prefWidth="628.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.FXMLTabPageUnitController">
+   <children>
+      <ScrollPane fx:id="scrollPaneUnit" layoutX="186.0" layoutY="73.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <content>
+          <AnchorPane fx:id="unitAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="541.0" prefWidth="697.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="UNIT ID" />
+                  <Label layoutX="14.0" layoutY="43.0" text="1st" />
+                  <Label layoutX="14.0" layoutY="88.0" text="2nd" />
+                  <Label layoutX="14.0" layoutY="141.0" text="3rd" />
+                  <Label layoutX="14.0" layoutY="191.0" text="4th" />
+                  <TextField fx:id="textFieldId" layoutX="73.0" layoutY="9.0" onAction="#textFieldIdOnAction" prefHeight="28.0" prefWidth="156.0" />
+                  <Button fx:id="buttonClear" layoutX="251.0" layoutY="9.0" mnemonicParsing="false" onAction="#buttonClearOnAction" text="CLEAR" />
+                  <Label layoutX="254.0" layoutY="309.0" text="CUT" />
+                  <Label layoutX="469.0" layoutY="309.0" text="ETD" />
+                  <Label layoutX="303.0" layoutY="14.0" text="ISSUE/CLOSE" />
+                  <DatePicker fx:id="datePickerClose" layoutX="392.0" layoutY="9.0" />
+                  <Button fx:id="buttonCloseToday" layoutX="586.0" layoutY="9.0" mnemonicParsing="false" text="TODAY" />
+                  <Label layoutX="9.0" layoutY="381.0" text="REMARK" />
+                  <Button fx:id="buttonMakeFromTemplate" layoutX="18.0" layoutY="459.0" mnemonicParsing="false" onAction="#makeFromTemplate" prefHeight="28.0" prefWidth="176.0" text="同型で新規作成（つづき）" />
+                  <Button fx:id="buttonMakeAnotherVersion" layoutX="218.0" layoutY="455.0" mnemonicParsing="false" onAction="#makeAnotherVersion" text="改変目的の複写（別バージョン）" />
+                  <Button fx:id="buttonRegisterChange" layoutX="442.0" layoutY="461.0" mnemonicParsing="false" onAction="#registerChange" text="上書き更新" />
+                  <Button fx:id="buttonStartUp" layoutX="22.0" layoutY="499.0" mnemonicParsing="false" onAction="#testInvoke" prefHeight="28.0" prefWidth="529.0" text="起動" />
+                  <TextField fx:id="textFieldMainTitleId" layoutX="59.0" layoutY="136.0" />
+                  <TextArea fx:id="textAreaTitle" layoutX="84.0" layoutY="208.0" prefHeight="43.0" prefWidth="490.0" />
+                  <TextArea fx:id="textAreaCreator" layoutX="85.0" layoutY="252.0" prefHeight="15.0" prefWidth="488.0" />
+                  <Label layoutX="19.0" layoutY="309.0" text="MTG" />
+                  <DatePicker fx:id="datePickerMtg" layoutX="64.0" layoutY="305.0" />
+                  <DatePicker fx:id="datePickerCut" layoutX="286.0" layoutY="305.0" />
+                  <DatePicker fx:id="datePickerEtd" layoutX="509.0" layoutY="305.0" />
+                  <TextArea fx:id="textAreaRemark" layoutX="61.0" layoutY="338.0" prefHeight="92.0" prefWidth="535.0" />
+                  <TextArea fx:id="textAreaMainTitleName" editable="false" layoutX="294.0" layoutY="149.0" prefHeight="45.0" prefWidth="371.0" />
+                  <TextArea fx:id="textAreaSeriesName" editable="false" layoutX="294.0" layoutY="95.0" prefHeight="44.0" prefWidth="371.0" />
+                  <TextArea fx:id="textAreaOverallSeriesName" editable="false" layoutX="295.0" layoutY="52.0" prefHeight="44.0" prefWidth="369.0" />
+                  <TextField fx:id="textFieldOverallSeriesId" editable="false" layoutX="48.0" layoutY="49.0" />
+                  <TextField fx:id="textFieldSeriesId" editable="false" layoutX="48.0" layoutY="92.0" />
+                  <Button fx:id="buttonRegisterNew" layoutX="534.0" layoutY="461.0" mnemonicParsing="false" onAction="#registerNew" text="新規作成" />
+                  <Label layoutX="18.0" layoutY="248.0" text="CRT" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
