@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TestReport" language="groovy" columnCount="3" pageWidth="595" pageHeight="842" columnWidth="185" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f56ec13-ca10-46f5-a47f-403a78eea5b8">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="New Dataset 1" uuid="bc1b0de6-c2a9-429d-97dc-9d15b9e3a0fd">
+		<field name="要素A" class="java.lang.String"/>
+		<field name="要素B" class="java.lang.String"/>
+		<field name="要素C
+い" class="java.lang.String"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="要素A" class="java.lang.String"/>
+	<field name="要素B" class="java.lang.String"/>
+	<field name="要素C
+い" class="java.lang.String"/>
+	<field name="ろ" class="java.lang.String"/>
+	<field name="は
+に" class="java.lang.String"/>
+	<field name="ほ" class="java.lang.String"/>
+	<field name="へ" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="279" y="35" width="100" height="20" uuid="6e7fb696-42fb-4ec3-ae9e-0db389e03a6c"/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="411" y="41" width="100" height="20" uuid="32990143-948a-4615-a86a-2b885fa5e7ff"/>
+				<text><![CDATA[要素A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="41" width="100" height="20" uuid="56cbfe76-2c72-4ea5-b18d-7b643a5a83a5"/>
+				<text><![CDATA[要素A]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="411" y="65" width="100" height="20" uuid="a02a8bbd-37ae-4214-982e-9faf81134751"/>
+				<textFieldExpression><![CDATA[$F{要素A}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="65" width="100" height="20" uuid="9400d08c-d547-41a8-94f4-263814bea269"/>
+				<textFieldExpression><![CDATA[$F{要素A}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="379" y="34" width="100" height="20" uuid="eef550b6-7497-4354-9adb-78f3042ece9d"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
